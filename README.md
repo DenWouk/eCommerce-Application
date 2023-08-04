@@ -10,7 +10,7 @@ The Ecommerce Application is a web application built using Next.js, a popular Re
 
 1. **Clone the Repository:** Clone the project repository to your local development environment.
 
-  ```bash
+    ```bash
     cd ecommerce-application
     npm install
     ```
@@ -24,7 +24,7 @@ The Ecommerce Application is a web application built using Next.js, a popular Re
 
 2. **Run the Development Server:** Launch the development server to see the application in action.
 
-        ```bash
+    ```bash
     npm run dev
     ```
 
@@ -36,7 +36,8 @@ The Ecommerce Application is a web application built using Next.js, a popular Re
     
     The application should now be accessible at [http://localhost:3000](http://localhost:3000)
 
-3. **Project Structure:**
+
+## Project Structure
 
 The project follows a standard Next.js application structure:
 
@@ -58,7 +59,6 @@ The project includes various helpful scripts for development, testing, and maint
 - `npm run test`: Run Jest tests to ensure code functionality and prevent regressions.
 - `npm run test:watch`: Run Jest in watch mode to automatically re-run tests on file changes.
 
-
 ## Project Maintainers
 
 The Ecommerce Application is currently maintained by:
@@ -78,11 +78,8 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
+## Deploy
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-```

@@ -71,6 +71,29 @@ The Ecommerce Application is currently maintained by:
 
 If you need assistance or have any questions, feel free to reach out to the project maintainers.
 
+## Technology Stack
+
+The Ecommerce Application is built on a modern and versatile technology stack, combining both frontend and backend technologies to deliver a seamless shopping experience. The core technologies used are as follows:
+
+**Frontend**:
+- **Next.js**: As a powerful React framework, Next.js empowers the application with server-rendered capabilities, ensuring fast load times and search engine optimization. Learn more [Next.js Documentation](https://nextjs.org/docs) 
+
+- **React**: The frontend is constructed using React, allowing for the creation of interactive and dynamic user interfaces, enhancing the user experience. Learn more [React + Next Documentation](https://react.dev/learn/start-a-new-react-project) 
+
+- **TypeScript**: By leveraging TypeScript, the frontend codebase benefits from static typing, catching errors early in the development process and providing better tooling support. Learn more [TypeScript Documentation](https://www.typescriptlang.org/docs/)
+
+- **Tailwind CSS**: Tailwind CSS is employed as the utility-first CSS framework, enabling rapid frontend development with pre-defined utility classes. Learn more [Tailwind Documentation](https://tailwindui.com/documentation) 
+
+- **ESLint**: ESLint ensures code quality by identifying and addressing code issues, enforcing consistent coding standards across the frontend codebase.
+
+- **Prettier**: The integration of Prettier automates code formatting, ensuring a uniform and clean codebase for enhanced readability.
+
+- **Jest**: Jest is utilized as the testing framework for frontend unit testing, validating the functionality and reliability of components.
+
+**Backend**:
+
+The backend of the Ecommerce Application is powered by commercetools.com, a headless platform that provides a scalable and secure foundation for managing product data, orders, and transactions.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -80,6 +103,4 @@ To learn more about Next.js, take a look at the following resources:
 
 ## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Check out our deploy [Next.js deployment documentation](https://nextjs.org/docs/deployment).

@@ -10,32 +10,31 @@ The Ecommerce Application is a web application built using Next.js, a popular Re
 
 1. **Clone the Repository:** Clone the project repository to your local development environment.
 
-    ```bash
-    cd ecommerce-application
-    npm install
-    ```
+   ```bash
+   cd ecommerce-application
+   npm install
+   ```
 
-    or with yarn:
+   or with yarn:
 
-    ```bash
-    cd ecommerce-application
-    yarn install
-    ```
+   ```bash
+   cd ecommerce-application
+   yarn install
+   ```
 
 2. **Run the Development Server:** Launch the development server to see the application in action.
 
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm run dev
+   ```
 
-    or with yarn:
+   or with yarn:
 
-    ```bash
-    yarn dev
-    ```
-    
-    The application should now be accessible at [http://localhost:3000](http://localhost:3000)
+   ```bash
+   yarn dev
+   ```
 
+   The application should now be accessible at [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
 
@@ -76,13 +75,14 @@ If you need assistance or have any questions, feel free to reach out to the proj
 The Ecommerce Application is built on a modern and versatile technology stack, combining both frontend and backend technologies to deliver a seamless shopping experience. The core technologies used are as follows:
 
 **Frontend**:
-- **Next.js**: As a powerful React framework, Next.js empowers the application with server-rendered capabilities, ensuring fast load times and search engine optimization. Learn more [Next.js Documentation](https://nextjs.org/docs) 
 
-- **React**: The frontend is constructed using React, allowing for the creation of interactive and dynamic user interfaces, enhancing the user experience. Learn more [React + Next Documentation](https://react.dev/learn/start-a-new-react-project) 
+- **Next.js**: As a powerful React framework, Next.js empowers the application with server-rendered capabilities, ensuring fast load times and search engine optimization. Learn more [Next.js Documentation](https://nextjs.org/docs)
+
+- **React**: The frontend is constructed using React, allowing for the creation of interactive and dynamic user interfaces, enhancing the user experience. Learn more [React + Next Documentation](https://react.dev/learn/start-a-new-react-project)
 
 - **TypeScript**: By leveraging TypeScript, the frontend codebase benefits from static typing, catching errors early in the development process and providing better tooling support. Learn more [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 
-- **Tailwind CSS**: Tailwind CSS is employed as the utility-first CSS framework, enabling rapid frontend development with pre-defined utility classes. Learn more [Tailwind Documentation](https://tailwindui.com/documentation) 
+- **Tailwind CSS**: Tailwind CSS is employed as the utility-first CSS framework, enabling rapid frontend development with pre-defined utility classes. Learn more [Tailwind Documentation](https://tailwindui.com/documentation)
 
 - **ESLint**: ESLint ensures code quality by identifying and addressing code issues, enforcing consistent coding standards across the frontend codebase.
 

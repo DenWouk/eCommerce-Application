@@ -8,12 +8,17 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint -- --fix",
-    "format": "prettier --write",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx,json,md}\" --write",
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install"
   },
-  "lint-staged": {"*/.{js,jsx,ts,tsx,css}": ["prettier --write", "eslint --fix"]},
+  "lint-staged": {
+    "**/*/.{js,jsx,ts,tsx,css}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
   "dependencies": {
     "@types/node": "20.4.5",
     "@types/react": "18.2.18",

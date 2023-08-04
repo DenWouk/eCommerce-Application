@@ -1,24 +1,75 @@
 # eCommerce-Application
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Welcome to our Ecommerce App! This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## Project Overview
+
+The Ecommerce Application is a web application built using Next.js, a popular React framework. It enables users to browse and shop for products, manage their cart, and complete secure transactions. Next.js automatically configures the tooling needed for React, including bundling, compiling, and more, which makes the React application interactive, dynamic, and fast.
 
 ## Getting Started
 
-First, run the development server:
+1. **Clone the Repository:** Clone the project repository to your local development environment.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+  ```bash
+    cd ecommerce-application
+    npm install
+    ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    or with yarn:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    ```bash
+    cd ecommerce-application
+    yarn install
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. **Run the Development Server:** Launch the development server to see the application in action.
+
+        ```bash
+    npm run dev
+    ```
+
+    or with yarn:
+
+    ```bash
+    yarn dev
+    ```
+    
+    The application should now be accessible at [http://localhost:3000](http://localhost:3000)
+
+3. **Project Structure:**
+
+The project follows a standard Next.js application structure:
+
+- `pages`: Contains the application's routes and pages.
+- `components`: Reusable React components used throughout the application.
+- `styles`: Contains global styles and CSS files for styling components.
+- `public`: Static assets like images and fonts are stored here.
+
+## Available Scripts
+
+The project includes various helpful scripts for development, testing, and maintenance:
+
+- `npm run dev`: Start the development server and hot-reload changes during development.
+- `npm run build`: Create a production build of the application.
+- `npm run start`: Start the production server to serve the built application.
+- `npm run lint`: Run ESLint to check for code quality.
+- `npm run lint:fix`: Automatically fix ESLint issues where possible.
+- `npm run format`: Format the code using Prettier to maintain consistent code style.
+- `npm run test`: Run Jest tests to ensure code functionality and prevent regressions.
+- `npm run test:watch`: Run Jest in watch mode to automatically re-run tests on file changes.
+
+
+## Project Maintainers
+
+The Ecommerce Application is currently maintained by:
+
+- [DenWouk (GitHub Profile)](https://github.com/DenWouk)
+- [zakalupali89 (GitHub Profile)](https://github.com/zakalupali89)
+- [tetlisna (GitHub Profile)](https://github.com/tetlisna)
+
+## Getting Help
+
+If you need assistance or have any questions, feel free to reach out to the project maintainers.
 
 ## Learn More
 
@@ -34,3 +85,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```

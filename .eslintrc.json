@@ -21,6 +21,7 @@
     "no-debugger": "off",
     "no-console": "warn",
     "class-methods-use-this": "off",
+    "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/no-unnecessary-type-assertion": "off"
   }
 }

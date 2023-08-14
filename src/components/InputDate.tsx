@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Controller } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
@@ -21,26 +21,21 @@ export default function InputDate({ control, errors, name }: ITextParams) {
   };
 
   return (
-    <Controller
-      control={control}
-      name="dateOfBirth"
-      defaultValue={undefined}
-      rules={validateDate}
-      render={({ field: { value, ...field } }) => (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Controller
+        name="dateOfBirth"
+        control={control}
+        render={({ field: { onChange, value }, fieldState }) => (
           <DatePicker
             value={value}
-            {...field}
-            onChange={(date) => {
-              console.log(date);
-              
-            }}
+            onChange={onChange}
             label="Date of Birth"
             className="dark:bg-white"
-            // {...register(name, validateAge)}
+            // error={fieldState.invalid} // Set error state based on field validation
+            // helperText={fieldState.error?.message || ''}
           />
-        </LocalizationProvider>
-      )}
-    />
+        )}
+      />
+    </LocalizationProvider>
   );
 }

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Button, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { Button, Checkbox, Typography } from '@mui/material';
+import { Controller, useForm } from 'react-hook-form';
 
 import Form from '../components/Form';
 import InputEmail from '../components/InputEmail';
@@ -11,7 +11,6 @@ import InputLastName from '../components/InputLastName';
 import apiRequest from '../helpers/api-req';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
-// import InputDate from '../components/InputDate';
 
 function SignUpPage() {
   const form = useForm<IFormInput>({
@@ -20,7 +19,7 @@ function SignUpPage() {
       password: '',
       firstName: '',
       lastName: '',
-      dateOfBirth: '',
+      dateOfBirth: new Date(),
       // checkbox: false,
       country: '',
       streetName: '',
@@ -50,7 +49,7 @@ function SignUpPage() {
         firstName: '',
         lastName: '',
         dateOfBirth: '',
-        // checkbox: false,
+        checkbox: false,
         country: '',
         city: '',
         streetName: '',
@@ -65,8 +64,14 @@ function SignUpPage() {
       <InputPassword register={register} errors={errors} name="password" />
       <InputFirstName register={register} errors={errors} name="firstName" />
       <InputLastName register={register} errors={errors} name="lastName" />
-      {/* <InputDate register={register} control={control} errors={errors} name="dateOfBirth" /> */}
+      <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
       <Address register={register} errors={errors} name="city" />
+      <Controller
+        name="checkbox"
+        control={control}
+        render={({ field }) => <Checkbox {...field} />}
+      />
+    
       <Button variant="outlined" type="submit">
         Sign up
       </Button>

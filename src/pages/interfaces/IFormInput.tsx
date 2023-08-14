@@ -3,7 +3,8 @@ export interface IFormInput {
   password: string;
   lastName?: string;
   firstName?: string;
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
+  checkbox?: boolean;
   country?: string;
   city?: string;
   streetName?: string;

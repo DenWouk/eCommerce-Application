@@ -125,7 +125,7 @@ function Address({ register, errors }: ITextParams) {
       />
       <TextField
         required
-        id="outlined-required-street"
+        id="outlined-required-streetname"
         className="dark:bg-white"
         label="Street Name"
         type="text"
@@ -139,7 +139,7 @@ function Address({ register, errors }: ITextParams) {
       />
       <TextField
         required
-        id="outlined-required-street"
+        id="outlined-required-streetnum"
         className="dark:bg-white"
         label=""
         type="text"
@@ -160,6 +160,7 @@ function Address({ register, errors }: ITextParams) {
         error={!!errors!.postalCode}
         helperText={errors!.postalCode?.message}
       />
+     
     </Stack>
   );
 }

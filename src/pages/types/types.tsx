@@ -4,7 +4,7 @@ export type AllowedNames =
   | 'lastName'
   | 'firstName'
   | 'dateOfBirth'
-  // | 'checkbox'
+  | 'checkbox'
   | 'country'
   | 'city'
   | 'streetName'

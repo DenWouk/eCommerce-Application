@@ -1,4 +1,4 @@
-export function rssIcon(): JSX.Element {
+export function RSSicon(): JSX.Element {
   return (
     <>
       <style>

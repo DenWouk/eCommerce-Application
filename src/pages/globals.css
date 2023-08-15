@@ -3,9 +3,47 @@
 @tailwind utilities;
 
 :root {
-  --background-color1: #9696968a;
+  --color1: #313131;
+  --color2: #fefefe;
+  --color3: #ebefd0;
+  --color4: #3a3939;
+
+  --background-color1: #6161618a;
+  --link-color1: #2270ec;
 }
 
 .header {
   background-color: var(--background-color1);
+}
+
+.footer {
+  position: fixed;
+  top: unset;
+  bottom: 0;
+  background-color: var(--background-color1);
+  box-shadow:
+    0px -2px 4px -1px rgb(0 0 0 / 20%),
+    0px -4px 5px 0px rgb(0 0 0 / 14%),
+    0px -1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.gh-logo {
+  width: 17px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: 0.3s;
+}
+
+.gh-logo-fill1,
+.gh-logo-fill2 {
+  fill: var(--color2);
+}
+
+.rss-logo {
+  fill: var(--color2);
+}
+
+.gh-logo:hover {
+  transform: rotateY(180deg);
+  transition: all 0.3s;
 }

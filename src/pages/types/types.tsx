@@ -8,5 +8,5 @@ export type AllowedNames =
   | 'country'
   | 'city'
   | 'streetName'
-  | 'streetNum'
+  | 'streetNumber'
   | 'postalCode';

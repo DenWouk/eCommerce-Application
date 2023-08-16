@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import { get } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
 export default function InputFirstName({ register, name, errors }: ITextParams) {
@@ -9,6 +10,8 @@ export default function InputFirstName({ register, name, errors }: ITextParams) 
       message: 'First name must contain at least one letter',
     },
   };
+  const error = get(errors, name);
+
   return (
     <TextField
       required
@@ -17,8 +20,8 @@ export default function InputFirstName({ register, name, errors }: ITextParams) 
       type="text"
       className="dark:bg-white"
       {...register(name, validateText)}
-      error={!!errors![name]}
-      helperText={errors![name]?.message}
+      error={!!error}
+      helperText={error?.message}
     />
   );
 }

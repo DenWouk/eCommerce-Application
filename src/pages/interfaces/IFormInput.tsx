@@ -1,3 +1,10 @@
+import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
+
+type TypeAddress = {
+  shippingAddress?: string;
+  billingAddress?: string;
+};
+
 export interface IFormInput {
   email: string;
   password: string;
@@ -5,9 +12,7 @@ export interface IFormInput {
   firstName?: string;
   dateOfBirth?: Date;
   checkbox?: boolean;
-  country?: string;
-  city?: string;
-  streetName?: string;
-  streetNum?: string;
-  postalCode?: string;
+  addresses: (BaseAddress & TypeAddress)[];
+  defaultShippingAddress?: string;
+  defaultBillingAddress?: string;
 }

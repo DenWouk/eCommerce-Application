@@ -1,10 +1,9 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Controller } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
-export default function InputDate({ control, errors, name }: ITextParams) {
+export default function InputDate({ control }: ITextParams) {
   function minYear(date: Date, age: number) {
     const copyDate = new Date(date);
     copyDate.setFullYear(date.getFullYear() - age);
@@ -19,18 +18,22 @@ export default function InputDate({ control, errors, name }: ITextParams) {
       return dob >= minBirthdate || 'You must be at least 13 years old';
     },
   };
-
+  // const error = get(errors, name);
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 13);
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
         name="dateOfBirth"
         control={control}
-        render={({ field: { onChange, value }, fieldState }) => (
+        rules={{ ...validateDate }}
+        render={({ field: { onChange, value } }) => (
           <DatePicker
             value={value}
             onChange={onChange}
             label="Date of Birth"
             className="dark:bg-white"
+            maxDate={maxDate}
             // error={fieldState.invalid} // Set error state based on field validation
             // helperText={fieldState.error?.message || ''}
           />

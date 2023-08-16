@@ -1,11 +1,10 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { Stack, Button, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { Stack, Button, Typography, Alert } from '@mui/material';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import signIn from '@/src/api/signIn';
 import Form from '../components/Form';
 import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
-import apiRequest from '../helpers/api-req';
 
 function SignInPage() {
   const form = useForm<IFormInput>({
@@ -17,11 +16,20 @@ function SignInPage() {
 
   const {
     register,
+    setError,
+    clearErrors,
     formState: { errors },
   } = form;
 
-  const onSubmit = async (data: IFormInput) => {
-    await apiRequest('api-signin', 'POST', JSON.stringify(data));
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const { email, password } = data;
+    try {
+      const customer = await signIn({ username: email, password });
+      clearErrors('root');
+      console.log(customer);
+    } catch (e: any) {
+      setError('root.server', { message: e.message });
+    }
   };
 
   return (
@@ -37,6 +45,8 @@ function SignInPage() {
       </Typography>
       <InputEmail register={register} errors={errors} name="email" />
       <InputPassword register={register} errors={errors} name="password" />
+      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+      {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
       <Stack spacing={2}>
         <Button variant="outlined" type="submit">
           Log in

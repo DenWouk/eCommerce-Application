@@ -1,9 +1,10 @@
 import { IconButton, TextField, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { get } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
-export default function InputPassword({ register, name, errors }: ITextParams) {
+export default function InputPassword({ register, name, errors, disabled = false }: ITextParams) {
   const [showPass, setShowPass] = useState(false);
   const togglePassVisibility = () => {
     setShowPass((prevShowPass) => !prevShowPass);
@@ -25,17 +26,20 @@ export default function InputPassword({ register, name, errors }: ITextParams) {
         value.trim() === value ? undefined : 'Password cannot have leading or trailing whitespace',
     },
   };
+  const error = get(errors, name);
+
   return (
     <TextField
       required
+      disabled={disabled}
       id="outlined-password-input"
       label="Password"
       type={showPass ? 'text' : 'password'}
       className="dark:bg-white"
       autoComplete="current-password"
       {...register(name, validateText as any)}
-      error={!!errors![name]}
-      helperText={errors![name]?.message}
+      error={!!error}
+      helperText={error?.message}
       InputProps={{
         endAdornment: (
           <Tooltip title={!showPass ? 'Show Password' : 'Hide Password'} arrow>

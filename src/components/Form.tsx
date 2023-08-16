@@ -5,10 +5,16 @@ import { IFormInput } from '../pages/interfaces/IFormInput';
 
 interface IFormProps<T> {
   defaultValues: T;
+  disabled?: boolean;
   children: ReactNode | ReactNode[];
   onSubmit: SubmitHandler<IFormInput>;
 }
-function Form<T extends FieldValues>({ defaultValues, children, onSubmit }: IFormProps<T>) {
+function Form<T extends FieldValues>({
+  defaultValues,
+  children,
+  onSubmit,
+  disabled,
+}: IFormProps<T>) {
   const {
     handleSubmit,
     register,
@@ -27,6 +33,7 @@ function Form<T extends FieldValues>({ defaultValues, children, onSubmit }: IFor
                       ...child.props,
                       register,
                       control,
+                      disabled,
                       errors,
                       key: child.props.name,
                     },
@@ -34,8 +41,13 @@ function Form<T extends FieldValues>({ defaultValues, children, onSubmit }: IFor
                 : child
             )
           : children}
+        {errors?.root && <div>{errors.root.message}</div>}
       </Stack>
     </form>
   );
 }
 export default Form;
+
+Form.defaultProps = {
+  disabled: false,
+};

@@ -1,26 +1,26 @@
-import { TextField, Typography, Stack, Box, Autocomplete } from '@mui/material';
+import {
+  TextField,
+  Typography,
+  Stack,
+  Box,
+  Autocomplete,
+  Button,
+  FormControlLabel,
+} from '@mui/material';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { Control, get, useFieldArray } from 'react-hook-form';
+import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
+import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '../pages/enums/countries';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
-interface ICountryType {
-  code: string;
-  label: string;
-  phone: string;
-  suggested?: boolean;
-}
 // type countryCode = 'US'| 'CA';
 
-function Address({ register, errors }: ITextParams) {
-  const [autocompleteValue, setAutocompleteValue] = useState<ICountryType | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<ICountryType | null>(null);
-  const isCountrySelected = selectedCountry !== null;
+type Props = Omit<ITextParams, 'control'> & {
+  control: Control<IFormInput, string>;
+};
 
-  useEffect(() => {
-    setSelectedCountry(autocompleteValue);
-  }, [autocompleteValue]);
-
+function Address({ register, errors, control }: Props) {
   const validateCountry = {
     required: 'Country is required',
   };
@@ -38,7 +38,7 @@ function Address({ register, errors }: ITextParams) {
       message: 'Street must contain at least one character',
     },
   };
-  const validateStreetNum = {
+  const validateStreetNumber = {
     required: `Number is required`,
     pattern: {
       value: /^.+$/,
@@ -68,100 +68,138 @@ function Address({ register, errors }: ITextParams) {
   //   };
   // }
 
+  const { fields, append, remove } = useFieldArray({
+    name: 'addresses',
+    control,
+  });
+
   return (
-    <Stack spacing={2} className="m-10" width={400}>
-      <Typography variant="h4"> Address </Typography>
-      <Autocomplete
-        className="dark:bg-white"
-        options={countries}
-        autoHighlight
-        getOptionLabel={(option) => option.label}
-        value={autocompleteValue}
-        onChange={(_, value) => setAutocompleteValue(value)}
-        renderOption={(props, option) => (
-          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-            <Image
-              loading="lazy"
-              width="20"
-              height="20"
-              src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
-              alt={`${option.code.toLowerCase()}`}
-            />
-            {option.label} ({option.code}) +{option.phone}
-          </Box>
-        )}
-        renderInput={(params) => (
-          <>
-            <TextField
-              {...params}
-              label="Choose a country"
-              inputProps={{
-                ...params.inputProps,
-                autoComplete: 'new-password', // disable autocomplete and autofill
-              }}
-              type="country"
-              {...register('country', validateCountry)}
-              error={!!errors!.country}
-              helperText={errors!.country?.message}
-            />
-            {/* Display error message if no country is selected */}
-            {!isCountrySelected && (
-              <Typography variant="body2" color="error">
-                Please select a country.
-              </Typography>
+    <>
+      {fields.map((field, index) => (
+        <Stack key={field.id} spacing={2} className="m-10" width={400}>
+          <Typography variant="h4">Address</Typography>
+          <CheckBoxTypeAddress
+            name={`addresses.${index}.shippingAddress`}
+            index={index}
+            label="ShippingAddress"
+            control={control}
+          />
+          <CheckBoxTypeAddress
+            name={`addresses.${index}.billingAddress`}
+            index={index}
+            label="BillingAddress"
+            control={control}
+          />
+          <FormControlLabel
+            label="DefaultShippingAddress"
+            control={
+              <input
+                type="radio"
+                className="dark:bg-white"
+                {...register(`defaultShippingAddress`)}
+                value={index}
+                // error={!!error}
+                // helperText={error?.message}
+              />
+            }
+          />
+          <FormControlLabel
+            label="DefaultBillingAddress"
+            control={
+              <input
+                type="radio"
+                className="dark:bg-white"
+                {...register(`defaultBillingAddress`)}
+                value={index}
+                // error={!!error}
+                // helperText={error?.message}
+              />
+            }
+          />
+          <Button onClick={() => remove(index)}>remove address</Button>
+          <Autocomplete
+            className="dark:bg-white"
+            options={countries}
+            autoHighlight
+            getOptionLabel={(option) => option.label}
+            renderOption={(props, option) => (
+              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <Image
+                  loading="lazy"
+                  width="20"
+                  height="20"
+                  src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
+                  alt={`${option.code.toLowerCase()}`}
+                />
+                {option.label} ({option.code}) +{option.phone}
+              </Box>
             )}
-          </>
-        )}
-      />
-      <TextField
-        required
-        id="outlined-required-city"
-        className="dark:bg-white"
-        label="City"
-        type="text"
-        {...register('city', validateCity)}
-        error={!!errors!.city}
-        helperText={errors!.city?.message}
-      />
-      <TextField
-        required
-        id="outlined-required-streetname"
-        className="dark:bg-white"
-        label="Street Name"
-        type="text"
-        {...register('streetName', validateStreet)}
-        error={!!errors!.streetName}
-        helperText={errors!.streetName?.message}
-        sx={{
-          width: 280,
-          mr: 10,
-        }}
-      />
-      <TextField
-        required
-        id="outlined-required-streetnum"
-        className="dark:bg-white"
-        label=""
-        type="text"
-        {...register('streetNum', validateStreetNum)}
-        error={!!errors!.streetNum}
-        helperText={errors!.streetNum?.message}
-        sx={{
-          width: 100,
-        }}
-      />
-      <TextField
-        required
-        id="outlined-required-postal"
-        className="dark:bg-white"
-        label="Post"
-        type="number"
-        {...register('postalCode', validatePost)}
-        error={!!errors!.postalCode}
-        helperText={errors!.postalCode?.message}
-      />
-     
-    </Stack>
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Choose a country"
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: 'new-password', // disable autocomplete and autofill
+                }}
+                type="country"
+                {...register(`addresses.${index}.country`, validateCountry)}
+                error={!!get(errors, `addresses.${index}.country`)}
+                helperText={errors!.addresses?.[index]?.country?.message}
+              />
+            )}
+          />
+          <TextField
+            required
+            id="outlined-required-city"
+            className="dark:bg-white"
+            label="City"
+            type="text"
+            {...register(`addresses.${index}.city`, validateCity)}
+            error={!!errors!.addresses?.[index]?.city}
+            helperText={errors!.addresses?.[index]?.city?.message}
+          />
+          <TextField
+            required
+            id="outlined-required-streetname"
+            className="dark:bg-white"
+            label="Street Name"
+            type="text"
+            {...register(`addresses.${index}.streetName`, validateStreet)}
+            error={!!errors!.addresses?.[index]?.streetName}
+            helperText={errors!.addresses?.[index]?.streetName?.message}
+            sx={{
+              width: 280,
+              mr: 10,
+            }}
+          />
+          <TextField
+            required
+            id="outlined-required-streetnum"
+            className="dark:bg-white"
+            label=""
+            type="text"
+            {...register(`addresses.${index}.streetNumber`, validateStreetNumber)}
+            error={!!errors!.addresses?.[index]?.streetNumber}
+            helperText={errors!.addresses?.[index]?.streetNumber?.message}
+            sx={{
+              width: 100,
+            }}
+          />
+          <TextField
+            required
+            id="outlined-required-postal"
+            className="dark:bg-white"
+            label="Post"
+            type="number"
+            {...register(`addresses.${index}.postalCode`, validatePost)}
+            error={!!errors!.addresses?.[index]?.postalCode}
+            helperText={errors!.addresses?.[index]?.postalCode?.message}
+          />
+        </Stack>
+      ))}
+      <Button onClick={() => append({ country: '' })}>Add address</Button>
+    </>
   );
 }
 

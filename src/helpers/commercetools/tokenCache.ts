@@ -1,25 +1,21 @@
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 
-const tokenStorage: { clientId?: TokenStore; default: TokenStore } = {
-  default: { token: '', expirationTime: 0 },
-};
+const tokenStore: TokenStore = { token: '', expirationTime: 0 };
 
-const tokenCache: TokenCache = {
-  get: (tokenCacheOptions?): TokenStore => {
-    const clientId = tokenCacheOptions?.clientId;
-    if (clientId) {
-      const tokenStore = tokenStorage[clientId as keyof typeof tokenStorage];
-      return tokenStore || tokenStorage.default;
-    }
-    return tokenStorage.default;
+const tokenCache: TokenCache & { clear: () => void } = {
+  get() {
+    return tokenStore;
   },
-  set: (cache, tokenCacheOptions?) => {
-    const clientId = tokenCacheOptions?.clientId;
-    if (clientId) {
-      tokenStorage[clientId as keyof typeof tokenStorage] = cache;
-    } else {
-      tokenStorage.default = cache;
-    }
+  set(value) {
+    tokenStore.token = value.token;
+    tokenStore.refreshToken = value.refreshToken;
+    tokenStore.expirationTime = value.expirationTime;
+  },
+
+  clear() {
+    tokenStore.token = '';
+    tokenStore.expirationTime = 0;
+    tokenStore.refreshToken = '';
   },
 };
 

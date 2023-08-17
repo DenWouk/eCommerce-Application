@@ -1,6 +1,7 @@
 import {
   AuthMiddlewareOptions,
   ClientBuilder,
+  createAuthForAnonymousSessionFlow,
   createAuthForClientCredentialsFlow,
   createAuthForPasswordFlow,
   createAuthWithExistingToken,
@@ -12,6 +13,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import getConfig from 'next/config';
 import tokenCache from '@/src/helpers/commercetools/tokenCache';
+import NamesClients from '@/src/helpers/commercetools/consts';
 
 const {
   ROOT_AUTH = '',
@@ -72,6 +74,30 @@ function getAuthOptions(
   };
 }
 
+type UnknownTypeClient = {
+  type: NamesClients.UNKNOWN;
+};
+
+type AnonymousTypeClient = {
+  type: NamesClients.ANONYMOUS;
+};
+
+type PasswordTypeClient = {
+  type: NamesClients.PASSWORD;
+  value: UserAuthOptions;
+};
+
+type WithExistingTokenTypeClient = {
+  type: NamesClients.EXISTING;
+  value: string;
+};
+
+type TypeClient =
+  | UnknownTypeClient
+  | AnonymousTypeClient
+  | PasswordTypeClient
+  | WithExistingTokenTypeClient;
+
 function getClient(
   options: {
     scopes: string[];
@@ -81,18 +107,28 @@ function getClient(
     clientSecret: string;
     projectKey?: string;
   },
-  userOrToken?: UserAuthOptions | string
+  typeClient: TypeClient = { type: NamesClients.UNKNOWN }
 ) {
   let middlewareOptions: AuthMiddlewareOptions | PasswordAuthMiddlewareOptions | undefined;
   let flowMiddleware: Middleware | undefined;
-  if (!userOrToken) {
-    middlewareOptions = getAuthOptions(options);
-    flowMiddleware = createAuthForClientCredentialsFlow(middlewareOptions);
-  } else if (typeof userOrToken === 'string') {
-    flowMiddleware = createAuthWithExistingToken(`Bearer ${userOrToken}`);
-  } else {
-    middlewareOptions = getAuthOptions(options, userOrToken);
-    flowMiddleware = createAuthForPasswordFlow(<PasswordAuthMiddlewareOptions>middlewareOptions);
+  const { type } = typeClient;
+
+  switch (type) {
+    case NamesClients.ANONYMOUS:
+      middlewareOptions = getAuthOptions(options);
+      flowMiddleware = createAuthForAnonymousSessionFlow(middlewareOptions);
+      break;
+    case NamesClients.PASSWORD:
+      middlewareOptions = getAuthOptions(options, typeClient.value);
+      flowMiddleware = createAuthForPasswordFlow(<PasswordAuthMiddlewareOptions>middlewareOptions);
+      break;
+    case NamesClients.EXISTING:
+      flowMiddleware = createAuthWithExistingToken(`Bearer ${typeClient.value}`);
+      break;
+    default:
+      middlewareOptions = getAuthOptions(options);
+      flowMiddleware = createAuthForClientCredentialsFlow(middlewareOptions);
+      break;
   }
 
   return (

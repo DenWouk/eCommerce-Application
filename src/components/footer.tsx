@@ -35,8 +35,8 @@ export default function Footer() {
 
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-evenly' }}>
           {authors.map((author, i) => (
-            <a rel="noopener noreferrer" href={authorsLinks[i]} target="_blank">
-              <Button key={author} sx={{ color: 'inherit', display: 'block', p: '0 5px' }}>
+            <a key={author} rel="noopener noreferrer" href={authorsLinks[i]} target="_blank">
+              <Button sx={{ color: 'inherit', display: 'block', p: '0 5px' }}>
                 <Typography
                   variant="subtitle1"
                   sx={{

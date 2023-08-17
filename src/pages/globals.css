@@ -16,6 +16,14 @@
   background-color: var(--background-color1);
 }
 
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 500px;
+  font-size: 40px;
+}
+
 .footer {
   position: fixed;
   top: unset;

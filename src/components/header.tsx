@@ -1,5 +1,5 @@
 import React from 'react';
-import AdbIcon from '@mui/icons-material/Adb';
+import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
@@ -15,10 +15,9 @@ import {
   Typography,
 } from '@mui/material';
 
-const pages = ['Products', 'Contact'];
-const settings = ['Profile', 'Logout'];
-
 export default function Header() {
+  const [auth, setAuth] = React.useState<boolean>(false);
+  const [loginBtn, setLoginBtn] = React.useState<boolean>(true);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -37,15 +36,25 @@ export default function Header() {
     setAnchorElUser(null);
   };
 
+  const handleAuth = () => {
+    setAuth(true);
+    setLoginBtn(false);
+  };
+
+  const handleLogoutBtn = () => {
+    setAuth(false);
+    setLoginBtn(true);
+
+    handleCloseUserMenu();
+  };
+
   return (
-    <AppBar position="static" className='header'>
+    <AppBar position="static" className="header">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -53,10 +62,9 @@ export default function Header() {
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
-              textDecoration: 'none',
             }}
           >
-            eCommerce-App
+            <Link href="/"> eCommerce-App</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
@@ -89,19 +97,22 @@ export default function Header() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              <Link href="/products">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Products</Typography>
                 </MenuItem>
-              ))}
+              </Link>
+              <Link href="/contacts">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Contacts</Typography>
+                </MenuItem>
+              </Link>
             </Menu>
           </Box>
 
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
             sx={{
               flexGrow: 1,
               mr: 2,
@@ -111,55 +122,71 @@ export default function Header() {
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
-              textDecoration: 'none',
             }}
           >
-            eCommerce-App
+            <Link href="/"> eCommerce-App </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page}
+            <Link href="/products">
+              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                Products
               </Button>
-            ))}
+            </Link>
+            <Link href="/contacts">
+              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                Contacts
+              </Button>
+            </Link>
           </Box>
 
-          <Button color="inherit">Login</Button>
+          {loginBtn && (
+            <Link href="/login">
+              <Button color="inherit" onClick={handleAuth}>
+                Login
+              </Button>
+            </Link>
+          )}
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="" src="" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {auth && (
+            <div>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar alt="" src="" />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <Link href="/profile">
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">Profile</Typography>
+                    </MenuItem>
+                  </Link>
+
+                  <Link href="/">
+                    <MenuItem onClick={handleLogoutBtn}>
+                      <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
+                  </Link>
+                </Menu>
+              </Box>
+            </div>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

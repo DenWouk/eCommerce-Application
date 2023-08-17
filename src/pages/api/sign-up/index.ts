@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       const { token, expirationTime } = tokenCache.get();
       const cookieValue = createValueCookieToken({ token, expirationTime });
       res
-        .setHeader(TOKEN_KYE, tokenCache.get().token)
+        .setHeader(TOKEN_KYE, token)
         .setHeader('Set-Cookie', cookieValue)
         .status(200)
         .json(responseSingIn);

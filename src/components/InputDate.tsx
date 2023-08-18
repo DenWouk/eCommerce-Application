@@ -14,7 +14,7 @@ export default function InputDate({ control }: ITextParams) {
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
   console.log("test");
-  
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller

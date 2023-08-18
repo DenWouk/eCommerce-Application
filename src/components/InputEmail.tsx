@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { get } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
@@ -22,6 +23,7 @@ export default function InputEmail({ register, name, errors, disabled = false }:
       {...register(name, validateText)}
       error={!!error}
       helperText={error?.message}
+      autoComplete="username"
     />
   );
 }

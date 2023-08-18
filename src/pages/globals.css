@@ -8,20 +8,36 @@
   --color3: #ebefd0;
   --color4: #3a3939;
 
-  --background-color1: #6161618a;
+  --background-color1: #6195c3fe;
+  --background-color2: #f1f7f7;
   --link-color1: #2270ec;
 }
 
+html {
+  font-size: 16px;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .header {
+  z-index: 3;
   background-color: var(--background-color1);
 }
 
 main {
   display: flex;
+  flex: 1 1 auto;
   justify-content: center;
   align-items: center;
-  min-height: 500px;
+  padding-bottom: 50px;
   font-size: 40px;
+  font-weight: bold;
+  color: var(--color4);
+  background: var(--background-color2);
 }
 
 .footer {

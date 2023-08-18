@@ -8,12 +8,13 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import Image from 'next/image';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Control, get, useFieldArray } from 'react-hook-form';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '../pages/enums/countries';
 import { ITextParams } from '../pages/interfaces/ITextParams';
+
+// type countryCode = 'US'| 'CA';
 
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
@@ -45,20 +46,27 @@ function Address({ register, errors, control }: Props) {
     },
   };
 
-  const validatePostalCode = (countryCode: string, value: string) => {
-    let pattern;
-    switch (countryCode) {
-      case 'United States':
-        pattern = /\d{5}([ -]\d{4})?/;
-        break;
-      case 'Canada':
-        pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
-        break;
-      default:
-        pattern = /^.+$/;
-    }
-    return pattern.test(value);
+  const validatePost = {
+    pattern: /^\d{5}(?:-\d{4})?$/, // US ZIP code pattern
+    message: 'Invalid US ZIP code format',
   };
+
+  // const postalPatterns: Record<string, RegExp> = {
+  //   "US": /^\d{5}(?:-\d{4})?$/,
+  //   "CA": /^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/,
+  // };
+  // function getPostalValidation(countryCode: countryCode) {
+  //   if (!postalPatterns[countryCode]) {
+  //     return {
+  //       message: 'Invalid postal code format', // Default message
+  //     };
+  //   }
+
+  //   return {
+  //     pattern: postalPatterns[countryCode],
+  //     message: `Invalid ${countryCode} postal code format`,
+  //   };
+  // }
 
   const { fields, append, remove } = useFieldArray({
     name: 'addresses',
@@ -83,7 +91,7 @@ function Address({ register, errors, control }: Props) {
             control={control}
           />
           <FormControlLabel
-            label="Default Shipping Address"
+            label="DefaultShippingAddress"
             control={
               <input
                 type="radio"
@@ -96,7 +104,7 @@ function Address({ register, errors, control }: Props) {
             }
           />
           <FormControlLabel
-            label="Default Billing Address"
+            label="DefaultBillingAddress"
             control={
               <input
                 type="radio"
@@ -119,8 +127,7 @@ function Address({ register, errors, control }: Props) {
                 <Image
                   loading="lazy"
                   width="20"
-                  height="10"
-                  className="w-6"
+                  height="20"
                   src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
                   alt={`${option.code.toLowerCase()}`}
                 />
@@ -133,7 +140,7 @@ function Address({ register, errors, control }: Props) {
                 label="Choose a country"
                 inputProps={{
                   ...params.inputProps,
-                  autoComplete: 'new-password',
+                  autoComplete: 'new-password', // disable autocomplete and autofill
                 }}
                 type="country"
                 {...register(`addresses.${index}.country`, validateCountry)}
@@ -184,13 +191,8 @@ function Address({ register, errors, control }: Props) {
             id="outlined-required-postal"
             className="dark:bg-white"
             label="Post"
-            type="string"
-            {...register(`addresses.${index}.postalCode`, {
-              validate: (value) => {
-                const validationResult = validatePostalCode(get(field, 'country'), value as string);
-                return validationResult || 'Invalid ZIP code format';
-              },
-            })}
+            type="number"
+            {...register(`addresses.${index}.postalCode`, validatePost)}
             error={!!errors!.addresses?.[index]?.postalCode}
             helperText={errors!.addresses?.[index]?.postalCode?.message}
           />

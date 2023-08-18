@@ -1,4 +1,4 @@
-export interface ICountryType {
+interface ICountryType {
   code: string;
   label: string;
   phone: string;

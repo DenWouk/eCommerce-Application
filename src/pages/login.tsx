@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Login() {
-  return <div>haa</div>;
+  return <Link href="/">to home</Link>;
 }

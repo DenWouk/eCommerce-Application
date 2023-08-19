@@ -10,11 +10,10 @@ import {
   PasswordAuthMiddlewareOptions,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { getServerSession } from 'next-auth';
+import { getToken } from 'next-auth/jwt';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import tokenCache from '@/src/helpers/commercetools/tokenCache';
-import { ClientOptions, ExistingTypeClient, TypeClient } from '@/src/types/commercetools';
+import { ClientOptions, ExistingTypeClient, Req, TypeClient } from '@/src/types/commercetools';
 
 const {
   ROOT_AUTH = '',
@@ -38,12 +37,9 @@ const unknownClientBuilder = new ClientBuilder();
 export type TypeBuilderApiRoot = BuilderApiRoot;
 
 class BuilderApiRoot {
-  private apiRoot: ByProjectKeyRequestBuilder | undefined;
-
-  getApiRoot() {
-    const { token } = tokenCache.get();
-    console.log(tokenCache.get(), 333);
-    return this.apiRoot || (token ? this.createForExisting(token) : this.createForUnknown());
+  async getBuilder(req: Req) {
+    const token = (await getToken({ req }))?.token?.token;
+    return token ? this.createForExisting(token) : this.createForUnknown();
   }
 
   createForUnknown() {
@@ -52,16 +48,12 @@ class BuilderApiRoot {
       { type: NamesClients.UNKNOWN },
       { scopes, clientId: CLIENT_ID_UNKNOWN, clientSecret: CLIENT_SECRET_UNKNOWN }
     );
-    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-    this.apiRoot = result;
-    return result;
+    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
   }
 
   createForExisting(accessToken: string) {
     const client = this.getClientWithToken(accessToken);
-    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-    this.apiRoot = result;
-    return result;
+    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
   }
 
   createForCO() {
@@ -70,9 +62,7 @@ class BuilderApiRoot {
       { type: NamesClients.UNKNOWN },
       { scopes, clientId: CLIENT_ID_CO, clientSecret: CLIENT_SECRET_CO }
     );
-    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-    this.apiRoot = result;
-    return result;
+    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
   }
 
   createForAnonymous() {
@@ -81,20 +71,16 @@ class BuilderApiRoot {
       { type: NamesClients.ANONYMOUS },
       { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET }
     );
-    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-    this.apiRoot = result;
-    return result;
+    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
   }
 
-  createForUser(userOrToken: UserAuthOptions) {
+  createForUser(credentials: UserAuthOptions) {
     const scopes = SCOPE_SPA.split(' ');
     const client = this.getClientWithOptions(
-      { type: NamesClients.PASSWORD, value: userOrToken },
+      { type: NamesClients.PASSWORD, value: credentials },
       { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET }
     );
-    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-    this.apiRoot = result;
-    return result;
+    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
   }
 
   private getAuthOptions(options: {
@@ -132,7 +118,7 @@ class BuilderApiRoot {
 
   private getClientWithToken(accessToken: string) {
     return new ClientBuilder()
-      .withExistingTokenFlow(`Bearer ${accessToken}`)
+      .withExistingTokenFlow(`Bearer ${accessToken}`, { force: true })
       .withHttpMiddleware({ host: ROOT_API, fetch })
       .build();
   }

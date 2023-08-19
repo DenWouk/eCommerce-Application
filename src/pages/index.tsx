@@ -1,14 +1,11 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
-import { getSession, signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth';
+import Link from 'next/link';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import productModel from '@/src/helpers/commercetools/product';
 import customerModel from '@/src/helpers/commercetools/cusomer';
-import tokenCache from '@/src/helpers/commercetools/tokenCache';
-import builderApiRoot from '@/src/helpers/commercetools/builderApiRoot';
-import { authOptions } from '@/src/pages/api/auth/[...nextauth]';
 
 type Props = {
   id: string;
@@ -43,10 +40,11 @@ export default function Home({ id, name }: Props) {
           </a>
         </div>
       </div>
-      <div>Id {id}</div>
+      <div>Product Id {id}</div>
       <div>Name from server {name}</div>
       <div>Name from session {data?.user?.name}</div>
       <div>{data?.type}</div>
+      <Link href="/login">To login</Link>
       <Button
         onClick={async () => {
           try {
@@ -171,11 +169,10 @@ export default function Home({ id, name }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res }) => {
-  console.log(tokenCache.get(), 222);
-  // const products = await productModel.getProducts();
-  // const customer = await customerModel.getMe().catch((e) => console.log(e?.code));
-  // const { id } = products.body.results[0];
-  // return { props: { id, name: customer?.body?.firstName || '' } };
-  return { props: { id: '', name: '' } };
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req }) => {
+  const products = await productModel.getProducts(req);
+  const customer = await customerModel.getMe(req).catch((e) => console.log(e?.code));
+  const { id } = products.body.results[0];
+  return { props: { id, name: customer?.body?.firstName || '' } };
+  // ({ props: { id: '', name: '' } })
 };

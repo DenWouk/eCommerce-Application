@@ -84,7 +84,6 @@ export const authOptions: AuthOptions = {
         }
 
         const { id, firstName, email } = customer.body.customer;
-        console.log(tokenCache.get(), 'auth');
         return {
           id,
           name: firstName,

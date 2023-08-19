@@ -1,4 +1,6 @@
-import { DefaultSession, DefaultUser } from 'next-auth';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import { DefaultJWT } from 'next-auth/src/jwt/types';
 import { TokenStore } from '@commercetools/sdk-client-v2';
 import NamesClients from '@/src/helpers/commercetools/consts';

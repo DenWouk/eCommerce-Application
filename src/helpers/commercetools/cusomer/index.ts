@@ -1,10 +1,11 @@
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
+import { Req } from '@/src/types/commercetools';
 
 class CustomerModel {
   constructor(private builder: TypeBuilderApiRoot) {}
 
-  async getMe() {
-    return this.builder.getApiRoot().me().get().execute();
+  async getMe(req: Req) {
+    return (await this.builder.getBuilder(req)).me().get().execute();
   }
 }
 

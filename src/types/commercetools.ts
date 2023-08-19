@@ -1,4 +1,6 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
+import { GetServerSidePropsContext, NextApiRequest } from 'next';
+import { NextRequest } from 'next/server';
 import NamesClients from '@/src/helpers/commercetools/consts';
 
 export type UnknownTypeClient = {
@@ -33,3 +35,5 @@ export type ClientOptions = {
   clientSecret: string;
   projectKey?: string;
 };
+
+export type Req = GetServerSidePropsContext['req'] | NextRequest | NextApiRequest;

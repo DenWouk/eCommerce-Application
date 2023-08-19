@@ -6,15 +6,15 @@ import {
   createAuthForAnonymousSessionFlow,
   createAuthForClientCredentialsFlow,
   createAuthForPasswordFlow,
-  createAuthWithExistingToken,
   Middleware,
   PasswordAuthMiddlewareOptions,
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { getServerSession } from 'next-auth';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import tokenCache from '@/src/helpers/commercetools/tokenCache';
-import { ClientOptions, TypeClient } from '@/src/types/commercetools';
-import getClient from '@/src/helpers/commercetools/getClient';
+import { ClientOptions, ExistingTypeClient, TypeClient } from '@/src/types/commercetools';
 
 const {
   ROOT_AUTH = '',
@@ -31,8 +31,71 @@ const {
   PROJECT_KEY: PK = '',
 } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
 
-export default class BuilderApiRoot {
-  constructor(private clientBuilder: ClientBuilder) {}
+const passwordClientBuilder = new ClientBuilder();
+const anonymousClientBuilder = new ClientBuilder();
+const unknownClientBuilder = new ClientBuilder();
+
+export type TypeBuilderApiRoot = BuilderApiRoot;
+
+class BuilderApiRoot {
+  private apiRoot: ByProjectKeyRequestBuilder | undefined;
+
+  getApiRoot() {
+    const { token } = tokenCache.get();
+    console.log(tokenCache.get(), 333);
+    return this.apiRoot || (token ? this.createForExisting(token) : this.createForUnknown());
+  }
+
+  createForUnknown() {
+    const scopes = SCOPE_UNKNOWN.split(' ');
+    const client = this.getClientWithOptions(
+      { type: NamesClients.UNKNOWN },
+      { scopes, clientId: CLIENT_ID_UNKNOWN, clientSecret: CLIENT_SECRET_UNKNOWN }
+    );
+    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    this.apiRoot = result;
+    return result;
+  }
+
+  createForExisting(accessToken: string) {
+    const client = this.getClientWithToken(accessToken);
+    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    this.apiRoot = result;
+    return result;
+  }
+
+  createForCO() {
+    const scopes = SCOPE_CO.split(' ');
+    const client = this.getClientWithOptions(
+      { type: NamesClients.UNKNOWN },
+      { scopes, clientId: CLIENT_ID_CO, clientSecret: CLIENT_SECRET_CO }
+    );
+    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    this.apiRoot = result;
+    return result;
+  }
+
+  createForAnonymous() {
+    const scopes = SCOPE_SPA.split(' ');
+    const client = this.getClientWithOptions(
+      { type: NamesClients.ANONYMOUS },
+      { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET }
+    );
+    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    this.apiRoot = result;
+    return result;
+  }
+
+  createForUser(userOrToken: UserAuthOptions) {
+    const scopes = SCOPE_SPA.split(' ');
+    const client = this.getClientWithOptions(
+      { type: NamesClients.PASSWORD, value: userOrToken },
+      { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET }
+    );
+    const result = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    this.apiRoot = result;
+    return result;
+  }
 
   private getAuthOptions(options: {
     scopes: string[];
@@ -67,79 +130,48 @@ export default class BuilderApiRoot {
     return { host: hostAuth, projectKey, credentials, scopes, tokenCache };
   }
 
-  private getClient(
-    options: ClientOptions,
-    typeClient: TypeClient = { type: NamesClients.UNKNOWN }
-  ) {
-    let middlewareOptions: AuthMiddlewareOptions | PasswordAuthMiddlewareOptions | undefined;
-    let flowMiddleware: Middleware | undefined;
-    const { type } = typeClient;
-
-    switch (type) {
-      case NamesClients.ANONYMOUS:
-        middlewareOptions = this.getAuthOptions(options);
-        flowMiddleware = createAuthForAnonymousSessionFlow(middlewareOptions);
-        break;
-      case NamesClients.PASSWORD:
-        middlewareOptions = this.getAuthOptions(options, typeClient.value);
-        flowMiddleware = createAuthForPasswordFlow(
-          <PasswordAuthMiddlewareOptions>middlewareOptions
-        );
-        break;
-      case NamesClients.EXISTING:
-        flowMiddleware = createAuthWithExistingToken(`Bearer ${typeClient.value}`);
-        break;
-      default:
-        middlewareOptions = this.getAuthOptions(options);
-        flowMiddleware = createAuthForClientCredentialsFlow(middlewareOptions);
-        break;
-    }
-
+  private getClientWithToken(accessToken: string) {
     return new ClientBuilder()
-      .withMiddleware(flowMiddleware)
+      .withExistingTokenFlow(`Bearer ${accessToken}`)
       .withHttpMiddleware({ host: ROOT_API, fetch })
       .build();
   }
 
-  getApiRootForUnknown() {
-    const scopes = SCOPE_UNKNOWN.split(' ');
-    const client = this.getClient({
-      scopes,
-      clientId: CLIENT_ID_UNKNOWN,
-      clientSecret: CLIENT_SECRET_UNKNOWN,
-    });
-    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-  }
+  private getClientWithOptions(
+    typeClient: Exclude<TypeClient, ExistingTypeClient>,
+    options: ClientOptions
+  ) {
+    let middlewareOptions: AuthMiddlewareOptions | PasswordAuthMiddlewareOptions | undefined;
+    let flowMiddleware: Middleware | undefined;
+    let clientBuilder: ClientBuilder | undefined;
+    const { type } = typeClient;
 
-  getApiRootForCO() {
-    const scopes = SCOPE_CO.split(' ');
-    const client = this.getClient({
-      scopes,
-      clientId: CLIENT_ID_CO,
-      clientSecret: CLIENT_SECRET_CO,
-    });
-    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
-  }
+    switch (type) {
+      case NamesClients.ANONYMOUS:
+        clientBuilder = anonymousClientBuilder;
+        middlewareOptions = this.getAuthOptions(options!);
+        flowMiddleware = createAuthForAnonymousSessionFlow(middlewareOptions);
+        break;
+      case NamesClients.PASSWORD:
+        clientBuilder = passwordClientBuilder;
+        middlewareOptions = this.getAuthOptions(options!, typeClient.value);
+        flowMiddleware = createAuthForPasswordFlow(
+          <PasswordAuthMiddlewareOptions>middlewareOptions
+        );
+        break;
+      default:
+        clientBuilder = unknownClientBuilder;
+        middlewareOptions = this.getAuthOptions(options!);
+        flowMiddleware = createAuthForClientCredentialsFlow(middlewareOptions);
+        break;
+    }
 
-  getApiRootForAnonymous() {
-    const scopes = SCOPE_SPA.split(' ');
-    const client = getClient(
-      { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET },
-      {
-        type: NamesClients.ANONYMOUS,
-      }
-    );
-    return createApiBuilderFromCtpClient(client).withProjectKey({
-      projectKey: PK,
-    });
-  }
-
-  getApiRootForUser(userOrToken: UserAuthOptions) {
-    const scopes = SCOPE_SPA.split(' ');
-    const client = this.getClient(
-      { scopes, clientId: CLIENT_ID, clientSecret: CLIENT_SECRET },
-      { type: NamesClients.PASSWORD, value: userOrToken }
-    );
-    return createApiBuilderFromCtpClient(client).withProjectKey({ projectKey: PK });
+    return clientBuilder
+      .withMiddleware(flowMiddleware)
+      .withHttpMiddleware({ host: ROOT_API, fetch })
+      .build();
   }
 }
+
+const builderApiRoot = new BuilderApiRoot();
+export default builderApiRoot;

@@ -1,10 +1,22 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { getSession, signIn, signOut, useSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
 import NamesClients from '@/src/helpers/commercetools/consts';
+import productModel from '@/src/helpers/commercetools/product';
+import customerModel from '@/src/helpers/commercetools/cusomer';
+import tokenCache from '@/src/helpers/commercetools/tokenCache';
+import builderApiRoot from '@/src/helpers/commercetools/builderApiRoot';
+import { authOptions } from '@/src/pages/api/auth/[...nextauth]';
 
-export default function Home() {
-  const { data, update } = useSession();
+type Props = {
+  id: string;
+  name: string;
+};
+
+export default function Home({ id, name }: Props) {
+  const { data } = useSession();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -31,7 +43,9 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <div> Name {data?.user?.name}</div>
+      <div>Id {id}</div>
+      <div>Name from server {name}</div>
+      <div>Name from session {data?.user?.name}</div>
       <div>{data?.type}</div>
       <Button
         onClick={async () => {
@@ -69,7 +83,6 @@ export default function Home() {
 
       <Button
         onClick={async () => {
-          const updated = await update({ user: { action: 'signout' } }).catch(console.log);
           await signOut({ redirect: false });
         }}
       >
@@ -157,3 +170,12 @@ export default function Home() {
     </main>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<Props> = async ({ req, res }) => {
+  console.log(tokenCache.get(), 222);
+  // const products = await productModel.getProducts();
+  // const customer = await customerModel.getMe().catch((e) => console.log(e?.code));
+  // const { id } = products.body.results[0];
+  // return { props: { id, name: customer?.body?.firstName || '' } };
+  return { props: { id: '', name: '' } };
+};

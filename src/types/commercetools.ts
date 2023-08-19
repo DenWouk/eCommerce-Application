@@ -1,20 +1,20 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import NamesClients from '@/src/helpers/commercetools/consts';
 
-type UnknownTypeClient = {
+export type UnknownTypeClient = {
   type: NamesClients.UNKNOWN;
 };
 
-type AnonymousTypeClient = {
+export type AnonymousTypeClient = {
   type: NamesClients.ANONYMOUS;
 };
 
-type PasswordTypeClient = {
+export type PasswordTypeClient = {
   type: NamesClients.PASSWORD;
   value: UserAuthOptions;
 };
 
-type WithExistingTokenTypeClient = {
+export type ExistingTypeClient = {
   type: NamesClients.EXISTING;
   value: string;
 };
@@ -23,7 +23,7 @@ export type TypeClient =
   | UnknownTypeClient
   | AnonymousTypeClient
   | PasswordTypeClient
-  | WithExistingTokenTypeClient;
+  | ExistingTypeClient;
 
 export type ClientOptions = {
   scopes: string[];

@@ -2,12 +2,11 @@ import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { CustomerSignInResult, ClientResponse, Cart } from '@commercetools/platform-sdk';
 import { AuthOptions } from 'next-auth/core/types';
-import { ClientBuilder } from '@commercetools/sdk-client-v2';
 import tokenCache from '@/src/helpers/commercetools/tokenCache';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import BuilderApiRoot from '@/src/helpers/commercetools/builderApiRoot';
+import builderApiRoot from '@/src/helpers/commercetools/builderApiRoot';
 
-const apiRoot = new BuilderApiRoot(new ClientBuilder());
+const builder = builderApiRoot;
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -18,8 +17,8 @@ export const authOptions: AuthOptions = {
       async authorize() {
         tokenCache.clear();
         try {
-          await apiRoot
-            .getApiRootForUnknown()
+          await builder
+            .createForUnknown()
             .categories()
             .get({ queryArgs: { limit: 1 } })
             .execute();
@@ -37,8 +36,8 @@ export const authOptions: AuthOptions = {
         tokenCache.clear();
         let newCart: ClientResponse<Cart> | undefined;
         try {
-          newCart = await apiRoot
-            .getApiRootForAnonymous()
+          newCart = await builder
+            .createForAnonymous()
             .me()
             .carts()
             .post({ body: { currency: 'USD' } })
@@ -64,8 +63,8 @@ export const authOptions: AuthOptions = {
         tokenCache.clear();
         let customer: ClientResponse<CustomerSignInResult> | undefined;
         try {
-          customer = await apiRoot
-            .getApiRootForUser(credentials)
+          customer = await builder
+            .createForUser(credentials)
             .me()
             .login()
             .post({
@@ -85,6 +84,7 @@ export const authOptions: AuthOptions = {
         }
 
         const { id, firstName, email } = customer.body.customer;
+        console.log(tokenCache.get(), 'auth');
         return {
           id,
           name: firstName,

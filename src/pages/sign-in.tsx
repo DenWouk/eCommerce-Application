@@ -1,5 +1,7 @@
 import { Stack, Button, Typography, Alert } from '@mui/material';
-import { SubmitHandler, useForm } from 'react-hook-form';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
+import Link from 'next/link';
 import signIn from '@/src/api/signIn';
 import Form from '../components/Form';
 import { IFormInput } from './interfaces/IFormInput';
@@ -51,7 +53,7 @@ function SignInPage() {
         <Button variant="outlined" type="submit">
           Log in
         </Button>
-        <Button variant="outlined" href="/sign-up">
+        <Button component={Link} variant="outlined" href="/sign-up">
           Sign up
         </Button>
       </Stack>

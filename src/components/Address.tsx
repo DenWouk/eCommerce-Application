@@ -8,7 +8,8 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import Image from 'next/image';
-import { Control, get, useFieldArray } from 'react-hook-form';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Control, UseFormWatch, get, useFieldArray } from 'react-hook-form';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '../pages/enums/countries';
@@ -18,9 +19,10 @@ import { ITextParams } from '../pages/interfaces/ITextParams';
 
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
+  watch: UseFormWatch<IFormInput>;
 };
 
-function Address({ register, errors, control }: Props) {
+function Address({ register, errors, control, watch }: Props) {
   const validateCountry = {
     required: 'Country is required',
   };
@@ -46,9 +48,19 @@ function Address({ register, errors, control }: Props) {
     },
   };
 
-  const validatePost = {
-    pattern: /^\d{5}(?:-\d{4})?$/, // US ZIP code pattern
-    message: 'Invalid US ZIP code format',
+  const validatePostalCode = (countryCode: string, value: string) => {
+    let pattern;
+    switch (countryCode) {
+      case 'Canada':
+        pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
+        break;
+      case 'United States':
+        pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
+        break;
+      default:
+        pattern = /^.+$/;
+    }
+    return pattern.test(value);
   };
 
   // const postalPatterns: Record<string, RegExp> = {
@@ -191,8 +203,16 @@ function Address({ register, errors, control }: Props) {
             id="outlined-required-postal"
             className="dark:bg-white"
             label="Post"
-            type="number"
-            {...register(`addresses.${index}.postalCode`, validatePost)}
+            type="string"
+            {...register(`addresses.${index}.postalCode`, {
+              validate: (value) => {
+                // const validationResult = validatePostalCode(get(field, 'country'), value as string);
+                // return validationResult || 'Invalid ZIP code format';
+                const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
+                const validationResult = validatePostalCode(selectedCountry, value as string);
+                return validationResult || 'Invalid ZIP code format';
+              },
+            })}
             error={!!errors!.addresses?.[index]?.postalCode}
             helperText={errors!.addresses?.[index]?.postalCode?.message}
           />

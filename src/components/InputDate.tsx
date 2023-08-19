@@ -1,6 +1,5 @@
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Controller } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
@@ -11,36 +10,32 @@ export default function InputDate({ control }: ITextParams) {
     return copyDate;
   }
   const minBirthdate = minYear(new Date(), 13);
+
+  const validateDate = {
+    required: 'Birth Date is required',
+    validate: (value: any) => {
+      const dob = new Date(value);
+      return dob >= minBirthdate || 'You must be at least 13 years old';
+    },
+  };
+  // const error = get(errors, name);
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
         name="dateOfBirth"
         control={control}
-        rules={{
-          validate: {
-            min: (date) => (date as Date) <= minBirthdate || 'Please, enter a valid date',
-          },
-        }}
-        render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
+        rules={{ ...validateDate }}
+        render={({ field: { onChange, value } }) => (
           <DatePicker
-            {...field}
-            inputRef={ref}
+            value={value}
             onChange={onChange}
             label="Date of Birth"
             className="dark:bg-white"
             maxDate={maxDate}
-            slotProps={{
-              textField: {
-                required: true,
-                onBlur,
-                name,
-                error: !!fieldState?.error,
-                helperText: fieldState?.error?.message,
-              },
-            }}
+            // error={fieldState.invalid} // Set error state based on field validation
+            // helperText={fieldState.error?.message || ''}
           />
         )}
       />

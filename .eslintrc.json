@@ -18,9 +18,7 @@
     "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "no-unused-expressions": "off",
     "@typescript-eslint/no-unused-expressions": [
-      "error",
-      { "allowShortCircuit": true, "allowTernary": true }
-    ],
+      "error", {"allowShortCircuit": true, "allowTernary": true}],
     "import/no-extraneous-dependencies": [
       "error",
       {

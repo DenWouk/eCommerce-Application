@@ -3,7 +3,7 @@ import { Stack, Button, Typography, Alert } from '@mui/material';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import signIn from '@/src/api/signIn';
-// import Form from '../components/Form';
+import Form from '../components/Form';
 import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
@@ -11,8 +11,8 @@ import InputPassword from '../components/InputPassword';
 function SignInPage() {
   const form = useForm<IFormInput>({
     defaultValues: {
-      email: 'zakalupali2@gmail.com',
-      password: 'K33666655!',
+      email: '',
+      password: '',
     },
   });
 
@@ -20,35 +20,36 @@ function SignInPage() {
     register,
     setError,
     clearErrors,
-    handleSubmit,
     formState: { errors },
   } = form;
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
-      await signIn({ username: email, password });
+      const customer = await signIn({ username: email, password });
       clearErrors('root');
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        setError('root.server', {
-          type: 'manual',
-          message: e.message,
-        } as FieldError);
-      }
+      console.log(customer);
+    } catch (e: any) {
+      setError('root.server', { message: e.message });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <Stack spacing={2} className="m-10" width={400}>
-        <Typography variant="h4" className="m-10">
-          Log in
-        </Typography>
-        <InputEmail register={register} errors={errors} name="email" />
-        <InputPassword register={register} errors={errors} name="password" />
-        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-        {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
+    <Form
+      onSubmit={onSubmit}
+      defaultValues={{
+        email: '',
+        password: '',
+      }}
+    >
+      <Typography variant="h4" className="m-10">
+        Log in
+      </Typography>
+      <InputEmail register={register} errors={errors} name="email" />
+      <InputPassword register={register} errors={errors} name="password" />
+      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+      {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
+      <Stack spacing={2}>
         <Button variant="outlined" type="submit">
           Log in
         </Button>
@@ -56,7 +57,7 @@ function SignInPage() {
           Sign up
         </Button>
       </Stack>
-    </form>
+    </Form>
   );
 }
 export default SignInPage;

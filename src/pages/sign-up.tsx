@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
+import Form from '../components/Form';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from './interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -24,17 +25,25 @@ function SignUpPage() {
       password: 'K33666655!',
       firstName: 'Kir',
       lastName: 'Yur',
-      dateOfBirth: new Date(),
+      // dateOfBirth: new Date(),
+      // checkbox: false,
       addresses: [],
     },
   });
+
   const {
-    handleSubmit,
     register,
     control,
     watch,
     formState: { errors },
   } = form;
+
+  const onSubmit = async (data: IFormInput) => {
+    console.log(data);
+    const customerDraft = createCustomerDraft(data);
+    const customer = await signUp(customerDraft);
+    console.log(customer);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>

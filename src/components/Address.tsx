@@ -15,6 +15,8 @@ import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '../pages/enums/countries';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
+// type countryCode = 'US'| 'CA';
+
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
   watch: UseFormWatch<IFormInput>;
@@ -61,6 +63,23 @@ function Address({ register, errors, control, watch }: Props) {
     return pattern.test(value);
   };
 
+  // const postalPatterns: Record<string, RegExp> = {
+  //   "US": /^\d{5}(?:-\d{4})?$/,
+  //   "CA": /^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ ]?\d[ABCEGHJ-NPRSTV-Z]\d$/,
+  // };
+  // function getPostalValidation(countryCode: countryCode) {
+  //   if (!postalPatterns[countryCode]) {
+  //     return {
+  //       message: 'Invalid postal code format', // Default message
+  //     };
+  //   }
+
+  //   return {
+  //     pattern: postalPatterns[countryCode],
+  //     message: `Invalid ${countryCode} postal code format`,
+  //   };
+  // }
+
   const { fields, append, remove } = useFieldArray({
     name: 'addresses',
     control,
@@ -84,7 +103,7 @@ function Address({ register, errors, control, watch }: Props) {
             control={control}
           />
           <FormControlLabel
-            label="Default Shipping Address"
+            label="DefaultShippingAddress"
             control={
               <input
                 type="radio"
@@ -97,7 +116,7 @@ function Address({ register, errors, control, watch }: Props) {
             }
           />
           <FormControlLabel
-            label="Default Billing Address"
+            label="DefaultBillingAddress"
             control={
               <input
                 type="radio"
@@ -120,8 +139,7 @@ function Address({ register, errors, control, watch }: Props) {
                 <Image
                   loading="lazy"
                   width="20"
-                  height="10"
-                  className="w-6"
+                  height="20"
                   src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
                   alt={`${option.code.toLowerCase()}`}
                 />
@@ -134,7 +152,7 @@ function Address({ register, errors, control, watch }: Props) {
                 label="Choose a country"
                 inputProps={{
                   ...params.inputProps,
-                  autoComplete: 'new-password',
+                  autoComplete: 'new-password', // disable autocomplete and autofill
                 }}
                 type="country"
                 {...register(`addresses.${index}.country`, validateCountry)}

@@ -25,7 +25,8 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
       })
       .catch((e) => {
         const code = e?.body?.errors?.[0]?.code;
-        if (code === 'invalid_customer_account_credentials') {
+        console.log(e?.body?.errors);
+        if (code === 'InvalidCredentials' || code === 'invalid_customer_account_credentials') {
           res.status(400).json({ message: e.message });
         } else {
           res.status(400).json({ message: 'Oops, something went wrong, try again later' });

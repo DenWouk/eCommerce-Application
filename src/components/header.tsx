@@ -14,6 +14,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import CustomizedSwitches from './theme-switch';
 
 export default function Header() {
   const [auth, setAuth] = React.useState<boolean>(false);
@@ -187,6 +188,7 @@ export default function Header() {
               </Box>
             </div>
           )}
+        <CustomizedSwitches />
         </Toolbar>
       </Container>
     </AppBar>

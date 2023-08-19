@@ -1,8 +1,7 @@
 import { Button, Stack, Typography } from '@mui/material';
-// import { passiveSupport } from 'passive-events-support/src/utils'
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from 'react-hook-form';
+import Link from 'next/link';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import InputEmail from '../components/InputEmail';
@@ -18,6 +17,7 @@ function SignUpPage() {
     const customerDraft = createCustomerDraft(data);
     await signUp(customerDraft);
   };
+
   const form = useForm<IFormInput>({
     defaultValues: {
       email: 'zakalupali2@gmail.com',
@@ -32,6 +32,7 @@ function SignUpPage() {
     handleSubmit,
     register,
     control,
+    watch,
     formState: { errors },
   } = form;
 
@@ -46,13 +47,13 @@ function SignUpPage() {
         <InputFirstName register={register} errors={errors} name="firstName" />
         <InputLastName register={register} errors={errors} name="lastName" />
         <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
-        <Address register={register} control={control} errors={errors} name="addresses" />
+        <Address register={register} control={control} errors={errors} name="addresses" watch={watch}/>
         <Button variant="outlined" type="submit">
           Sign up
         </Button>
         <Typography variant="caption">
           Already have an account?
-          <Button variant="outlined" href="/sign-in">
+          <Button component={Link} variant="outlined" href="/sign-in">
             Log in
           </Button>
         </Typography>

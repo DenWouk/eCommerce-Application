@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Control, get, useFieldArray } from 'react-hook-form';
+import { Control, UseFormWatch, get, useFieldArray } from 'react-hook-form';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '../pages/enums/countries';
@@ -17,9 +17,10 @@ import { ITextParams } from '../pages/interfaces/ITextParams';
 
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
+  watch: UseFormWatch<IFormInput>;
 };
 
-function Address({ register, errors, control }: Props) {
+function Address({ register, errors, control, watch }: Props) {
   const validateCountry = {
     required: 'Country is required',
   };
@@ -48,11 +49,11 @@ function Address({ register, errors, control }: Props) {
   const validatePostalCode = (countryCode: string, value: string) => {
     let pattern;
     switch (countryCode) {
-      case 'United States':
-        pattern = /\d{5}([ -]\d{4})?/;
-        break;
       case 'Canada':
         pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
+        break;
+      case 'United States':
+        pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
         break;
       default:
         pattern = /^.+$/;
@@ -187,7 +188,10 @@ function Address({ register, errors, control }: Props) {
             type="string"
             {...register(`addresses.${index}.postalCode`, {
               validate: (value) => {
-                const validationResult = validatePostalCode(get(field, 'country'), value as string);
+                // const validationResult = validatePostalCode(get(field, 'country'), value as string);
+                // return validationResult || 'Invalid ZIP code format';
+                const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
+                const validationResult = validatePostalCode(selectedCountry, value as string);
                 return validationResult || 'Invalid ZIP code format';
               },
             })}

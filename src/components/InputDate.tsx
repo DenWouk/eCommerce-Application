@@ -1,6 +1,5 @@
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Controller } from 'react-hook-form';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
@@ -13,7 +12,6 @@ export default function InputDate({ control }: ITextParams) {
   const minBirthdate = minYear(new Date(), 13);
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
-  console.log("test");
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -48,4 +46,3 @@ export default function InputDate({ control }: ITextParams) {
     </LocalizationProvider>
   );
 }
-

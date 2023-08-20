@@ -10,7 +10,7 @@ export interface IFormInput {
   password: string;
   lastName?: string;
   firstName?: string;
-  dateOfBirth?: Date;
+  dateOfBirth: Date | null;
   checkbox?: boolean;
   addresses: (BaseAddress & TypeAddress)[];
   defaultShippingAddress?: string;

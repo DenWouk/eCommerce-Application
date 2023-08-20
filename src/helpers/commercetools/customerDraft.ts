@@ -1,11 +1,12 @@
 import { CustomerDraft } from '@commercetools/platform-sdk';
 import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
+import formatDate from '@/src/helpers/date';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
 import countries from '@/src/pages/enums/countries';
 
 export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const {
-    dateOfBirth: birth,
+    dateOfBirth: day,
     addresses: baseAddresses,
     firstName,
     lastName,
@@ -13,7 +14,8 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
     password,
     defaultShippingAddress,
   } = data;
-  const dateOfBirth = birth?.toISOString().slice(0, 10);
+
+  const dateOfBirth = formatDate(day);
   const shippingAddresses: number[] = [];
   const billingAddresses: number[] = [];
   const addresses: BaseAddress[] = baseAddresses.map((address) => {

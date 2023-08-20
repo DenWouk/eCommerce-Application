@@ -1,5 +1,4 @@
 import { Button, Stack, Typography } from '@mui/material';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import signUp from '@/src/api/signUp';
@@ -17,14 +16,13 @@ function SignUpPage() {
     const customerDraft = createCustomerDraft(data);
     await signUp(customerDraft);
   };
-
   const form = useForm<IFormInput>({
     defaultValues: {
       email: 'zakalupali2@gmail.com',
       password: 'K33666655!',
       firstName: 'Kir',
       lastName: 'Yur',
-      dateOfBirth: new Date(),
+      dateOfBirth: null,
       addresses: [],
     },
   });
@@ -47,7 +45,13 @@ function SignUpPage() {
         <InputFirstName register={register} errors={errors} name="firstName" />
         <InputLastName register={register} errors={errors} name="lastName" />
         <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
-        <Address register={register} control={control} errors={errors} name="addresses" watch={watch}/>
+        <Address
+          register={register}
+          control={control}
+          errors={errors}
+          name="addresses"
+          watch={watch}
+        />
         <Button variant="outlined" type="submit">
           Sign up
         </Button>

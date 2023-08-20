@@ -8,7 +8,6 @@ import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
 
-
 function SignInPage() {
   const form = useForm<IFormInput>({
     defaultValues: {
@@ -16,8 +15,8 @@ function SignInPage() {
       password: 'K33666655!',
     },
   });
-  
-  const router = useRouter(); 
+
+  const router = useRouter();
 
   const {
     register,
@@ -27,16 +26,14 @@ function SignInPage() {
     formState: { errors },
   } = form;
 
-
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
       const result = await signIn({ username: email, password });
       clearErrors('root');
-      if(result && result.statusCode && result.statusCode === 200){
+      if (result && result.statusCode && result.statusCode === 200) {
         router.push(`/`);
       }
-      
     } catch (e: any) {
       if (e instanceof Error) {
         setError('root.server', {

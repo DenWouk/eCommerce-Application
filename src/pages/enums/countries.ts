@@ -1,4 +1,4 @@
-export interface ICountryType {
+interface ICountryType {
   code: string;
   label: string;
   phone: string;
@@ -28,7 +28,7 @@ export const countryPost: readonly ICountryType[] = [
     label: 'France',
     phone: '33',
     suggested: true,
-  }
+  },
 ];
 
 export const countries: readonly ICountryType[] = [

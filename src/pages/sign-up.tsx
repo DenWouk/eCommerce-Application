@@ -3,7 +3,7 @@ import { Button, Stack, Typography } from '@mui/material';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
@@ -15,16 +15,14 @@ import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
 
-
 function SignUpPage() {
-
   const form = useForm<IFormInput>({
     defaultValues: {
       email: 'zakalupali2@gmail.com',
       password: 'K33666655!',
       firstName: 'Kir',
       lastName: 'Yur',
-      dateOfBirth: new Date(),
+      dateOfBirth: null,
       addresses: [],
     },
   });
@@ -39,32 +37,31 @@ function SignUpPage() {
     formState: { errors },
   } = form;
 
-  const router = useRouter(); 
+  const router = useRouter();
   const showSuccess = () => {
     toast.success('Successful Registration!', {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 5000,
-        hideProgressBar: true,
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 3000,
+      hideProgressBar: true,
     });
   };
   const showError = () => {
     toast.error('There is already an existing customer with the provided email', {
-        position: toast.POSITION.BOTTOM_CENTER,
-        autoClose: 5000,
-        hideProgressBar: true,
+      position: toast.POSITION.TOP_CENTER,
+      // autoClose: 3000,
+      hideProgressBar: true,
     });
-};
-  const onSubmit:SubmitHandler<IFormInput> = async (data: IFormInput) => {
-    try{
+  };
+  const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
+    try {
       const customerDraft = createCustomerDraft(data);
       const result = await signUp(customerDraft);
       clearErrors('root');
-      if(result && result.statusCode && result.statusCode === 200 || result.statusCode === 201){
+      if ((result && result.statusCode && result.statusCode === 200) || result.statusCode === 201) {
         router.push(`/`);
         showSuccess();
       }
-
-    } catch(e: any){
+    } catch (e: any) {
       if (e instanceof Error) {
         setError('root.server', {
           type: 'manual',
@@ -86,11 +83,16 @@ function SignUpPage() {
         <InputFirstName register={register} errors={errors} name="firstName" />
         <InputLastName register={register} errors={errors} name="lastName" />
         <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
-        <Address register={register} control={control} errors={errors} name="addresses" watch={watch}/>
+        <Address
+          register={register}
+          control={control}
+          errors={errors}
+          name="addresses"
+          watch={watch}
+        />
         <Button variant="outlined" type="submit">
           Sign up
         </Button>
-        <ToastContainer />
         <Typography variant="caption">
           Already have an account?
           <Button component={Link} variant="outlined" href="/sign-in">

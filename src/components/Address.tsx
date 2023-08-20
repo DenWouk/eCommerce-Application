@@ -8,7 +8,6 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import Image from 'next/image';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Control, UseFormWatch, get, useFieldArray } from 'react-hook-form';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
@@ -61,8 +60,8 @@ function Address({ register, errors, control, watch }: Props) {
       case 'France':
         pattern = /^\d{2}[ ]?\d{3}$/;
         break;
-      default: 
-      return false;
+      default:
+        return false;
     }
     return pattern.test(value);
   };

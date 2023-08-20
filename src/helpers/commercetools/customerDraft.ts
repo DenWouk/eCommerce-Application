@@ -12,16 +12,17 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
     email,
     password,
     defaultShippingAddress,
+    defaultBillingAddress,
   } = data;
   const dateOfBirth = birth?.toISOString().slice(0, 10);
   const shippingAddresses: number[] = [];
   const billingAddresses: number[] = [];
-  const addresses: BaseAddress[] = baseAddresses.map((address) => {
+  const addresses: BaseAddress[] = baseAddresses.map((address, i) => {
     const { shippingAddress: sAd, billingAddress: bAd } = address;
     const codeCountry = countries.find((value) => value.label === address.country)?.code;
-    if (!codeCountry) throw Error('Фиг табе ,а не регистрация');
-    sAd !== undefined && shippingAddresses.push(parseInt(sAd, 10));
-    bAd !== undefined && billingAddresses.push(parseInt(bAd, 10));
+    if (!codeCountry) throw Error('Фиг табе ,а не регистрация'); // FIXME
+    sAd && shippingAddresses.push(i);
+    bAd && billingAddresses.push(i);
     const { shippingAddress, billingAddress, ...rest } = address;
     return {
       ...rest,
@@ -31,10 +32,11 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
       lastName,
     };
   });
+  console.log(defaultShippingAddress);
   return {
     firstName,
-    defaultShippingAddress:
-      defaultShippingAddress !== undefined ? +defaultShippingAddress : undefined,
+    defaultShippingAddress: defaultShippingAddress === null ? undefined : +defaultShippingAddress,
+    defaultBillingAddress: defaultBillingAddress === null ? undefined : +defaultBillingAddress,
     shippingAddresses,
     billingAddresses,
     lastName,

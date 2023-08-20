@@ -1,7 +1,10 @@
 import { Button, Stack, Typography } from '@mui/material';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { useForm } from 'react-hook-form';
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import InputEmail from '../components/InputEmail';
@@ -12,11 +15,8 @@ import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
 
+
 function SignUpPage() {
-  const onSubmit = async (data: IFormInput) => {
-    const customerDraft = createCustomerDraft(data);
-    await signUp(customerDraft);
-  };
 
   const form = useForm<IFormInput>({
     defaultValues: {
@@ -28,13 +28,52 @@ function SignUpPage() {
       addresses: [],
     },
   });
+
   const {
     handleSubmit,
     register,
+    setError,
+    clearErrors,
     control,
     watch,
     formState: { errors },
   } = form;
+
+  const router = useRouter(); 
+  const showSuccess = () => {
+    toast.success('Successful Registration!', {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 5000,
+        hideProgressBar: true,
+    });
+  };
+  const showError = () => {
+    toast.error('There is already an existing customer with the provided email', {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 5000,
+        hideProgressBar: true,
+    });
+};
+  const onSubmit:SubmitHandler<IFormInput> = async (data: IFormInput) => {
+    try{
+      const customerDraft = createCustomerDraft(data);
+      const result = await signUp(customerDraft);
+      clearErrors('root');
+      if(result && result.statusCode && result.statusCode === 200 || result.statusCode === 201){
+        router.push(`/`);
+        showSuccess();
+      }
+
+    } catch(e: any){
+      if (e instanceof Error) {
+        setError('root.server', {
+          type: 'manual',
+          message: e.message,
+        } as FieldError);
+        showError();
+      }
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -51,6 +90,7 @@ function SignUpPage() {
         <Button variant="outlined" type="submit">
           Sign up
         </Button>
+        <ToastContainer />
         <Typography variant="caption">
           Already have an account?
           <Button component={Link} variant="outlined" href="/sign-in">

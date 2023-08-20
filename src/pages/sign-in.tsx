@@ -2,11 +2,12 @@ import { Stack, Button, Typography, Alert } from '@mui/material';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import signIn from '@/src/api/signIn';
-// import Form from '../components/Form';
 import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
+
 
 function SignInPage() {
   const form = useForm<IFormInput>({
@@ -15,6 +16,8 @@ function SignInPage() {
       password: 'K33666655!',
     },
   });
+  
+  const router = useRouter(); 
 
   const {
     register,
@@ -24,12 +27,17 @@ function SignInPage() {
     formState: { errors },
   } = form;
 
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
-      await signIn({ username: email, password });
+      const result = await signIn({ username: email, password });
       clearErrors('root');
-    } catch (e: unknown) {
+      if(result && result.statusCode && result.statusCode === 200){
+        router.push(`/`);
+      }
+      
+    } catch (e: any) {
       if (e instanceof Error) {
         setError('root.server', {
           type: 'manual',

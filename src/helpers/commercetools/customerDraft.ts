@@ -1,7 +1,7 @@
 import { CustomerDraft } from '@commercetools/platform-sdk';
 import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
-import countries from '@/src/pages/enums/countries';
+import {countries} from '@/src/pages/enums/countries';
 
 export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const {
@@ -18,7 +18,7 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const billingAddresses: number[] = [];
   const addresses: BaseAddress[] = baseAddresses.map((address) => {
     const { shippingAddress: sAd, billingAddress: bAd } = address;
-    const codeCountry = countries.find((value) => value.label === address.country)?.code;
+    const codeCountry = countries.find((value: { label: string; }) => value.label === address.country)?.code;
     if (!codeCountry) throw Error('Фиг табе ,а не регистрация');
     sAd !== undefined && shippingAddresses.push(parseInt(sAd, 10));
     bAd !== undefined && billingAddresses.push(parseInt(bAd, 10));

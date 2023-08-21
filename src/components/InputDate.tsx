@@ -26,8 +26,13 @@ export default function InputDate({ control }: ITextParams) {
       <Controller
         name="dateOfBirth"
         control={control}
-        rules={{ ...validateDate }}
-        render={({ field: { onChange, value } }) => (
+        rules={{
+          required: true,
+          validate: {
+            min: (date) => (date as Date) <= minBirthdate || 'Please, enter a valid date',
+          },
+        }}
+        render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
           <DatePicker
             value={value}
             onChange={onChange}

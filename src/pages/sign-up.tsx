@@ -1,7 +1,10 @@
 import { Button, Stack, Typography } from '@mui/material';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { useForm } from 'react-hook-form';
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import Form from '../components/Form';
@@ -14,35 +17,59 @@ import Address from '../components/Address';
 import InputDate from '../components/InputDate';
 
 function SignUpPage() {
-  const onSubmit = async (data: IFormInput) => {
-    const customerDraft = createCustomerDraft(data);
-    await signUp(customerDraft);
-  };
-
   const form = useForm<IFormInput>({
     defaultValues: {
       email: 'zakalupali2@gmail.com',
       password: 'K33666655!',
       firstName: 'Kir',
       lastName: 'Yur',
-      // dateOfBirth: new Date(),
-      // checkbox: false,
+      dateOfBirth: null,
       addresses: [],
     },
   });
 
   const {
     register,
+    setError,
+    clearErrors,
     control,
     watch,
     formState: { errors },
   } = form;
 
-  const onSubmit = async (data: IFormInput) => {
-    console.log(data);
-    const customerDraft = createCustomerDraft(data);
-    const customer = await signUp(customerDraft);
-    console.log(customer);
+  const router = useRouter();
+  const showSuccess = () => {
+    toast.success('Successful Registration!', {
+      position: toast.POSITION.TOP_CENTER,
+      autoClose: 3000,
+      hideProgressBar: true,
+    });
+  };
+  const showError = () => {
+    toast.error('There is already an existing customer with the provided email', {
+      position: toast.POSITION.TOP_CENTER,
+      // autoClose: 3000,
+      hideProgressBar: true,
+    });
+  };
+  const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
+    try {
+      const customerDraft = createCustomerDraft(data);
+      const result = await signUp(customerDraft);
+      clearErrors('root');
+      if ((result && result.statusCode && result.statusCode === 200) || result.statusCode === 201) {
+        router.push(`/`);
+        showSuccess();
+      }
+    } catch (e: any) {
+      if (e instanceof Error) {
+        setError('root.server', {
+          type: 'manual',
+          message: e.message,
+        } as FieldError);
+        showError();
+      }
+    }
   };
 
   return (
@@ -56,7 +83,13 @@ function SignUpPage() {
         <InputFirstName register={register} errors={errors} name="firstName" />
         <InputLastName register={register} errors={errors} name="lastName" />
         <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
-        <Address register={register} control={control} errors={errors} name="addresses" watch={watch}/>
+        <Address
+          register={register}
+          control={control}
+          errors={errors}
+          name="addresses"
+          watch={watch}
+        />
         <Button variant="outlined" type="submit">
           Sign up
         </Button>

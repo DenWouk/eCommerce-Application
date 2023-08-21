@@ -8,11 +8,10 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import Image from 'next/image';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Control, UseFormWatch, get, useFieldArray } from 'react-hook-form';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { IFormInput } from '@/src/pages/interfaces/IFormInput';
-import countries from '../pages/enums/countries';
+import { countryPost } from '../pages/enums/countries';
 import { ITextParams } from '../pages/interfaces/ITextParams';
 
 // type countryCode = 'US'| 'CA';
@@ -57,8 +56,14 @@ function Address({ register, errors, control, watch }: Props) {
       case 'United States':
         pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
         break;
+      case 'Germany':
+        pattern = /^\d{5}$/;
+        break;
+      case 'France':
+        pattern = /^\d{2}[ ]?\d{3}$/;
+        break;
       default:
-        pattern = /^.+$/;
+        return false;
     }
     return pattern.test(value);
   };
@@ -131,7 +136,7 @@ function Address({ register, errors, control, watch }: Props) {
           <Button onClick={() => remove(index)}>remove address</Button>
           <Autocomplete
             className="dark:bg-white"
-            options={countries}
+            options={countryPost}
             autoHighlight
             getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (

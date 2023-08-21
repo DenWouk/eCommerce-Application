@@ -10,9 +10,17 @@ export default function InputDate({ control }: ITextParams) {
     return copyDate;
   }
   const minBirthdate = minYear(new Date(), 13);
+
+  const validateDate = {
+    required: 'Birth Date is required',
+    validate: (value: any) => {
+      const dob = new Date(value);
+      return dob >= minBirthdate || 'You must be at least 13 years old';
+    },
+  };
+  // const error = get(errors, name);
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
@@ -26,21 +34,13 @@ export default function InputDate({ control }: ITextParams) {
         }}
         render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
           <DatePicker
-            {...field}
-            inputRef={ref}
+            value={value}
             onChange={onChange}
             label="Date of Birth"
             className="dark:bg-white"
             maxDate={maxDate}
-            slotProps={{
-              textField: {
-                required: true,
-                onBlur,
-                name,
-                error: !!fieldState?.error,
-                helperText: fieldState?.error?.message,
-              },
-            }}
+            // error={fieldState.invalid} // Set error state based on field validation
+            // helperText={fieldState.error?.message || ''}
           />
         )}
       />

@@ -11,8 +11,8 @@ import InputPassword from '../components/InputPassword';
 function SignInPage() {
   const form = useForm<IFormInput>({
     defaultValues: {
-      email: 'zakalupali2@gmail.com',
-      password: 'K33666655!',
+      email: '',
+      password: '',
     },
   });
 
@@ -22,7 +22,6 @@ function SignInPage() {
     register,
     setError,
     clearErrors,
-    handleSubmit,
     formState: { errors },
   } = form;
 
@@ -45,15 +44,21 @@ function SignInPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <Stack spacing={2} className="m-10" width={400}>
-        <Typography variant="h4" className="m-10">
-          Log in
-        </Typography>
-        <InputEmail register={register} errors={errors} name="email" />
-        <InputPassword register={register} errors={errors} name="password" />
-        {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-        {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
+    <Form
+      onSubmit={onSubmit}
+      defaultValues={{
+        email: '',
+        password: '',
+      }}
+    >
+      <Typography variant="h4" className="m-10">
+        Log in
+      </Typography>
+      <InputEmail register={register} errors={errors} name="email" />
+      <InputPassword register={register} errors={errors} name="password" />
+      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+      {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
+      <Stack spacing={2}>
         <Button variant="outlined" type="submit">
           Log in
         </Button>
@@ -61,7 +66,7 @@ function SignInPage() {
           Sign up
         </Button>
       </Stack>
-    </form>
+    </Form>
   );
 }
 export default SignInPage;

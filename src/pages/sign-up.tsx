@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
+import Form from '../components/Form';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from './interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -28,7 +29,6 @@ function SignUpPage() {
   });
 
   const {
-    handleSubmit,
     register,
     setError,
     clearErrors,

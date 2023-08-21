@@ -4,7 +4,34 @@ interface ICountryType {
   phone: string;
   suggested?: boolean;
 }
-const countries: readonly ICountryType[] = [
+export const countryPost: readonly ICountryType[] = [
+  {
+    code: 'CA',
+    label: 'Canada',
+    phone: '1',
+    suggested: true,
+  },
+  {
+    code: 'US',
+    label: 'United States',
+    phone: '1',
+    suggested: true,
+  },
+  {
+    code: 'DE',
+    label: 'Germany',
+    phone: '49',
+    suggested: true,
+  },
+  {
+    code: 'FR',
+    label: 'France',
+    phone: '33',
+    suggested: true,
+  },
+];
+
+export const countries: readonly ICountryType[] = [
   { code: 'AD', label: 'Andorra', phone: '376' },
   {
     code: 'AE',
@@ -429,4 +456,4 @@ const countries: readonly ICountryType[] = [
   { code: 'ZW', label: 'Zimbabwe', phone: '263' },
 ];
 
-export default countries;
+// export default countries, countriesPost;

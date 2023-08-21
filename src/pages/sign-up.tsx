@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { signIn } from 'next-auth/react';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import ErrorMessage from '@/src/components/ErrorMessage';
+import NamesClients from '@/src/helpers/commercetools/consts';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from './interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -61,17 +63,22 @@ function SignUpPage() {
   const showError = (message: string) => {
     toast.error(message, {
       position: toast.POSITION.TOP_CENTER,
-      // autoClose: 3000,
       hideProgressBar: true,
     });
   };
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
+    const { email, password } = data;
     try {
       const customerDraft = createCustomerDraft(data);
-      const result = await signUp(customerDraft);
+      await signUp(customerDraft);
+      const result = await signIn(NamesClients.PASSWORD, {
+        username: email,
+        password,
+        redirect: false,
+      });
       console.log(customerDraft);
       clearErrors('root');
-      if ((result && result.statusCode && result.statusCode === 200) || result.statusCode === 201) {
+      if (result?.ok) {
         router.push(`/`);
         showSuccess();
       }

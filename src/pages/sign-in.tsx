@@ -2,8 +2,9 @@ import { Stack, Button, Typography } from '@mui/material';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import signIn from '@/src/api/signIn';
+import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
+import NamesClients from '@/src/helpers/commercetools/consts';
 import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
@@ -29,10 +30,21 @@ function SignInPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
-      const result = await signIn({ username: email, password });
+      const result = await signIn(NamesClients.PASSWORD, {
+        username: email,
+        password,
+        redirect: false,
+      });
+
       clearErrors('root');
-      if (result && result.statusCode && result.statusCode === 200) {
+      if (result?.ok) {
         router.push(`/`);
+      }
+      if (result?.error) {
+        setError('root.server', {
+          type: 'manual',
+          message: result.error,
+        } as FieldError);
       }
     } catch (e: any) {
       if (e instanceof Error) {

@@ -7,12 +7,16 @@ export default withAuth(
     const { type } = req.nextauth.token || {};
     const url = req.nextUrl.clone();
     const { pathname } = url;
-    if (pathname === '/login' && type === NamesClients.PASSWORD) {
+    if (pathname === '/sign-in' && type === NamesClients.PASSWORD) {
+      url.pathname = '/';
+      return NextResponse.redirect(url);
+    }
+    if (pathname === '/sign-up' && type === NamesClients.PASSWORD) {
       url.pathname = '/';
       return NextResponse.redirect(url);
     }
     if (pathname === 'profile' && type !== NamesClients.PASSWORD) {
-      url.pathname = '/login';
+      url.pathname = '/sign-in';
       return NextResponse.redirect(url);
     }
 
@@ -27,4 +31,4 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ['/profile', '/login'] };
+export const config = { matcher: ['/profile', '/sign-in', '/sign-up'] };

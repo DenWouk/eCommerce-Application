@@ -76,7 +76,7 @@ function SignUpPage() {
         password,
         redirect: false,
       });
-      console.log(customerDraft);
+      console.log(customerDraft, 'hello');
       clearErrors('root');
       if (result?.ok) {
         router.push(`/`);

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import { IFormInput } from './interfaces/IFormInput';
+import { IFormInput } from '@/src/interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
 

@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
-import { IFormInput } from '@/src/pages/interfaces/IFormInput';
-import { ITextParams } from '../pages/interfaces/ITextParams';
+import { UseFormRegister } from 'react-hook-form';
+import { IFormInput } from '@/src/interfaces/IFormInput';
+import { ITextParams } from '@/src/interfaces/ITextParams';
 
 type Props = Omit<ITextParams, 'register' | 'control'> & {
   label: string;

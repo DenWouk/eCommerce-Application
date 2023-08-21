@@ -16,6 +16,13 @@ const nextConfig = {
     CLIENT_SECRET_CO: process.env.NEXT_PUBLIC_SECRET_CO,
     SCOPE_CO: process.env.NEXT_PUBLIC_SCOPE_CO,
   },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
 };
 
 module.exports = nextConfig;

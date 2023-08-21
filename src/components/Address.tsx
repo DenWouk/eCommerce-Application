@@ -18,9 +18,9 @@ import {
 } from 'react-hook-form';
 import { useState } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
-import { IFormInput } from '@/src/pages/interfaces/IFormInput';
-import { countryPost } from '../pages/enums/countries';
-import { ITextParams } from '../pages/interfaces/ITextParams';
+import { IFormInput } from '@/src/interfaces/IFormInput';
+import { countryPost } from '@/src/enums/countries';
+import { ITextParams } from '@/src/interfaces/ITextParams';
 
 export const enum TypeAddress {
   BILLING = 'Billing',

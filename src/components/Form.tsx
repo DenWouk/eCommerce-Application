@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import React, { ReactNode } from 'react';
 import { Stack } from '@mui/material';
-import { IFormInput } from '../pages/interfaces/IFormInput';
+import { IFormInput } from '@/src/interfaces/IFormInput';
 
 interface IFormProps<T> {
   defaultValues: T;

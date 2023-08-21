@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import signUp from '@/src/api/signUp';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
+import ErrorMessage from '@/src/components/ErrorMessage';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from './interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -21,8 +22,6 @@ function SignUpPage() {
       password: 'K33666655!',
       firstName: 'Kir',
       lastName: 'Yur',
-      dateOfBirth: null,
-      addresses: [],
       dateOfBirth: null,
       addresses: [
         {
@@ -59,8 +58,8 @@ function SignUpPage() {
       hideProgressBar: true,
     });
   };
-  const showError = () => {
-    toast.error('There is already an existing customer with the provided email', {
+  const showError = (message: string) => {
+    toast.error(message, {
       position: toast.POSITION.TOP_CENTER,
       // autoClose: 3000,
       hideProgressBar: true,
@@ -70,6 +69,7 @@ function SignUpPage() {
     try {
       const customerDraft = createCustomerDraft(data);
       const result = await signUp(customerDraft);
+      console.log(customerDraft);
       clearErrors('root');
       if ((result && result.statusCode && result.statusCode === 200) || result.statusCode === 201) {
         router.push(`/`);
@@ -81,42 +81,44 @@ function SignUpPage() {
           type: 'manual',
           message: e.message,
         } as FieldError);
-        showError();
+        showError(e.message);
       }
     }
   };
 
   return (
     <FormProvider {...form}>
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <Stack spacing={2} className="m-10" width={400}>
-        <Typography variant="h4" className="m-10">
-          Register
-        </Typography>
-        <InputEmail register={register} errors={errors} name="email" />
-        <InputPassword register={register} errors={errors} name="password" />
-        <InputFirstName register={register} errors={errors} name="firstName" />
-        <InputLastName register={register} errors={errors} name="lastName" />
-        <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
-        <Address
-          setValue={setValue}
-          getValues={getValues}
-          register={register}
-          control={control}
-          errors={errors}
-          name="addresses"
-          watch={watch}/>
-        <Button variant="outlined" type="submit">
-          Sign up
-        </Button>
-        <Typography variant="caption">
-          Already have an account?
-          <Button component={Link} variant="outlined" href="/sign-in">
-            Log in
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Stack spacing={2} className="m-10" width={400}>
+          <Typography variant="h4" className="m-10">
+            Register
+          </Typography>
+          <InputEmail register={register} errors={errors} name="email" />
+          <InputPassword register={register} errors={errors} name="password" />
+          <InputFirstName register={register} errors={errors} name="firstName" />
+          <InputLastName register={register} errors={errors} name="lastName" />
+          <InputDate register={register} control={control} errors={errors} name="dateOfBirth" />
+          <Address
+            setValue={setValue}
+            getValues={getValues}
+            register={register}
+            control={control}
+            errors={errors}
+            name="addresses"
+            watch={watch}
+          />
+          {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
+          <Button variant="outlined" type="submit">
+            Sign up
           </Button>
-        </Typography>
-      </Stack>
-    </form>
+          <Typography variant="caption">
+            Already have an account?
+            <Button component={Link} variant="outlined" href="/sign-in">
+              Log in
+            </Button>
+          </Typography>
+        </Stack>
+      </form>
     </FormProvider>
   );
 }

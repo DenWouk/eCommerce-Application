@@ -5,5 +5,5 @@ type Props = {
 };
 
 export default function ErrorMessage({ message }: Props) {
-  return <Alert>{message}</Alert>;
+  return <Alert severity="error">{message}</Alert>;
 }

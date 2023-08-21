@@ -32,7 +32,7 @@ export default function InputDate({ control }: ITextParams) {
             min: (date) => (date as Date) <= minBirthdate || 'Please, enter a valid date',
           },
         }}
-        render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
+        render={({ field: { value, onChange } }) => (
           <DatePicker
             value={value}
             onChange={onChange}

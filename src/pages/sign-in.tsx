@@ -1,9 +1,9 @@
-import { Stack, Button, Typography, Alert } from '@mui/material';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { Stack, Button, Typography } from '@mui/material';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import signIn from '@/src/api/signIn';
+import ErrorMessage from '@/src/components/ErrorMessage';
 import { IFormInput } from './interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
@@ -22,6 +22,7 @@ function SignInPage() {
     register,
     setError,
     clearErrors,
+    handleSubmit,
     formState: { errors },
   } = form;
 
@@ -44,20 +45,13 @@ function SignInPage() {
   };
 
   return (
-    <Form
-      onSubmit={onSubmit}
-      defaultValues={{
-        email: '',
-        password: '',
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h4" className="m-10">
         Log in
       </Typography>
       <InputEmail register={register} errors={errors} name="email" />
       <InputPassword register={register} errors={errors} name="password" />
-      {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
-      {errors?.root ? <Alert severity="error">{errors.root.server.message}</Alert> : <></>}
+      {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
       <Stack spacing={2}>
         <Button variant="outlined" type="submit">
           Log in
@@ -66,7 +60,7 @@ function SignInPage() {
           Sign up
         </Button>
       </Stack>
-    </Form>
+    </form>
   );
 }
 export default SignInPage;

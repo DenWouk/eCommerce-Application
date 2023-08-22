@@ -53,14 +53,14 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
   const validateCity = {
     required: `City is required`,
     pattern: {
-      value: /^[a-zA-Z]+(?: [a-zA-Z]+)*$/,
+      value: /^[a-zA-Z]+$/,
       message: `City must contain at least one letter`,
     },
   };
   const validateStreet = {
     required: `Street is required`,
     pattern: {
-      value: /^.+$/,
+      value: /^\S+.*\S$/,
       message: 'Street must contain at least one character',
     },
   };

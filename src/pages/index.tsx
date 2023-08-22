@@ -14,20 +14,12 @@ export default function Home({ authorized }: AuthProps) {
   const router = useRouter();
   return (
     <>
-      <div className='auth-btns-duplicate'>
-        <Button
-          component={Link}
-          variant="outlined"
-          href="/sign-in"
-        >
+      <div className="auth-btns-duplicate">
+        <Button component={Link} variant="outlined" href={authorized ? '/' : '/sign-in'}>
           Sign in
         </Button>
 
-        <Button
-          component={Link}
-          variant="outlined"
-          href="/sign-up"
-        >
+        <Button component={Link} variant="outlined" href={authorized ? '/' : '/sign-up'}>
           Registration
         </Button>
       </div>

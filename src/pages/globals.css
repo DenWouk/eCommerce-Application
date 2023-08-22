@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color1: #313131;
+  --color2: #fefefe;
+  --color3: #6195c3;
+  --color4: #6c6c6c;
+
+  --background-color1: #6195c3;
+  --background-color2: #f1f7f7;
+  --background-color3: #2270ec;
+
+  --link-color1: #2270ec;
+}
+
+html {
+  font-size: 16px;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  position: fixed;
+  z-index: 3;
+  background-color: var(--background-color1);
+}
+
+main {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  padding: 90px 0 50px;
+  font-size: 35px;
+  font-weight: bold;
+  color: var(--color4);
+  background: transparent;
+}
+
+.auth-btns-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-shipping-adress {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  color: var(--color4);
+  border: solid 1px #cccccc;
+  border-radius: 4px;
+}
+
+.input-radio {
+  width: 16px;
+  height: 16px;
+  margin: 10px 13px;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #656565;
+  background-color: #ffffff;
+  appearance: none;
+  transition: all ease-in 0.2s;
+}
+
+.input-radio:checked {
+  background-color: var(--background-color3);
+}
+
+.registration-btn, .login-btn {
+  margin-top: 20px !important;
+  color: var(--color2);
+  background-color: var(--background-color1);
+}
+
+.registration-btn:hover, .login-btn:hover {
+  background-color: var(--background-color3);
+}
+
+.footer {
+  position: fixed;
+  top: unset;
+  bottom: 0;
+  z-index: 3;
+  background-color: var(--background-color1);
+  box-shadow:
+    0px -2px 4px -1px rgb(0 0 0 / 20%),
+    0px -4px 5px 0px rgb(0 0 0 / 14%),
+    0px -1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.gh-logo {
+  width: 17px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: 0.3s;
+}
+
+.gh-logo-fill1,
+.gh-logo-fill2 {
+  fill: var(--color2);
+}
+
+.rss-logo {
+  fill: var(--color2);
+}
+
+.gh-logo:hover {
+  transform: rotateY(180deg);
+  transition: all 0.3s;
+}

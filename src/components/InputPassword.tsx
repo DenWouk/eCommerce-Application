@@ -2,7 +2,7 @@ import { IconButton, TextField, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { get } from 'react-hook-form';
-import { ITextParams } from '@/src/interfaces/ITextParams';
+import { ITextParams } from '../interfaces/ITextParams';
 
 export default function InputPassword({ register, name, errors, disabled = false }: ITextParams) {
   const [showPass, setShowPass] = useState(false);

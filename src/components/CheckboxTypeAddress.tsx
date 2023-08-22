@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { UseFormRegister } from 'react-hook-form';
+import { Control, Controller, UseFormRegister } from 'react-hook-form';
 import { IFormInput } from '@/src/interfaces/IFormInput';
-import { ITextParams } from '@/src/interfaces/ITextParams';
+import { ITextParams } from '../interfaces/ITextParams';
 
 type Props = Omit<ITextParams, 'register' | 'control'> & {
   label: string;
@@ -14,7 +14,7 @@ export default function CheckBoxTypeAddress({ name, register, label, hidden }: P
     <FormControlLabel
       label={label}
       hidden={hidden}
-      control={<Checkbox className="dark:bg-white" {...register(name)} />}
+      control={<Checkbox {...register(name)} />}
     />
   );
 }

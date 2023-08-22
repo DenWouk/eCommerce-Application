@@ -18,9 +18,9 @@ import {
 } from 'react-hook-form';
 import { useState } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
-import { IFormInput } from '@/src/interfaces/IFormInput';
-import { countryPost } from '@/src/enums/countries';
-import { ITextParams } from '@/src/interfaces/ITextParams';
+import { countryPost } from '../enums/countries';
+import { IFormInput } from '../interfaces/IFormInput';
+import { ITextParams } from '../interfaces/ITextParams';
 
 export const enum TypeAddress {
   BILLING = 'Billing',
@@ -28,8 +28,8 @@ export const enum TypeAddress {
 }
 
 export const enum NameAddress {
-  BILLING = 'billingAddress',
-  SHIPPING = 'shippingAddress',
+  BILLING = 'billing Address',
+  SHIPPING = 'shipping Address',
 }
 
 export const enum DefNameAddress {
@@ -127,47 +127,55 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
         return (
-          <Stack key={field.id} spacing={2} className="m-10" width={400}>
-            {/* <AddressItem typeAddresses={typeAddresses} index={index} handleRemove={handleRemove} /> */}
-            <Typography variant="h4">{typeAddress} address</Typography>
-            <CheckBoxTypeAddress
-              name={`addresses.${index}.shippingAddress`}
-              hidden={typeAddresses[index] === TypeAddress.SHIPPING}
-              label="ShippingAddress"
-              register={register}
-            />
-            <CheckBoxTypeAddress
-              name={`addresses.${index}.billingAddress`}
-              hidden={typeAddresses[index] === TypeAddress.BILLING}
-              label="BillingAddress"
-              register={register}
-            />
-            <FormControlLabel
-              label="DefaultShippingAddress"
-              control={
-                <input
-                  type="radio"
-                  className="dark:bg-white"
-                  {...register(`defaultShippingAddress`)}
-                  value={index}
-                  // error={!!error}
-                  // helperText={error?.message}
-                />
-              }
-            />
-            <FormControlLabel
-              label="DefaultBillingAddress"
-              control={
-                <input
-                  type="radio"
-                  className="dark:bg-white"
-                  {...register(`defaultBillingAddress`)}
-                  value={index}
-                  // error={!!error}
-                  // helperText={error?.message}
-                />
-              }
-            />
+          <Stack key={field.id} spacing={1} className="m-10" width={400}>
+            <div className="form-shipping-adress">
+              <Typography
+                variant="h4"
+                sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}
+              >
+                {typeAddress} address
+              </Typography>
+
+              <CheckBoxTypeAddress
+                name={`addresses.${index}.shippingAddress`}
+                hidden={typeAddresses[index] === TypeAddress.SHIPPING}
+                label="ShippingAddress"
+                register={register}
+              />
+
+              <CheckBoxTypeAddress
+                name={`addresses.${index}.billingAddress`}
+                hidden={typeAddresses[index] === TypeAddress.BILLING}
+                label="Billing Address"
+                register={register}
+              />
+
+              <FormControlLabel
+                label="Default Shipping Address"
+                control={
+                  <input
+                    type="radio"
+                    className="input-radio"
+                    {...register(`defaultShippingAddress`)}
+                    name="adress"
+                    value={index}
+                  />
+                }
+              />
+
+              <FormControlLabel
+                label="Default Billing Address"
+                control={
+                  <input
+                    type="radio"
+                    className="input-radio"
+                    {...register(`defaultBillingAddress`)}
+                    name="adress"
+                    value={index}
+                  />
+                }
+              />
+            </div>
 
             {typeAddresses.length > 1 && (
               <Button onClick={() => handleRemove(index)}>remove address</Button>
@@ -196,7 +204,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                   label="Choose a country"
                   inputProps={{
                     ...params.inputProps,
-                    autoComplete: 'new-password', // disable autocomplete and autofill
+                    autoComplete: 'new-password',
                   }}
                   type="country"
                   {...register(`addresses.${index}.country`, validateCountry)}
@@ -205,6 +213,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 />
               )}
             />
+
             <TextField
               required
               id="outlined-required-city"
@@ -215,6 +224,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               error={!!errors!.addresses?.[index]?.city}
               helperText={errors!.addresses?.[index]?.city?.message}
             />
+
             <TextField
               required
               id="outlined-required-streetname"
@@ -229,6 +239,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 mr: 10,
               }}
             />
+
             <TextField
               required
               id="outlined-required-streetnum"
@@ -242,6 +253,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 width: 100,
               }}
             />
+
             <TextField
               required
               id="outlined-required-postal"
@@ -250,10 +262,9 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               type="string"
               {...register(`addresses.${index}.postalCode`, {
                 validate: (value) => {
-                  // const validationResult = validatePostalCode(get(field, 'country'), value as string);
-                  // return validationResult || 'Invalid ZIP code format';
                   const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
                   const validationResult = validatePostalCode(selectedCountry, value as string);
+
                   return validationResult || 'Invalid ZIP code format';
                 },
               })}
@@ -263,8 +274,12 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
           </Stack>
         );
       })}
-      <Button onClick={() => handleAdd(TypeAddress.BILLING)}>Add billing address</Button>
-      <Button onClick={() => handleAdd(TypeAddress.SHIPPING)}>Add shipping address</Button>
+      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.BILLING)}>
+        Add billing address
+      </Button>
+      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.SHIPPING)}>
+        Add shipping address
+      </Button>
     </>
   );
 }

@@ -234,7 +234,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               helperText={errors!.addresses?.[index]?.streetName?.message}
             />
 
-            <div className="flex flex-nowrap gap-2.5 justify-between">
+            <div className="flex flex-nowrap gap-2">
               <TextField
                 required
                 id="outlined-required-streetnum"
@@ -244,6 +244,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 {...register(`addresses.${index}.streetNumber`, validateStreetNumber)}
                 error={!!errors!.addresses?.[index]?.streetNumber}
                 helperText={errors!.addresses?.[index]?.streetNumber?.message}
+                sx={{ width: '50%' }}
               />
 
               <TextField
@@ -254,7 +255,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 type="string"
                 {...register(`addresses.${index}.postalCode`, {
                   validate: (value) => {
-                    const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
+                    const selectedCountry = watch(`addresses.${index}.country`);
                     const validationResult = validatePostalCode(selectedCountry, value as string);
 
                     return validationResult || 'Invalid ZIP code format';
@@ -262,6 +263,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 })}
                 error={!!errors!.addresses?.[index]?.postalCode}
                 helperText={errors!.addresses?.[index]?.postalCode?.message}
+                sx={{ width: '50%' }}
               />
             </div>
           </Stack>

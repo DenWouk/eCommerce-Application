@@ -3,7 +3,7 @@ import getConfig from "next/config";
 
 const { ROOT_API= '', PROJECT_KEY = '' } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
 
-export async function signUpForCrosscheck(
+export default async function signUpForCrosscheck(
   customerDraft: CustomerDraft, accessToken: string
 ): Promise<ClientResponse<CustomerSignInResult>> {
   const url = `${ROOT_API}/${PROJECT_KEY}/customers`

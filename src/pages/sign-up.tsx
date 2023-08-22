@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
-import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import InputEmail from '../components/InputEmail';
@@ -16,7 +15,6 @@ import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
 import { getTokenForCrosscheck, signInForCrosscheck } from '../api/signInForCrossCheck';
-import { signUpForCrosscheck } from '../api/signUpForCrossCheck';
 
 function SignUpPage() {
   const form = useForm<IFormInput>({
@@ -68,12 +66,10 @@ function SignUpPage() {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
-    try {
-      const customerDraft = createCustomerDraft(data);
 
-      const tokenForSignUp = await getTokenForCrosscheck();
-      const cc = await signUpForCrosscheck(customerDraft, tokenForSignUp.access_token);
+    try {
       const tokenForSignIn = await getTokenForCrosscheck({ username: email, password });
+      
       await signInForCrosscheck({ username: email, password }, tokenForSignIn.access_token);
 
       const result = await signIn(NamesClients.PASSWORD, {
@@ -81,7 +77,7 @@ function SignUpPage() {
         password,
         redirect: false,
       });
-      console.log(customerDraft, 'hello');
+
       clearErrors('root');
       if (result?.ok) {
         router.push('/');

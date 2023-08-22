@@ -11,14 +11,6 @@ export default function InputDate({ control }: ITextParams) {
   }
   const minBirthdate = minYear(new Date(), 13);
 
-  const validateDate = {
-    required: 'Birth Date is required',
-    validate: (value: any) => {
-      const dob = new Date(value);
-      return dob >= minBirthdate || 'You must be at least 13 years old';
-    },
-  };
-
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
   return (

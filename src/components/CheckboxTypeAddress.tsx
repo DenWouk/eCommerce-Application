@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel } from '@mui/material';
-import { Control, Controller, UseFormRegister } from 'react-hook-form';
+import { UseFormRegister } from 'react-hook-form';
 import { IFormInput } from '@/src/interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
 

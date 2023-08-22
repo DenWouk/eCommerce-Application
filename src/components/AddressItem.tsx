@@ -1,10 +1,9 @@
 import { Autocomplete, Box, Button, FormControlLabel, TextField, Typography } from '@mui/material';
 import Image from 'next/image';
 import { get, useFormContext } from 'react-hook-form';
-import { useEffect } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { countries } from '@/src/enums/countries';
-import { NameAddress, TypeAddress } from '@/src/components/Address';
+import { TypeAddress } from '@/src/components/Address';
 import { IFormInput } from '@/src/interfaces/IFormInput';
 
 const validateCountry = {
@@ -57,23 +56,10 @@ export default function AddressItem({ typeAddresses, index, handleRemove }: Prop
   const typeAddress = typeAddresses[index];
 
   const {
-    control,
     watch,
-    setValue,
     register,
     formState: { errors },
   } = useFormContext<IFormInput, string>();
-
-  // const [defBillingValue = '', defShippingValue = ''] = watch([
-  //   'defaultBillingAddress',
-  //   'defaultShippingAddress',
-  // ]);
-  // defBillingValue &&
-  // +defBillingValue === index &&
-  // setValue(`addresses.${index}.billingAddress`, `${index}`);
-  // defShippingValue &&
-  // +defShippingValue === index &&
-  // setValue(`addresses.${index}.shippingAddress`, `${index}`);
 
   return (
     <>
@@ -98,8 +84,6 @@ export default function AddressItem({ typeAddresses, index, handleRemove }: Prop
             className="dark:bg-white"
             {...register(`defaultShippingAddress`)}
             value={index}
-            // error={!!error}
-            // helperText={error?.message}
           />
         }
       />
@@ -111,8 +95,6 @@ export default function AddressItem({ typeAddresses, index, handleRemove }: Prop
             className="dark:bg-white"
             {...register(`defaultBillingAddress`)}
             value={index}
-            // error={!!error}
-            // helperText={error?.message}
           />
         }
       />
@@ -198,9 +180,7 @@ export default function AddressItem({ typeAddresses, index, handleRemove }: Prop
         type="string"
         {...register(`addresses.${index}.postalCode`, {
           validate: (value) => {
-            // const validationResult = validatePostalCode(get(field, 'country'), value as string);
-            // return validationResult || 'Invalid ZIP code format';
-            const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
+            const selectedCountry = watch(`addresses.${index}.country`); 
             const validationResult = validatePostalCode(selectedCountry, value as string);
             return validationResult || 'Invalid ZIP code format';
           },

@@ -1,7 +1,7 @@
 import React from 'react';
-import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@mui/material';
-import { RSSicon } from '../icons/rss-icon';
-import { GhSvg } from '../icons/gh-icon';
+import { AppBar, Box, Button, Container, IconButton, Typography } from '@mui/material';
+import  RSSicon  from '../icons/rss-icon';
+import  GhSvg  from '../icons/gh-icon';
 
 const authors = ['Tanya', 'Kirill', 'Denis'];
 const authorsLinks = [
@@ -73,7 +73,7 @@ export default function Footer() {
                 borderRadius: 0,
               }}
             >
-              <svg className={'rss-logo '} viewBox="0 0 552.8 205.3">
+              <svg className="rss-logo " viewBox="0 0 552.8 205.3">
                 {RSSicon()}
               </svg>
             </IconButton>

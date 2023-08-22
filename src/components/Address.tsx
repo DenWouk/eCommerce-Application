@@ -127,7 +127,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
         return (
-          <Stack key={field.id} spacing={1} className="m-10" width={400}>
+          <Stack key={field.id} spacing={1} className="m-10">
             <div className="form-shipping-adress">
               <Typography
                 variant="h4"
@@ -234,43 +234,38 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               {...register(`addresses.${index}.streetName`, validateStreet)}
               error={!!errors!.addresses?.[index]?.streetName}
               helperText={errors!.addresses?.[index]?.streetName?.message}
-              sx={{
-                width: 280,
-                mr: 10,
-              }}
             />
 
-            <TextField
-              required
-              id="outlined-required-streetnum"
-              className="dark:bg-white"
-              label=""
-              type="text"
-              {...register(`addresses.${index}.streetNumber`, validateStreetNumber)}
-              error={!!errors!.addresses?.[index]?.streetNumber}
-              helperText={errors!.addresses?.[index]?.streetNumber?.message}
-              sx={{
-                width: 100,
-              }}
-            />
+            <div className="flex flex-nowrap gap-2.5 justify-between">
+              <TextField
+                required
+                id="outlined-required-streetnum"
+                className="dark:bg-white"
+                label="Street Number"
+                type="text"
+                {...register(`addresses.${index}.streetNumber`, validateStreetNumber)}
+                error={!!errors!.addresses?.[index]?.streetNumber}
+                helperText={errors!.addresses?.[index]?.streetNumber?.message}
+              />
 
-            <TextField
-              required
-              id="outlined-required-postal"
-              className="dark:bg-white"
-              label="Post"
-              type="string"
-              {...register(`addresses.${index}.postalCode`, {
-                validate: (value) => {
-                  const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
-                  const validationResult = validatePostalCode(selectedCountry, value as string);
+              <TextField
+                required
+                id="outlined-required-postal"
+                className="dark:bg-white"
+                label="Post"
+                type="string"
+                {...register(`addresses.${index}.postalCode`, {
+                  validate: (value) => {
+                    const selectedCountry = watch(`addresses.${index}.country`); // Watch the selected country
+                    const validationResult = validatePostalCode(selectedCountry, value as string);
 
-                  return validationResult || 'Invalid ZIP code format';
-                },
-              })}
-              error={!!errors!.addresses?.[index]?.postalCode}
-              helperText={errors!.addresses?.[index]?.postalCode?.message}
-            />
+                    return validationResult || 'Invalid ZIP code format';
+                  },
+                })}
+                error={!!errors!.addresses?.[index]?.postalCode}
+                helperText={errors!.addresses?.[index]?.postalCode?.message}
+              />
+            </div>
           </Stack>
         );
       })}

@@ -78,7 +78,7 @@ function SignInPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="form-registration" onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={1}>
         <InputEmail register={register} errors={errors} name="email" />
 

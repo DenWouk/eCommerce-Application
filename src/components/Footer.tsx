@@ -18,13 +18,13 @@ export default function Footer() {
         sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '30px' }}
       >
         <Typography
-          variant="subtitle2"
+          variant="subtitle1"
           noWrap
           component="span"
           sx={{
             mr: 2,
             fontFamily: 'monospace',
-            fontSize: 16,
+            fontSize: 'inherit',
             fontWeight: 700,
             letterSpacing: 'unset',
             color: 'inherit',
@@ -44,7 +44,7 @@ export default function Footer() {
                     justifyContent: 'center',
                     gap: '3px',
                     fontFamily: 'monospace',
-                    fontSize: 16,
+                    fontSize: 'inherit',
                     fontWeight: 700,
                     color: 'inherit',
                     textDecoration: 'none',

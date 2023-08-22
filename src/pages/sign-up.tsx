@@ -7,6 +7,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
+import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
+import signUpForCrosscheck from '@/src/api/signUpForCrossCheck';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -66,18 +68,18 @@ function SignUpPage() {
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
-
     try {
-      const tokenForSignIn = await getTokenForCrosscheck({ username: email, password });
-      
-      await signInForCrosscheck({ username: email, password }, tokenForSignIn.access_token);
+      const customerDraft = createCustomerDraft(data);
 
+      const tokenForSignUp = await getTokenForCrosscheck();
+      await signUpForCrosscheck(customerDraft, tokenForSignUp.access_token);
+      const tokenForSignIn = await getTokenForCrosscheck({ username: email, password });
+      await signInForCrosscheck({ username: email, password }, tokenForSignIn.access_token);
       const result = await signIn(NamesClients.PASSWORD, {
         username: email,
         password,
         redirect: false,
       });
-
       clearErrors('root');
       if (result?.ok) {
         router.push('/');
@@ -127,7 +129,7 @@ function SignUpPage() {
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button className='registration-btn' variant="outlined" type="submit">
+          <Button className="registration-btn" variant="outlined" type="submit">
             Registration
           </Button>
         </Stack>

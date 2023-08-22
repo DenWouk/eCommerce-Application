@@ -12,8 +12,8 @@ type Props = Omit<ITextParams, 'register' | 'control'> & {
 export default function CheckBoxTypeAddress({ name, register, label, hidden }: Props) {
   return (
     <FormControlLabel
+      style={hidden ? { display: 'none' } : undefined}
       label={label}
-      hidden={hidden}
       control={<Checkbox {...register(name)} />}
     />
   );

@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import { toast } from 'react-toastify';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
+import LoadingButton from '@/src/components/LoadingButton';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
@@ -40,7 +41,7 @@ function SignInPage() {
     setError,
     clearErrors,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = form;
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -86,9 +87,9 @@ function SignInPage() {
 
         {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-        <Button className='login-btn' variant="outlined" type="submit" sx={{backgroundColor: '#6195c3'}}>
+        <LoadingButton type="submit" isLoading={isSubmitting}>
           Sign in
-        </Button>
+        </LoadingButton>
 
         <Button component={Link} variant="outlined" href="/sign-up">
           Registration

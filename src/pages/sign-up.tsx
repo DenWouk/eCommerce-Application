@@ -9,6 +9,7 @@ import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import signUpForCrosscheck from '@/src/api/signUpForCrossCheck';
+import LoadingButton from '@/src/components/LoadingButton';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -49,7 +50,7 @@ function SignUpPage() {
     getValues,
     setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = form;
 
   const router = useRouter();
@@ -130,9 +131,9 @@ function SignUpPage() {
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button className="registration-btn" variant="outlined" type="submit">
+          <LoadingButton type="submit" isLoading={isSubmitting}>
             Registration
-          </Button>
+          </LoadingButton>
         </Stack>
       </form>
     </FormProvider>

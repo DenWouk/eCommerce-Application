@@ -10,9 +10,9 @@ export default function InputDate({ control }: ITextParams) {
     return copyDate;
   }
   const minBirthdate = minYear(new Date(), 13);
-
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
@@ -24,13 +24,23 @@ export default function InputDate({ control }: ITextParams) {
             min: (date) => (date as Date) <= minBirthdate || 'Please, enter a valid date',
           },
         }}
-        render={({ field: { value, onChange } }) => (
+        render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
           <DatePicker
-            value={value}
+            {...field}
+            inputRef={ref}
             onChange={onChange}
             label="Date of Birth"
             className="dark:bg-white"
             maxDate={maxDate}
+            slotProps={{
+              textField: {
+                required: true,
+                onBlur,
+                name,
+                error: !!fieldState?.error,
+                helperText: fieldState?.error?.message,
+              },
+            }}
           />
         )}
       />

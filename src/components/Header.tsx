@@ -105,7 +105,13 @@ export default function Header() {
             <Link href="/"> eCommerce-App </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', gap: '40px'}}>
+            <Link href="/">
+              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                Main
+              </Button>
+            </Link>
+
             <Link href="/products">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Products

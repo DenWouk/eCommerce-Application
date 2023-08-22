@@ -32,6 +32,7 @@ html {
 }
 
 main {
+  position: relative;
   display: flex;
   flex: 1 1 auto;
   justify-content: center;
@@ -41,6 +42,13 @@ main {
   font-weight: bold;
   color: var(--color4);
   background: transparent;
+}
+
+.auth-btns-duplicate {
+  position: absolute;
+  top: 100px;
+  display: flex;
+  gap: 10px;
 }
 
 .auth-btns-container {

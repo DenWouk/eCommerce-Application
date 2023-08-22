@@ -13,46 +13,66 @@ export type AuthProps = {
 export default function Home({ authorized }: AuthProps) {
   const router = useRouter();
   return (
-    <div className="auth-btns-container">
-      <h2>{authorized ? 'Authorized' : 'Not authorized'}</h2>
-
-      {!authorized && (
-        <>
-          <Button
-            component={Link}
-            variant="contained"
-            href="/sign-in"
-            sx={{ background: '#6195c3fe' }}
-          >
-            Sign in
-          </Button>
-
-          <Button
-            component={Link}
-            variant="contained"
-            href="/sign-up"
-            sx={{ background: '#6195c3fe' }}
-          >
-            Registration
-          </Button>
-        </>
-      )}
-
-      {authorized && (
+    <>
+      <div className='auth-btns-duplicate'>
         <Button
           component={Link}
-          variant="contained"
-          href=""
-          sx={{ background: '#6195c3fe' }}
-          onClick={async () => {
-            await signOut({ redirect: false });
-            router.push('/');
-          }}
+          variant="outlined"
+          href="/sign-in"
         >
-          Logout
+          Sign in
         </Button>
-      )}
-    </div>
+
+        <Button
+          component={Link}
+          variant="outlined"
+          href="/sign-up"
+        >
+          Registration
+        </Button>
+      </div>
+
+      <div className="auth-btns-container">
+        <h2>{authorized ? 'Authorized' : 'Not authorized'}</h2>
+
+        {!authorized && (
+          <>
+            <Button
+              component={Link}
+              variant="contained"
+              href="/sign-in"
+              sx={{ background: '#6195c3fe' }}
+            >
+              Sign in
+            </Button>
+
+            <Button
+              component={Link}
+              variant="contained"
+              href="/sign-up"
+              sx={{ background: '#6195c3fe' }}
+            >
+              Registration
+            </Button>
+          </>
+        )}
+
+        {authorized && (
+          <Button
+            component={Link}
+            variant="contained"
+            href=""
+            sx={{ background: '#6195c3fe' }}
+            onClick={async () => {
+              await signOut({ redirect: false });
+              router.push('/');
+            }}
+          >
+            Logout
+          </Button>
+        )}
+      </div>
+    </>
   );
 }
 

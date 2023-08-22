@@ -20,6 +20,7 @@ import { getTokenForCrosscheck, signInForCrosscheck } from '../api/signInForCros
 
 function SignUpPage() {
   const form = useForm<IFormInput>({
+    mode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -98,7 +99,7 @@ function SignUpPage() {
 
   return (
     <FormProvider {...form}>
-      <form className='form-registration' onSubmit={handleSubmit(onSubmit)} noValidate>
+      <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack spacing={1} className="m-10">
           <Typography variant="caption" sx={{ fontSize: '16px' }}>
             Already have an account?

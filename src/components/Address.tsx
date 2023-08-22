@@ -60,7 +60,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
   const validateStreet = {
     required: `Street is required`,
     pattern: {
-      value: /^\S+.*\S$/,
+      value: /^\S(.*\S)?$/,
       message: 'Street must contain at least one character',
     },
   };

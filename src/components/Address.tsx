@@ -157,7 +157,6 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                     type="radio"
                     className="input-radio"
                     {...register(`defaultShippingAddress`)}
-                    name="adress"
                     value={index}
                   />
                 }
@@ -170,7 +169,6 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                     type="radio"
                     className="input-radio"
                     {...register(`defaultBillingAddress`)}
-                    name="adress"
                     value={index}
                   />
                 }

@@ -74,6 +74,12 @@ export default function Header() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
+              <Link href="/">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Main</Typography>
+                </MenuItem>
+              </Link>
+
               <Link href="/products">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Products</Typography>

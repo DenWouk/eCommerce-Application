@@ -3,7 +3,6 @@ import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
-  Avatar,
   Box,
   Button,
   Container,
@@ -11,42 +10,18 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import CustomizedSwitches from './theme-switch';
 
 export default function Header() {
-  const [auth, setAuth] = React.useState<boolean>(false);
-  const [loginBtn, setLoginBtn] = React.useState<boolean>(true);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-
-  const handleAuth = () => {
-    setAuth(true);
-    setLoginBtn(false);
-  };
-
-  const handleLogoutBtn = () => {
-    setAuth(false);
-    setLoginBtn(true);
-
-    handleCloseUserMenu();
   };
 
   return (
@@ -54,12 +29,13 @@ export default function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant="h1"
             noWrap
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
+              fontSize: '24px',
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
@@ -103,6 +79,7 @@ export default function Header() {
                   <Typography textAlign="center">Products</Typography>
                 </MenuItem>
               </Link>
+
               <Link href="/contacts">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Contacts</Typography>
@@ -134,61 +111,13 @@ export default function Header() {
                 Products
               </Button>
             </Link>
+            
             <Link href="/contacts">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Contacts
               </Button>
             </Link>
           </Box>
-
-          {loginBtn && (
-            <Link href="/login">
-              <Button color="inherit" onClick={handleAuth}>
-                Login
-              </Button>
-            </Link>
-          )}
-
-          {auth && (
-            <div>
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="" src="" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <Link href="/profile">
-                    <MenuItem onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">Profile</Typography>
-                    </MenuItem>
-                  </Link>
-
-                  <Link href="/">
-                    <MenuItem onClick={handleLogoutBtn}>
-                      <Typography textAlign="center">Logout</Typography>
-                    </MenuItem>
-                  </Link>
-                </Menu>
-              </Box>
-            </div>
-          )}
-        <CustomizedSwitches />
         </Toolbar>
       </Container>
     </AppBar>

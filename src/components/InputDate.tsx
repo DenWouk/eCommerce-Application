@@ -1,7 +1,7 @@
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Controller } from 'react-hook-form';
-import { ITextParams } from '../pages/interfaces/ITextParams';
+import { ITextParams } from '../interfaces/ITextParams';
 
 export default function InputDate({ control }: ITextParams) {
   function minYear(date: Date, age: number) {
@@ -18,7 +18,7 @@ export default function InputDate({ control }: ITextParams) {
       return dob >= minBirthdate || 'You must be at least 13 years old';
     },
   };
-  // const error = get(errors, name);
+
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 13);
   return (
@@ -39,8 +39,6 @@ export default function InputDate({ control }: ITextParams) {
             label="Date of Birth"
             className="dark:bg-white"
             maxDate={maxDate}
-            // error={fieldState.invalid} // Set error state based on field validation
-            // helperText={fieldState.error?.message || ''}
           />
         )}
       />

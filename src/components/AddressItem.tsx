@@ -3,9 +3,9 @@ import Image from 'next/image';
 import { get, useFormContext } from 'react-hook-form';
 import { useEffect } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
-import countries from '@/src/pages/enums/countries';
+import { countries } from '@/src/enums/countries';
 import { NameAddress, TypeAddress } from '@/src/components/Address';
-import { IFormInput } from '@/src/pages/interfaces/IFormInput';
+import { IFormInput } from '@/src/interfaces/IFormInput';
 
 const validateCountry = {
   required: 'Country is required',
@@ -125,7 +125,7 @@ export default function AddressItem({ typeAddresses, index, handleRemove }: Prop
         className="dark:bg-white"
         options={countries}
         autoHighlight
-        getOptionLabel={(option) => option.label}
+        getOptionLabel={(option: any) => option.label}
         renderOption={(props, option) => (
           <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
             <Image

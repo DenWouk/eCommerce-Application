@@ -2,8 +2,8 @@ import { CustomerDraft } from '@commercetools/platform-sdk';
 import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import formatDate from '@/src/helpers/date';
 
-import { IFormInput } from '@/src/pages/interfaces/IFormInput';
-import { countries } from '@/src/pages/enums/countries';
+import { IFormInput } from '@/src/interfaces/IFormInput';
+import { countries } from '@/src/enums/countries';
 
 export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const {

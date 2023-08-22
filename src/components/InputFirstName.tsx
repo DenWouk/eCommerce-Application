@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import { get } from 'react-hook-form';
-import { ITextParams } from '../pages/interfaces/ITextParams';
+import { ITextParams } from '../interfaces/ITextParams';
 
 export default function InputFirstName({ register, name, errors }: ITextParams) {
   const validateText = {

@@ -5,9 +5,25 @@ import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import { IFormInput } from './interfaces/IFormInput';
+import { IFormInput } from '../interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
+import { toast } from 'react-toastify';
+import { getTokenForCrosscheck, signInForCrosscheck } from '../api/signInForCrossCheck';
+
+const showSuccess = () => {
+  toast.success('Successful Login!', {
+    position: toast.POSITION.TOP_CENTER,
+    autoClose: 3000,
+    hideProgressBar: true,
+  });
+};
+const showError = (message: string) => {
+  toast.error(message, {
+    position: toast.POSITION.TOP_CENTER,
+    hideProgressBar: true,
+  });
+};
 
 function SignInPage() {
   const form = useForm<IFormInput>({
@@ -30,6 +46,9 @@ function SignInPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
+      const token = await getTokenForCrosscheck({ username: email, password });
+      await signInForCrosscheck({ username: email, password }, token.access_token);
+
       const result = await signIn(NamesClients.PASSWORD, {
         username: email,
         password,
@@ -38,7 +57,8 @@ function SignInPage() {
 
       clearErrors('root');
       if (result?.ok) {
-        router.push(`/`);
+        router.push('/');
+        showSuccess();
       }
       if (result?.error) {
         setError('root.server', {
@@ -52,24 +72,26 @@ function SignInPage() {
           type: 'manual',
           message: e.message,
         } as FieldError);
+        showError(e.message);
       }
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Typography variant="h4" className="m-10">
-        Log in
-      </Typography>
-      <InputEmail register={register} errors={errors} name="email" />
-      <InputPassword register={register} errors={errors} name="password" />
-      {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
-      <Stack spacing={2}>
-        <Button variant="outlined" type="submit">
-          Log in
+      <Stack spacing={1}>
+        <InputEmail register={register} errors={errors} name="email" />
+
+        <InputPassword register={register} errors={errors} name="password" />
+
+        {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
+
+        <Button className='login-btn' variant="outlined" type="submit" sx={{backgroundColor: '#6195c3'}}>
+          Sign in
         </Button>
+
         <Button component={Link} variant="outlined" href="/sign-up">
-          Sign up
+          Registration
         </Button>
       </Stack>
     </form>

@@ -28,7 +28,7 @@ html {
 .header {
   position: fixed;
   z-index: 3;
-  background-color: var(--background-color1);
+  background-color: #6195c3;
 }
 
 main {

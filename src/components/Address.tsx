@@ -15,10 +15,11 @@ import {
   useFieldArray,
   UseFormSetValue,
   UseFormGetValues,
+  useFormContext,
 } from 'react-hook-form';
 import { useState } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
-import { countryPost } from '../enums/countries';
+import { countryPost, ICountryType } from '../enums/countries';
 import { IFormInput } from '../interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
 
@@ -37,6 +38,48 @@ export const enum DefNameAddress {
   SHIPPING = 'defaultShippingAddress',
 }
 
+const validateCity = {
+  required: `City is required`,
+  pattern: {
+    value: /^[a-zA-Z]+$/,
+    message: `City must contain at least one letter`,
+  },
+};
+const validateStreet = {
+  required: `Street is required`,
+  pattern: {
+    value: /^\S(.*\S)?$/,
+    message: 'Street must contain at least one character',
+  },
+};
+const validateStreetNumber = {
+  required: `Number is required`,
+  pattern: {
+    value: /^.+$/,
+    message: 'Must contain at least one character',
+  },
+};
+const validatePostalCode = (countryCode: string, value: string) => {
+  let pattern;
+  switch (countryCode) {
+    case 'Canada':
+      pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
+      break;
+    case 'United States':
+      pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
+      break;
+    case 'Germany':
+      pattern = /^\d{5}$/;
+      break;
+    case 'France':
+      pattern = /^\d{2}[ ]?\d{3}$/;
+      break;
+    default:
+      return false;
+  }
+  return pattern.test(value);
+};
+
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
   watch: UseFormWatch<IFormInput>;
@@ -45,53 +88,36 @@ type Props = Omit<ITextParams, 'control'> & {
 };
 
 function Address({ register, setValue, getValues, errors, control, watch }: Props) {
+  const { setError, clearErrors, getFieldState } = useFormContext<IFormInput, string>();
   const [typeAddresses, setTypeAddresses] = useState([TypeAddress.SHIPPING]);
 
   const validateCountry = {
     required: 'Country is required',
   };
-  const validateCity = {
-    required: `City is required`,
-    pattern: {
-      value: /^[a-zA-Z]+$/,
-      message: `City must contain at least one letter`,
-    },
-  };
-  const validateStreet = {
-    required: `Street is required`,
-    pattern: {
-      value: /^\S(.*\S)?$/,
-      message: 'Street must contain at least one character',
-    },
-  };
-  const validateStreetNumber = {
-    required: `Number is required`,
-    pattern: {
-      value: /^.+$/,
-      message: 'Must contain at least one character',
-    },
-  };
 
-  const validatePostalCode = (countryCode: string, value: string) => {
-    let pattern;
-    switch (countryCode) {
-      case 'Canada':
-        pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
-        break;
-      case 'United States':
-        pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
-        break;
-      case 'Germany':
-        pattern = /^\d{5}$/;
-        break;
-      case 'France':
-        pattern = /^\d{2}[ ]?\d{3}$/;
-        break;
-      default:
-        return false;
-    }
-    return pattern.test(value);
-  };
+  const validateCountryOnSelect =
+    (index: number) => (e: unknown, newValue: ICountryType | null | string) => {
+      const nameCountryField = `addresses.${index}.country` as const;
+      if (countryPost.find(({ label }) => label === newValue)) {
+        clearErrors(nameCountryField);
+        const namePostalCodeField = `addresses.${index}.postalCode` as const;
+        const state = getFieldState(namePostalCodeField);
+        const value = getValues(namePostalCodeField) || '';
+        if (state.isTouched && !validatePostalCode(newValue?.toString() || '', value)) {
+          setError(namePostalCodeField, {
+            type: 'manual',
+            message: 'Invalid ZIP code format',
+          });
+        } else {
+          clearErrors(namePostalCodeField);
+        }
+      } else {
+        setError(nameCountryField, {
+          type: 'manual',
+          message: 'Country is required',
+        });
+      }
+    };
 
   const { fields, append, remove } = useFieldArray({
     name: 'addresses',
@@ -182,6 +208,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
             <Autocomplete
               className="dark:bg-white"
               options={countryPost}
+              onInputChange={validateCountryOnSelect(index)}
               autoHighlight
               getOptionLabel={(option) => option.label}
               renderOption={(props, option) => (

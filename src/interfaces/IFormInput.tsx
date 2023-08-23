@@ -3,6 +3,8 @@ import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/g
 type TypeAddress = {
   shippingAddress?: boolean;
   billingAddress?: boolean;
+  defaultShippingAddress?: boolean;
+  defaultBillingAddress?: boolean;
 };
 
 export interface IFormInput {
@@ -14,6 +16,4 @@ export interface IFormInput {
   dateOfBirth: Date | null;
   checkbox?: boolean;
   addresses: (BaseAddress & TypeAddress)[];
-  defaultShippingAddress: number | null;
-  defaultBillingAddress: number | null;
 }

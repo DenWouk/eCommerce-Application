@@ -36,6 +36,9 @@ function SignUpPage() {
           streetNumber: '',
           postalCode: '',
           shippingAddress: true,
+          billingAddress: false,
+          defaultShippingAddress: false,
+          defaultBillingAddress: false,
         },
       ],
     },
@@ -72,7 +75,6 @@ function SignUpPage() {
     const { email, password } = data;
     try {
       const customerDraft = createCustomerDraft(data);
-
       const tokenForSignUp = await getTokenForCrosscheck();
       await signUpForCrosscheck(customerDraft, tokenForSignUp.access_token);
       const tokenForSignIn = await getTokenForCrosscheck({ username: email, password });

@@ -6,6 +6,7 @@ import {
   Autocomplete,
   Button,
   FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import Image from 'next/image';
 import {
@@ -16,27 +17,14 @@ import {
   UseFormSetValue,
   UseFormGetValues,
   useFormContext,
+  Controller,
 } from 'react-hook-form';
 import { useState } from 'react';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
+import { DefNameAddress, TypeAddress } from '@/src/enums/address';
 import { countryPost, ICountryType } from '../enums/countries';
 import { IFormInput } from '../interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
-
-export const enum TypeAddress {
-  BILLING = 'Billing',
-  SHIPPING = 'Shipping',
-}
-
-export const enum NameAddress {
-  BILLING = 'billing Address',
-  SHIPPING = 'shipping Address',
-}
-
-export const enum DefNameAddress {
-  BILLING = 'defaultBillingAddress',
-  SHIPPING = 'defaultShippingAddress',
-}
 
 const validateCity = {
   required: `City is required`,
@@ -139,18 +127,6 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
   };
 
   const handleRemove = (index: number) => {
-    const bAddress = DefNameAddress.BILLING;
-    const sAddress = DefNameAddress.SHIPPING;
-    const defBilling = getValues(bAddress);
-    const defShipping = getValues(sAddress);
-    setTimeout(() => {
-      defBilling === index + 1 && setValue(bAddress, 5);
-      defShipping === index + 1 && setValue(sAddress, 5);
-    }, 100);
-
-    defBilling === index && setValue(bAddress, null);
-    defShipping === index && setValue(sAddress, null);
-
     typeAddresses.splice(index, 1);
     remove(index);
   };
@@ -161,6 +137,10 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
         const typeAddress = typeAddresses[index];
         return (
           <Stack key={field.id} spacing={1} className="m-10">
+            {typeAddresses.length > 1 && (
+              <Button onClick={() => handleRemove(index)}>remove address</Button>
+            )}
+
             <div className="form-shipping-adress">
               <Typography
                 variant="h4"
@@ -172,45 +152,83 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               <CheckBoxTypeAddress
                 name={`addresses.${index}.shippingAddress`}
                 hidden={typeAddresses[index] === TypeAddress.SHIPPING}
+                interacts={DefNameAddress.SHIPPING}
+                index={index}
                 label="ShippingAddress"
-                register={register}
               />
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.billingAddress`}
                 hidden={typeAddresses[index] === TypeAddress.BILLING}
+                interacts={DefNameAddress.BILLING}
+                index={index}
                 label="Billing Address"
-                register={register}
               />
 
-              <FormControlLabel
-                label="Default Shipping Address"
-                control={
-                  <input
-                    type="radio"
-                    className="input-radio"
-                    {...register(`defaultShippingAddress`)}
-                    value={index}
+              <Controller
+                name={`addresses.${index}.defaultShippingAddress`}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <FormControlLabel
+                    label="Default shipping address"
+                    control={
+                      <Checkbox
+                        checked={!!value}
+                        value={value}
+                        onChange={(e) => {
+                          const addressType = 'shippingAddress' as const;
+                          const { checked } = e.target;
+                          if (checked) {
+                            const values = getValues('addresses');
+                            (typeAddresses[index] === TypeAddress.SHIPPING &&
+                              values[index][addressType]) ||
+                              setValue(`addresses.${index}.${addressType}`, true);
+                            values.forEach(
+                              (_, i) =>
+                                i !== index &&
+                                setValue(`addresses.${i}.defaultShippingAddress`, false)
+                            );
+                          }
+                          onChange(checked);
+                        }}
+                      />
+                    }
                   />
-                }
+                )}
               />
 
-              <FormControlLabel
-                label="Default Billing Address"
-                control={
-                  <input
-                    type="radio"
-                    className="input-radio"
-                    {...register(`defaultBillingAddress`)}
-                    value={index}
+              <Controller
+                name={`addresses.${index}.defaultBillingAddress`}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <FormControlLabel
+                    label="Default billing address"
+                    control={
+                      <Checkbox
+                        checked={!!value}
+                        value={value}
+                        onChange={(e) => {
+                          const addressType = 'billingAddress' as const;
+                          const { checked } = e.target;
+                          if (checked) {
+                            const values = getValues('addresses');
+                            values[index][addressType] ||
+                              setValue(`addresses.${index}.${addressType}`, true);
+                            values.forEach(
+                              (_, i) =>
+                                checked &&
+                                i !== index &&
+                                setValue(`addresses.${i}.defaultBillingAddress`, false)
+                            );
+                          }
+                          onChange(checked);
+                        }}
+                      />
+                    }
                   />
-                }
+                )}
               />
             </div>
-
-            {typeAddresses.length > 1 && (
-              <Button onClick={() => handleRemove(index)}>remove address</Button>
-            )}
 
             <Autocomplete
               className="dark:bg-white"

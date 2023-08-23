@@ -146,13 +146,27 @@ export default function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
-          {!authorized && (
+
+          {authorized ? (
+            <Button
+              component={Link}
+              variant="contained"
+              href=""
+              sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
+              onClick={async () => {
+                await signOut({ redirect: false });
+                router.push('/');
+              }}
+            >
+              Logout
+            </Button>
+          ) : (
             <>
               <Button
                 component={Link}
                 variant="contained"
                 href="/sign-in"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
+                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
               >
                 Sign in
               </Button>
@@ -161,26 +175,11 @@ export default function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-up"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
+                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
               >
                 Sign up
               </Button>
             </>
-          )}
-
-          {authorized && (
-            <Button
-              component={Link}
-              variant="contained"
-              href=""
-              sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
-              onClick={async () => {
-                await signOut({ redirect: false });
-                router.push('/');
-              }}
-            >
-              Logout
-            </Button>
           )}
         </Toolbar>
       </Container>

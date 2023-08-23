@@ -60,24 +60,30 @@ const validateStreetNumber = {
   },
 };
 const validatePostalCode = (countryCode: string, value: string) => {
+  const message = 'Invalid ZIP code format, the correct format is';
+  let errorMessage: string | undefined;
   let pattern;
   switch (countryCode) {
     case 'Canada':
       pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
+      errorMessage = pattern.test(value) ? undefined : `${message} "A1A 1A1" `;
       break;
     case 'United States':
       pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
+      errorMessage = pattern.test(value) ? undefined : `${message} "12345" or "12345-1234"`;
       break;
     case 'Germany':
       pattern = /^\d{5}$/;
+      errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
       break;
     case 'France':
-      pattern = /^\d{2}[ ]?\d{3}$/;
+      pattern = /^\d{5}$/;
+      errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
       break;
     default:
-      return false;
+      errorMessage = "Didn't choose a country";
   }
-  return pattern.test(value);
+  return errorMessage || true;
 };
 
 type Props = Omit<ITextParams, 'control'> & {
@@ -103,10 +109,11 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
         const namePostalCodeField = `addresses.${index}.postalCode` as const;
         const state = getFieldState(namePostalCodeField);
         const value = getValues(namePostalCodeField) || '';
-        if (state.isTouched && !validatePostalCode(newValue?.toString() || '', value)) {
+        const message = validatePostalCode(newValue?.toString() || '', value);
+        if ((state.isTouched || state.invalid) && typeof message === 'string') {
           setError(namePostalCodeField, {
             type: 'manual',
-            message: 'Invalid ZIP code format',
+            message,
           });
         } else {
           clearErrors(namePostalCodeField);

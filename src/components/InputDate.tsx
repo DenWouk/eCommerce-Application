@@ -4,14 +4,14 @@ import { Controller } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
 export default function InputDate({ control }: ITextParams) {
-  function minYear(date: Date, age: number) {
+  const currentDate = new Date();
+  function minusYear(date: Date, age: number) {
     const copyDate = new Date(date);
     copyDate.setFullYear(date.getFullYear() - age);
     return copyDate;
   }
-  const minBirthdate = minYear(new Date(), 13);
-  const maxDate = new Date();
-  maxDate.setFullYear(maxDate.getFullYear() - 13);
+  const maxDate = minusYear(currentDate, 13);
+  const minDate = minusYear(currentDate, 120);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -21,7 +21,8 @@ export default function InputDate({ control }: ITextParams) {
         rules={{
           required: 'You should be at least 13 years old',
           validate: {
-            min: (date) => (date as Date) <= minBirthdate || 'You should be at least 13 years old',
+            min: (date) => (date as Date) >= minDate || 'You should be at more 120 years old',
+            max: (date) => (date as Date) <= maxDate || 'You should be at least 13 years old',
           },
         }}
         render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
@@ -32,6 +33,7 @@ export default function InputDate({ control }: ITextParams) {
             label="Date of Birth"
             className="dark:bg-white"
             maxDate={maxDate}
+            minDate={minDate}
             slotProps={{
               textField: {
                 required: true,

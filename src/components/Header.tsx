@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
@@ -13,7 +15,13 @@ import {
   Typography,
 } from '@mui/material';
 
-export default function Header() {
+type Props = {
+  authorized: boolean | undefined;
+};
+
+export default function Header({ authorized }: Props) {
+  const router = useRouter();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,7 +43,7 @@ export default function Header() {
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
-              fontSize: '24px',
+              fontSize: '22px',
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
@@ -103,6 +111,7 @@ export default function Header() {
               display: { xs: 'flex', md: 'none' },
               justifyContent: 'center',
               fontFamily: 'monospace',
+              fontSize: '16px',
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
@@ -111,7 +120,14 @@ export default function Header() {
             <Link href="/"> eCommerce-App </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', gap: '40px'}}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center',
+              gap: '40px',
+            }}
+          >
             <Link href="/">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Main
@@ -123,13 +139,49 @@ export default function Header() {
                 Products
               </Button>
             </Link>
-            
+
             <Link href="/contacts">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Contacts
               </Button>
             </Link>
           </Box>
+          {!authorized && (
+            <>
+              <Button
+                component={Link}
+                variant="contained"
+                href="/sign-in"
+                sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
+              >
+                Sign in
+              </Button>
+
+              <Button
+                component={Link}
+                variant="contained"
+                href="/sign-up"
+                sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
+              >
+                Sign up
+              </Button>
+            </>
+          )}
+
+          {authorized && (
+            <Button
+              component={Link}
+              variant="contained"
+              href=""
+              sx={{ width: '80px', mr: '5px', fontSize: '10px',  background: '#6195c3fe' }}
+              onClick={async () => {
+                await signOut({ redirect: false });
+                router.push('/');
+              }}
+            >
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

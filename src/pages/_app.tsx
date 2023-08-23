@@ -9,9 +9,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
   return (
     <SessionProvider session={session}>
       <ToastContainer />
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+      <Layout pageProps={pageProps}>
+        <Component {...pageProps} />
+      </Layout>
     </SessionProvider>
   );
 }

@@ -28,6 +28,7 @@ const showError = (message: string) => {
 
 function SignInPage() {
   const form = useForm<IFormInput>({
+    mode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -80,7 +81,7 @@ function SignInPage() {
 
   return (
     <form className="form-registration" onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={1}>
+      <Stack className="m-5" spacing={1}>
         <InputEmail register={register} errors={errors} name="email" />
 
         <InputPassword register={register} errors={errors} name="password" />

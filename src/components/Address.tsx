@@ -141,7 +141,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
               <Button onClick={() => handleRemove(index)}>remove address</Button>
             )}
 
-            <div className="form-shipping-adress">
+            <div className="form-shipping-address">
               <Typography
                 variant="h4"
                 sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}

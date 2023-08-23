@@ -58,10 +58,13 @@ main {
 }
 
 .form-registration {
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.form-shipping-adress {
+.form-shipping-address {
   display: flex;
   flex-direction: column;
   padding: 10px;

@@ -103,7 +103,7 @@ function SignUpPage() {
   return (
     <FormProvider {...form}>
       <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Stack spacing={1} className="m-10">
+        <Stack spacing={1} className="m-5">
           <Typography variant="caption" sx={{ fontSize: '16px' }}>
             Already have an account?
             <Button component={Link} variant="outlined" href="/sign-in" sx={{ ml: '10px' }}>

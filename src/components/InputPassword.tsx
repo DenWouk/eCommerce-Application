@@ -18,6 +18,8 @@ export default function InputPassword({ register, name, errors, disabled = false
     validate: {
       uppercase: (value: string) =>
         /^(?=.*[A-Z])/.test(value) || 'Password must contain at least one uppercase letter',
+      lowercase: (value: string) =>
+        /^(?=.*[a-z])/.test(value) || 'Password must contain at least one lowercase letter',
       digit: (value: string) =>
         /^(?=.*\d)/.test(value) || 'Password must contain at least one digit',
       specialChar: (value: string) =>

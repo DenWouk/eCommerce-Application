@@ -21,7 +21,7 @@ export default function InputDate({ control }: ITextParams) {
         rules={{
           required: true,
           validate: {
-            min: (date) => (date as Date) <= minBirthdate || 'Please, enter a valid date',
+            min: (date) => (date as Date) <= minBirthdate || 'You should be at least 13 years old',
           },
         }}
         render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (

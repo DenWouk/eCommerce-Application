@@ -6,8 +6,8 @@ export default function InputFirstName({ register, name, errors }: ITextParams) 
   const validateText = {
     required: 'First name is required',
     pattern: {
-      value: /[a-zA-Z]/,
-      message: 'First name must contain at least one letter',
+      value: /^[a-zA-Z]+$/,
+      message: 'First name must contain at least one character and no special characters or numbers',
     },
   };
   const error = get(errors, name);

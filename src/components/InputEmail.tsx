@@ -5,9 +5,12 @@ import { ITextParams } from '../interfaces/ITextParams';
 export default function InputEmail({ register, name, errors, disabled = false }: ITextParams) {
   const validateText = {
     required: 'Email Address is required',
-    pattern: {
-      value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      message: 'Please enter a valid email address',
+    validate: {
+      noLeadingTrailingWhitespace: (value: string) =>
+        value.trim() === value ? undefined : 'Email cannot have leading or trailing whitespace',
+      validEmail: (value: string) =>
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value) ||
+        'Please enter a valid email address',
     },
   };
   const error = get(errors, name);
@@ -18,8 +21,8 @@ export default function InputEmail({ register, name, errors, disabled = false }:
       id="outlined-required-emails"
       className="dark:bg-white"
       label="Email"
-      type="email"
-      {...register(name, validateText)}
+      type="text"
+      {...register(name, validateText as any)}
       error={!!error}
       helperText={error?.message}
     />

@@ -64,12 +64,12 @@ function SignUpPage() {
       hideProgressBar: true,
     });
   };
-  const showError = (message: string) => {
-    toast.error(message, {
-      position: toast.POSITION.TOP_CENTER,
-      hideProgressBar: true,
-    });
-  };
+  // const showError = (message: string) => {
+  //   toast.error(message, {
+  //     position: toast.POSITION.TOP_CENTER,
+  //     hideProgressBar: true,
+  //   });
+  // };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
@@ -95,7 +95,6 @@ function SignUpPage() {
           type: 'manual',
           message: e.message,
         } as FieldError);
-        showError(e.message);
       }
     }
   };

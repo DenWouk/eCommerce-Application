@@ -6,7 +6,7 @@ export default function InputLastName({ register, name, errors }: ITextParams) {
   const validateText = {
     required: 'Last name is required',
     pattern: {
-      value: /^[a-zA-Z]+$/,
+      value: /^[a-zA-Zа-яА-Я]+$/,
       message: 'Name cannot contain special characters or numbers',
     },
   };

@@ -26,6 +26,9 @@ export default function InputPassword({ register, name, errors, disabled = false
         value.trim() === value ? undefined : 'Password cannot have leading or trailing whitespace',
       lowercase: (value: string) =>
         /^(?=.*[a-z])/.test(value) || 'Password must contain at least one lowercase letter',
+      noNonLatinChars: (value: string) =>
+        /^[A-Za-z\d!@#$%^&*]*$/.test(value) ||
+        'Password can only contain Latin letters, digits, and special characters',
     },
   };
   const error = get(errors, name);

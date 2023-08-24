@@ -4,7 +4,7 @@ import { ITextParams } from '../pages/interfaces/ITextParams';
 
 export default function InputEmail({ register, name, errors, disabled = false }: ITextParams) {
   const validateText = {
-    required: 'Email Address is required111',
+    required: 'Email Address is required',
     pattern: {
       value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
       message: 'Please enter a valid email address',

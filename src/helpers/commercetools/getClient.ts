@@ -131,13 +131,10 @@ function getClient(
       break;
   }
 
-  return (
-    new ClientBuilder()
-      .withMiddleware(flowMiddleware)
-      // .withLoggerMiddleware()
-      .withMiddleware(createHttpClient(getHTTPMiddlewareOptions(options.hostApi || ROOT_API)))
-      .build()
-  );
+  return new ClientBuilder()
+    .withMiddleware(flowMiddleware)
+    .withMiddleware(createHttpClient(getHTTPMiddlewareOptions(options.hostApi || ROOT_API)))
+    .build();
 }
 
 export default getClient;

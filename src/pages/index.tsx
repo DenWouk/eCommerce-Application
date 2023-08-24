@@ -15,15 +15,25 @@ export default function Home({ authorized }: AuthProps) {
   return (
     <>
       <div className="auth-btns-duplicate">
-        <Button component={Link} variant="outlined" href="/" sx={{width: '95px'}}>
+        <Button component={Link} variant="outlined" href="/" sx={{ width: '95px' }}>
           Main
         </Button>
 
-        <Button component={Link} variant="outlined" href={authorized ? '/' : '/sign-in'} sx={{width: '95px'}}>
+        <Button
+          component={Link}
+          variant="outlined"
+          href={authorized ? '/' : '/sign-in'}
+          sx={{ width: '95px' }}
+        >
           Sign in
         </Button>
 
-        <Button component={Link} variant="outlined" href={authorized ? '/' : '/sign-up'} sx={{width: '95px'}}>
+        <Button
+          component={Link}
+          variant="outlined"
+          href={authorized ? '/' : '/sign-up'}
+          sx={{ width: '95px' }}
+        >
           Sign Up
         </Button>
       </div>

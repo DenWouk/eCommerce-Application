@@ -1,7 +1,7 @@
 import { IconButton, TextField, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { get } from 'react-hook-form';
+import { get, RegisterOptions } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
 export default function InputPassword({ register, name, errors, disabled = false }: ITextParams) {
@@ -9,7 +9,7 @@ export default function InputPassword({ register, name, errors, disabled = false
   const togglePassVisibility = () => {
     setShowPass((prevShowPass) => !prevShowPass);
   };
-  const validateText = {
+  const validateText: RegisterOptions = {
     required: 'Password is required',
     minLength: {
       value: 8,
@@ -42,7 +42,7 @@ export default function InputPassword({ register, name, errors, disabled = false
       type={showPass ? 'text' : 'password'}
       className="dark:bg-white"
       autoComplete="current-password"
-      {...register(name, validateText as any)}
+      {...register(name, validateText)}
       error={!!error}
       helperText={error?.message}
       InputProps={{

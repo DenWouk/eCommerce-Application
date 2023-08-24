@@ -25,7 +25,7 @@ export default withAuth(
   {
     callbacks: {
       authorized() {
-        return true; // If there is a token, the user is authenticated
+        return true;
       },
     },
   }

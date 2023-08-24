@@ -8,7 +8,6 @@ type TypeAddress = {
 };
 
 export interface IFormInput {
-  gg: string;
   email: string;
   password: string;
   lastName?: string;

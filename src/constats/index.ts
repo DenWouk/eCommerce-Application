@@ -1,2 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
-export const TOKEN_KYE = 'access-token' as const;
+const TOKEN_KEY = 'access-token' as const;
+
+export default TOKEN_KEY;

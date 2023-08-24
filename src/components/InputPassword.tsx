@@ -24,6 +24,9 @@ export default function InputPassword({ register, name, errors, disabled = false
         /^(?=.*\d)/.test(value) || 'Password must contain at least one digit',
       specialChar: (value: string) =>
         /^(?=.*[!@#$%^&*])/.test(value) || 'Password must contain at least one special character',
+      noNonLatinChars: (value: string) =>
+        /^[A-Za-z\d!@#$%^&*]*$/.test(value) ||
+        'Password can only contain Latin letters, digits, and special characters',
       noLeadingTrailingWhitespace: (value: string) =>
         value.trim() === value ? undefined : 'Password cannot have leading or trailing whitespace',
     },

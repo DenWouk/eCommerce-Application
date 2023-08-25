@@ -1,16 +1,13 @@
 import { Button } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { getToken } from 'next-auth/jwt';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import NamesClients from '@/src/helpers/commercetools/consts';
+import { AuthProps } from '@/src/types/auth';
+import isAuthorized from '@/src/helpers/auth';
 
-export type AuthProps = {
-  authorized: boolean;
-};
-
-export default function Home({ authorized }: AuthProps) {
+type Props = AuthProps;
+export default function Home({ authorized }: Props) {
   const router = useRouter();
   return (
     <>
@@ -19,21 +16,11 @@ export default function Home({ authorized }: AuthProps) {
           Main
         </Button>
 
-        <Button
-          component={Link}
-          variant="outlined"
-          href={authorized ? '/' : '/sign-in'}
-          sx={{ width: '95px' }}
-        >
+        <Button component={Link} variant="outlined" href="/sign-in" sx={{ width: '95px' }}>
           Sign in
         </Button>
 
-        <Button
-          component={Link}
-          variant="outlined"
-          href={authorized ? '/' : '/sign-up'}
-          sx={{ width: '95px' }}
-        >
+        <Button component={Link} variant="outlined" href="/sign-up" sx={{ width: '95px' }}>
           Sign Up
         </Button>
       </div>
@@ -83,6 +70,6 @@ export default function Home({ authorized }: AuthProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = (await getToken({ req }))?.type === NamesClients.PASSWORD;
+  const authorized = await isAuthorized({ req });
   return { props: { authorized } };
 };

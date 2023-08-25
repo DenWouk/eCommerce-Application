@@ -2,14 +2,17 @@ import { Button, Stack, Typography } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
-import signUpForCrosscheck from '@/src/api/signUpForCrossCheck';
 import LoadingButton from '@/src/components/LoadingButton';
+import { AuthProps } from '@/src/types/auth';
+import isAuthorized from '@/src/helpers/auth';
+import signUp from '@/src/api/signUp';
+import { showSuccess } from '@/src/helpers/toastify';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -17,9 +20,8 @@ import InputFirstName from '../components/InputFirstName';
 import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
-import { getTokenForCrosscheck, signInForCrosscheck } from '../api/signInForCrossCheck';
 
-function SignUpPage() {
+export default function SignUpPage() {
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -57,22 +59,11 @@ function SignUpPage() {
   } = form;
 
   const router = useRouter();
-  const showSuccess = () => {
-    toast.success('Successful Registration!', {
-      position: toast.POSITION.TOP_CENTER,
-      autoClose: 3000,
-      hideProgressBar: true,
-    });
-  };
-
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
     try {
       const customerDraft = createCustomerDraft(data);
-      const tokenForSignUp = await getTokenForCrosscheck();
-      await signUpForCrosscheck(customerDraft, tokenForSignUp.access_token);
-      const tokenForSignIn = await getTokenForCrosscheck({ username: email, password });
-      await signInForCrosscheck({ username: email, password }, tokenForSignIn.access_token);
+      await signUp(customerDraft);
       const result = await signIn(NamesClients.PASSWORD, {
         username: email,
         password,
@@ -80,8 +71,8 @@ function SignUpPage() {
       });
       clearErrors('root');
       if (result?.ok) {
-        router.push('/');
-        showSuccess();
+        router.replace('/');
+        showSuccess('Successful Registration!');
       }
     } catch (e: any) {
       if (e instanceof Error) {
@@ -134,4 +125,8 @@ function SignUpPage() {
     </FormProvider>
   );
 }
-export default SignUpPage;
+
+export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
+  const authorized = await isAuthorized({ req });
+  return { props: { authorized } };
+};

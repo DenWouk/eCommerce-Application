@@ -1,32 +1,21 @@
 import { Stack, Button } from '@mui/material';
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
-import { toast } from 'react-toastify';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import LoadingButton from '@/src/components/LoadingButton';
+import { AuthProps } from '@/src/types/auth';
+import isAuthorized from '@/src/helpers/auth';
+import { showSuccess } from '@/src/helpers/toastify';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
-import { getTokenForCrosscheck, signInForCrosscheck } from '../api/signInForCrossCheck';
 
-const showSuccess = () => {
-  toast.success('Successful Login!', {
-    position: toast.POSITION.TOP_CENTER,
-    autoClose: 3000,
-    hideProgressBar: true,
-  });
-};
-const showError = (message: string) => {
-  toast.error(message, {
-    position: toast.POSITION.TOP_CENTER,
-    hideProgressBar: true,
-  });
-};
-
-function SignInPage() {
+export default function SignInPage() {
+  const router = useRouter();
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -34,8 +23,6 @@ function SignInPage() {
       password: '',
     },
   });
-
-  const router = useRouter();
 
   const {
     register,
@@ -48,19 +35,15 @@ function SignInPage() {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     try {
-      const token = await getTokenForCrosscheck({ username: email, password });
-      await signInForCrosscheck({ username: email, password }, token.access_token);
-
       const result = await signIn(NamesClients.PASSWORD, {
         username: email,
         password,
         redirect: false,
       });
-
       clearErrors('root');
       if (result?.ok) {
-        router.push('/');
-        showSuccess();
+        router.replace('/');
+        showSuccess('Successful login!');
       }
       if (result?.error) {
         setError('root.server', {
@@ -74,7 +57,6 @@ function SignInPage() {
           type: 'manual',
           message: e.message,
         } as FieldError);
-        showError(e.message);
       }
     }
   };
@@ -99,4 +81,7 @@ function SignInPage() {
     </form>
   );
 }
-export default SignInPage;
+export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
+  const authorized = await isAuthorized({ req });
+  return { props: { authorized } };
+};

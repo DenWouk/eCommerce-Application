@@ -11,6 +11,8 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
+    "no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "error",
     "no-debugger": "off",
     "no-console": "warn",
     "class-methods-use-this": "off",

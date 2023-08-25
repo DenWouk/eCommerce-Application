@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     try {
       const responseSignUp = await customerModel.signUp(body);
       res.status(200).json(responseSignUp);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       const code = e?.body?.errors?.[0]?.code;
       if (code === 'DuplicateField' || code === 'invalid_customer_account_credentials') {

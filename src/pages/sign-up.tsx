@@ -74,7 +74,7 @@ export default function SignUpPage() {
         router.replace('/');
         showSuccess('Successful Registration!');
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (e instanceof Error) {
         setError('root.server', {
           type: 'manual',

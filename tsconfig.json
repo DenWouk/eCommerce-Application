@@ -8,6 +8,7 @@
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "noImplicitAny": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,

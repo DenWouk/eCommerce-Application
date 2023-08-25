@@ -51,7 +51,7 @@ export default function SignInPage() {
           message: result.error,
         } as FieldError);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       if (e instanceof Error) {
         setError('root.server', {
           type: 'manual',

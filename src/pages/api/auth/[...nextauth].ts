@@ -1,10 +1,12 @@
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { CustomerSignInResult, ClientResponse, Cart } from '@commercetools/platform-sdk';
+import { ClientResponse, Cart, Customer } from '@commercetools/platform-sdk';
 import { AuthOptions } from 'next-auth/core/types';
+import { getToken, GetTokenParams } from 'next-auth/jwt';
+import { getCookieParser } from 'next/dist/server/api-utils';
 import tokenCache from '@/src/helpers/commercetools/tokenCache';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import builderApiRoot from '@/src/helpers/commercetools/builderApiRoot';
+import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 
 const builder = builderApiRoot;
 
@@ -56,24 +58,45 @@ export const authOptions: AuthOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        tokenCache.clear();
+        const cookies = req?.headers && getCookieParser(req.headers)();
+        let typeBuilder: keyof Pick<TypeBuilderApiRoot, 'createForUser' | 'createForAnonymous'> =
+          'createForUser';
+        let isAnonymousSession: boolean = false;
+        if (cookies) {
+          const jwt = await getToken({ req: { cookies, headers: req.headers } } as GetTokenParams);
+          const { token, type } = jwt || {};
+          isAnonymousSession = type === NamesClients.ANONYMOUS && !!token;
+          if (isAnonymousSession) {
+            typeBuilder = 'createForAnonymous' as const;
+          }
+        }
         if (!credentials) {
           throw new Error('Username and password were not provided');
         }
-        tokenCache.clear();
-        let customer: ClientResponse<CustomerSignInResult> | undefined;
+
+        const client = builder[typeBuilder](credentials);
+        let customer: Customer | undefined;
         try {
-          customer = await builder
-            .createForUser(credentials)
-            .me()
-            .login()
-            .post({
-              body: {
-                email: credentials.username,
-                password: credentials.password,
-              },
-            })
-            .execute();
+          customer = (
+            await client
+              .me()
+              .login()
+              .post({
+                body: {
+                  email: credentials.username,
+                  password: credentials.password,
+                },
+              })
+              .execute()
+          ).body.customer;
+          tokenCache.clear();
+
+          if (isAnonymousSession) {
+            customer = (await builder.createForUser(credentials).me().get().execute()).body;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
           const code = e?.body?.errors?.[0]?.code;
           if (code === 'invalid_customer_account_credentials') {
@@ -82,13 +105,15 @@ export const authOptions: AuthOptions = {
             throw new Error('Oops, something went wrong, try again later');
           }
         }
+        const token = tokenCache.get();
+        tokenCache.clear();
 
-        const { id, firstName, email } = customer.body.customer;
+        const { id, firstName, email } = customer;
         return {
           id,
           name: firstName,
           email,
-          token: tokenCache.get(),
+          token,
           type: NamesClients.PASSWORD,
         };
       },

@@ -1,13 +1,16 @@
 import { Button } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { getToken } from 'next-auth/jwt';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
+import NamesClients from '@/src/helpers/commercetools/consts';
 
-type Props = AuthProps;
-export default function Home({ authorized }: Props) {
+export type AuthProps = {
+  authorized: boolean;
+};
+
+export default function Home({ authorized }: AuthProps) {
   const router = useRouter();
   return (
     <>
@@ -70,6 +73,6 @@ export default function Home({ authorized }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
+  const authorized = (await getToken({ req }))?.type === NamesClients.PASSWORD;
   return { props: { authorized } };
 };

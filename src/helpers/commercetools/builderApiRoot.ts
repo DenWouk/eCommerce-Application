@@ -28,7 +28,7 @@ const {
   CLIENT_ID_UNKNOWN = '',
   CLIENT_SECRET_UNKNOWN = '',
   PROJECT_KEY: PK = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 const passwordClientBuilder = new ClientBuilder();
 const anonymousClientBuilder = new ClientBuilder();

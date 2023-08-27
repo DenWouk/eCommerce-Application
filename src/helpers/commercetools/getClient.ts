@@ -19,7 +19,7 @@ const {
   ROOT_AUTH = '',
   ROOT_API = '',
   PROJECT_KEY = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 function getHTTPMiddlewareOptions(host: string): HttpMiddlewareOptions {
   return {

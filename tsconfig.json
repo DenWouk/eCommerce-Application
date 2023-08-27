@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": [],
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -7,6 +8,7 @@
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "noImplicitAny": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
@@ -28,10 +30,12 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts", "**/*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
     ".next/types/**/*.ts",
     "next.config.js",
     "tailwind.config.js",
-    "postcss.config.js"],
+    "postcss.config.js"
+  ],
   "exclude": ["node_modules"]
 }

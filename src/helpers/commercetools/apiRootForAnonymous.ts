@@ -8,7 +8,7 @@ const {
   CLIENT_ID = '',
   CLIENT_SECRET = '',
   PROJECT_KEY = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 const scopes = SCOPE.split(' ');
 

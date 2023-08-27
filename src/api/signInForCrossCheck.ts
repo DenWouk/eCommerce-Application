@@ -16,10 +16,10 @@ const {
   CLIENT_ID_CO = '',
   CLIENT_SECRET_CO = '',
   SCOPE_CO = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 export async function getTokenForCrosscheck(data?: UserAuthOptions): Promise<Token> {
-  let url = '';
+  let url: string | undefined;
   if (data) {
     url = `${ROOT_AUTH}/oauth/${PROJECT_KEY}/customers/token?grant_type=password&username=${data.username}&password=${data.password}&scope=${SCOPE_CO}`;
   } else {

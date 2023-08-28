@@ -12,7 +12,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { getToken } from 'next-auth/jwt';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import tokenCache from '@/src/helpers/commercetools/tokenCache';
+import { tokenCache } from '@/src/helpers/commercetools/token';
 import { ClientOptions, ExistingTypeClient, Req, TypeClient } from '@/src/types/commercetools';
 
 const {

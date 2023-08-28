@@ -12,7 +12,7 @@ import {
   UserAuthOptions,
 } from '@commercetools/sdk-client-v2';
 import getConfig from 'next/config';
-import tokenCache from '@/src/helpers/commercetools/tokenCache';
+import { tokenCache } from '@/src/helpers/commercetools/token';
 import NamesClients from '@/src/helpers/commercetools/consts';
 
 const {

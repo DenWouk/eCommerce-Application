@@ -10,11 +10,13 @@ declare module 'next-auth' {
     user: DefaultSession['user'];
     id: string;
     type: NamesClients;
+    error?: string;
   }
 
   interface User extends DefaultUser {
     type: NamesClients;
     token: TokenStore;
+    error?: string;
   }
 }
 
@@ -23,5 +25,6 @@ declare module 'next-auth/jwt' {
     id: string;
     type: NamesClients;
     token: TokenStore;
+    error?: string;
   }
 }

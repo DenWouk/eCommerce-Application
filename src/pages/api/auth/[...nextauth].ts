@@ -4,9 +4,9 @@ import { ClientResponse, Cart, Customer } from '@commercetools/platform-sdk';
 import { AuthOptions } from 'next-auth/core/types';
 import { getToken, GetTokenParams } from 'next-auth/jwt';
 import { getCookieParser } from 'next/dist/server/api-utils';
-import tokenCache from '@/src/helpers/commercetools/tokenCache';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
+import { refreshAccessToken, tokenCache } from '@/src/helpers/commercetools/token';
 
 const builder = builderApiRoot;
 
@@ -91,9 +91,9 @@ export const authOptions: AuthOptions = {
               })
               .execute()
           ).body.customer;
-          tokenCache.clear();
 
           if (isAnonymousSession) {
+            tokenCache.clear();
             customer = (await builder.createForUser(credentials).me().get().execute()).body;
           }
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,7 +106,6 @@ export const authOptions: AuthOptions = {
           }
         }
         const token = tokenCache.get();
-        tokenCache.clear();
 
         const { id, firstName, email } = customer;
         return {
@@ -125,13 +124,21 @@ export const authOptions: AuthOptions = {
         const { token: tokenStore, id, type } = user;
         return { ...token, id, type, token: tokenStore };
       }
-      return token;
+
+      if (Date.now() < token.token.expirationTime) {
+        return token;
+      }
+
+      return refreshAccessToken(token);
     },
 
     async session({ session, token }) {
       const { id, type } = token;
       return { ...session, type, id };
     },
+  },
+  session: {
+    maxAge: 180 * 24 * 60 * 60,
   },
   theme: {
     colorScheme: 'light',

@@ -14,6 +14,14 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
+import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import NamesClients from '../helpers/commercetools/consts';
+import productModel from '../helpers/commercetools/product';
+
+type Props = {
+  productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
+};
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,7 +31,12 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function ProductsPage() {
+export default function ProductsPage(props: Props) {
+  const { productsResponse } = props;
+  const products = productsResponse?.body?.results;
+
+  console.log(products[0].name['en-US']);
+
   const [page, setPage] = React.useState(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -77,3 +90,12 @@ export default function ProductsPage() {
     </Container>
   );
 }
+
+export const getServerSideProps = ssrWithAuthToken<Props & { authorized: boolean }>(
+  async ({ req, token }) => {
+    const authorized = token?.type === NamesClients.PASSWORD;
+    const productsResponse = await productModel.getProducts(req);
+
+    return { props: { authorized, productsResponse } };
+  }
+);

@@ -1,7 +1,7 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import getConfig from 'next/config';
 
-const { ROOT_API = '', PROJECT_KEY = '' } = getConfig().publicRuntimeConfig as Record<
+const { ROOT_API = '', PROJECT_KEY = '' } = getConfig().serverRuntimeConfig as Record<
   string,
   string | undefined
 >;

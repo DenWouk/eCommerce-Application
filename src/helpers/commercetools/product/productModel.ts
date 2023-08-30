@@ -49,7 +49,6 @@ class ProductModel {
                 fuzzy: true,
                 limit: LIMIT,
                 priceCurrency: 'USD',
-                filter: 'country="US"',
                 markMatchingVariants: true,
                 sort: sort && `${sort} ${order}`,
                 'text.en-US': `${searchString}`,

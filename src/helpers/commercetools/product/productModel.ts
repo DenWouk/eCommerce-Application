@@ -5,22 +5,17 @@ import { SortOrder } from '@/src/helpers/commercetools/consts';
 
 const LIMIT = 10;
 
-const enum Sort {
-  ASC = 'asc',
-  DESC = 'desc',
-}
-
 export type FilterProducts = {
   search?: string;
   sort?: string;
-  order?: Sort;
+  order?: SortOrder;
 };
 
 class ProductModel {
   constructor(private builder: TypeBuilderApiRoot) {}
 
   async getProducts(req: Req, filter?: FilterProducts) {
-    const { search, sort = 'price', order = SortOrder.DESC } = filter || {};
+    const { search, sort, order } = filter || {};
     let suggest: ClientResponse<SuggestionResult> | undefined;
     let searchString = search;
     if (searchString) {
@@ -54,7 +49,6 @@ class ProductModel {
                 fuzzy: true,
                 limit: LIMIT,
                 priceCurrency: 'USD',
-                priceCountry: 'US',
                 filter: 'country="US"',
                 markMatchingVariants: true,
                 sort: sort && `${sort} ${order}`,
@@ -65,9 +59,7 @@ class ProductModel {
               queryArgs: {
                 limit: LIMIT,
                 priceCurrency: 'USD',
-                priceCountry: 'US',
-                // filter: 'variants.scopedPrice:true',
-                // filter: 'variants.scopedPrice.value.centAmount:range (* to 50000)',
+                filter: 'variants.scopedPrice.value.centAmount:range (* to 500000000)',
                 markMatchingVariants: true,
                 localeProjection: 'US',
               },
@@ -80,21 +72,9 @@ class ProductModel {
     return (await this.builder.getBuilder(req))
       .productProjections()
       .search()
-      .get({ queryArgs: { filter: `categories.id:subtree("${id}")`, expand: 'categories[*]' } })
+      .get({ queryArgs: { filter: `categories.id:"${id}"` } })
       .execute();
   }
-
-  async getProductCategory(req: Req) {
-    return (await this.builder.getBuilder(req)).categories().get().execute();
-  }
-
-  // async getProductWithSort(req: Req, sort: { name: string; order: 'asc' }) {
-  //   return (await this.builder.getBuilder(req))
-  //     .productProjections()
-  //     .search()
-  //     .get({ queryArgs: { filter: `categories.id:subtree("${id}")`, expand: 'categories[*]' } })
-  //     .execute();
-  // }
 
   async getProductById(req: Req, id: string) {
     return (await this.builder.getBuilder(req))

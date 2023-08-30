@@ -29,7 +29,7 @@ import { ITextParams } from '../interfaces/ITextParams';
 const validateCity = {
   required: `City is required`,
   pattern: {
-    value: /^[a-zA-Z]+$/,
+    value: /^[a-zA-Z\s]+$/,
     message: `City must contain at least one letter`,
   },
 };

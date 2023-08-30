@@ -2,10 +2,17 @@ import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
 // import customerModel from '../helpers/commercetools/customer';
 import { useSession } from 'next-auth/react';
+import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import getProfile from '../api/getProfile';
 import { countryPost } from '../enums/countries';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
+import ProfileTabs from '../components/ProfileTabs';
+import InputFirstName from '../components/InputFirstName';
+import { IFormInput } from '../interfaces/IFormInput';
+import signUp from './sign-up';
+import createCustomerDraft from '../helpers/commercetools/customerDraft';
+import NamesClients from '../helpers/commercetools/consts';
 
 export default function ProfilePage() {
   const customerData = {
@@ -74,16 +81,76 @@ export default function ProfilePage() {
               (a2.isDefault as number) - (a1.isDefault as number)
           );
 
-        // console.log({
-        //   addresses,
-        //   shippingAddressIds,
-        //   billingAddressIds,
-        //   data,
-        //   billingAddressesArr,
-        //   shippingAddressesArr,
-        //   defaultShippingAddressId,
-        //   defaultBillingAddressId,
-        // });
+
+  //       const form = useForm<IFormInput>({
+  //         mode: 'onChange',
+  //         defaultValues: {
+  //           email: '',
+  //           password: '',
+  //           firstName: '',
+  //           lastName: '',
+  //           dateOfBirth: null,
+  //           addresses: [
+  //             {
+  //               country: '',
+  //               city: '',
+  //               streetName: '',
+  //               streetNumber: '',
+  //               postalCode: '',
+  //               shippingAddress: true,
+  //               billingAddress: false,
+  //               defaultShippingAddress: false,
+  //               defaultBillingAddress: false,
+  //             },
+  //           ],
+  //         },
+  //       });
+  //       const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
+  //         const { email, password } = data;
+  //         try {
+  //           const customerDraft = createCustomerDraft(data);
+  //           signUp(customerDraft);
+  //           const result = await signIn(NamesClients.PASSWORD, {
+  //             username: email,
+  //             password,
+  //             redirect: false,
+  //           });
+  //           clearErrors('root');
+  //           if (result?.ok) {
+  //             router.replace('/');
+  //             showSuccess('Successful Registration!');
+  //           }
+  //         } catch (e: unknown) {
+  //           if (e instanceof Error) {
+  //             setError('root.server', {
+  //               type: 'manual',
+  //               message: e.message,
+  //             } as FieldError);
+  //           }
+  //         }
+  //       };
+  //       const {
+  //         register,
+  //         setError,
+  //         clearErrors,
+  //         control,
+  //         watch,
+  //         getValues,
+  //         setValue,
+  //         handleSubmit,
+  //         formState: { errors, isSubmitting },
+  //       } = form;
+
+  //       console.log({
+  //         addresses,
+  //         shippingAddressIds,
+  //         billingAddressIds,
+  //         data,
+  //         billingAddressesArr,
+  //         shippingAddressesArr,
+  //         defaultShippingAddressId,
+  //         defaultBillingAddressId,
+  //       });
 
         setProfileInfo(data);
         setShippingAddresses(shippingAddressesArr);
@@ -104,18 +171,27 @@ export default function ProfilePage() {
         </Typography>
 
         <Stack spacing={1}>
-          <Typography>First Name: {firstName}</Typography>
-          <Typography>Last Name: {lastName} </Typography>
-          <Typography>Date of Birth: {dateOfBirth}</Typography>
-          <Typography className="text-center">
-            <strong>User Addresses:</strong>
-          </Typography>
-          <AddressAccordions
-            shippingAddress={shippingAddresses}
-            billingAddress={billingAddresses}
-          />
+          {/* <FormProvider {...form}>
+            <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate> */}
+              {/* <InputFirstName register={register} errors={errors} name="firstName" /> */}
+              <Typography>First Name: {firstName}</Typography>
+              <Typography>Last Name: {lastName} </Typography>
+              <Typography>Date of Birth: {dateOfBirth}</Typography>
+              <Typography className="text-center">
+                <strong>User Addresses:</strong>
+              </Typography>
+              <AddressAccordions
+                shippingAddress={shippingAddresses}
+                billingAddress={billingAddresses}
+              />
+            {/* </form>
+          </FormProvider> */}
         </Stack>
       </Paper>
     </Box>
   );
 }
+export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
+  const authorized = await isAuthorized({ req });
+  return { props: { authorized } };
+};

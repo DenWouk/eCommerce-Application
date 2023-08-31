@@ -29,6 +29,7 @@ export default function InputPassword({ register, name, errors, disabled }: ITex
       noNonLatinChars: (value: string) =>
         /^[A-Za-z\d!@#$%^&*]*$/.test(value) ||
         'Password can only contain Latin letters, digits, and special characters',
+      noMatch: (value: string) => value.match(value) || 'Passwords should match',
     },
   };
   const error = get(errors, name);
@@ -37,8 +38,8 @@ export default function InputPassword({ register, name, errors, disabled }: ITex
     <TextField
       required
       disabled={disabled}
-      id="outlined-password-input"
-      label="Password"
+      id="outlined-password-confirm"
+      label="Confirm Password"
       type={showPass ? 'text' : 'password'}
       className="dark:bg-white"
       autoComplete="current-password"

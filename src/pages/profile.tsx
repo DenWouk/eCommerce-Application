@@ -1,18 +1,12 @@
-import { Box, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { useState, useEffect } from 'react';
-// import customerModel from '../helpers/commercetools/customer';
 import { useSession } from 'next-auth/react';
-import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import HomeIcon from '@mui/icons-material/Home';
 import getProfile from '../api/getProfile';
 import { countryPost } from '../enums/countries';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
-import ProfileTabs from '../components/ProfileTabs';
-import InputFirstName from '../components/InputFirstName';
-import { IFormInput } from '../interfaces/IFormInput';
-import signUp from './sign-up';
-import createCustomerDraft from '../helpers/commercetools/customerDraft';
-import NamesClients from '../helpers/commercetools/consts';
+import UserInfoForm from '../components/UserInfoForm';
 
 export default function ProfilePage() {
   const customerData = {
@@ -27,6 +21,7 @@ export default function ProfilePage() {
     billingAddressIds: [],
     isEmailVerified: false,
     stores: [],
+    version: 1,
   };
 
   const [profileInfo, setProfileInfo] = useState(customerData);
@@ -45,6 +40,7 @@ export default function ProfilePage() {
           defaultShippingAddressId,
           defaultBillingAddressId,
         } = data;
+
         const billingAddressesArr: IBaseAddressProfile[] = billingAddressIds
           .map((addressId: string) => {
             const addressFind = addresses.find(
@@ -81,77 +77,6 @@ export default function ProfilePage() {
               (a2.isDefault as number) - (a1.isDefault as number)
           );
 
-
-  //       const form = useForm<IFormInput>({
-  //         mode: 'onChange',
-  //         defaultValues: {
-  //           email: '',
-  //           password: '',
-  //           firstName: '',
-  //           lastName: '',
-  //           dateOfBirth: null,
-  //           addresses: [
-  //             {
-  //               country: '',
-  //               city: '',
-  //               streetName: '',
-  //               streetNumber: '',
-  //               postalCode: '',
-  //               shippingAddress: true,
-  //               billingAddress: false,
-  //               defaultShippingAddress: false,
-  //               defaultBillingAddress: false,
-  //             },
-  //           ],
-  //         },
-  //       });
-  //       const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
-  //         const { email, password } = data;
-  //         try {
-  //           const customerDraft = createCustomerDraft(data);
-  //           signUp(customerDraft);
-  //           const result = await signIn(NamesClients.PASSWORD, {
-  //             username: email,
-  //             password,
-  //             redirect: false,
-  //           });
-  //           clearErrors('root');
-  //           if (result?.ok) {
-  //             router.replace('/');
-  //             showSuccess('Successful Registration!');
-  //           }
-  //         } catch (e: unknown) {
-  //           if (e instanceof Error) {
-  //             setError('root.server', {
-  //               type: 'manual',
-  //               message: e.message,
-  //             } as FieldError);
-  //           }
-  //         }
-  //       };
-  //       const {
-  //         register,
-  //         setError,
-  //         clearErrors,
-  //         control,
-  //         watch,
-  //         getValues,
-  //         setValue,
-  //         handleSubmit,
-  //         formState: { errors, isSubmitting },
-  //       } = form;
-
-  //       console.log({
-  //         addresses,
-  //         shippingAddressIds,
-  //         billingAddressIds,
-  //         data,
-  //         billingAddressesArr,
-  //         shippingAddressesArr,
-  //         defaultShippingAddressId,
-  //         defaultBillingAddressId,
-  //       });
-
         setProfileInfo(data);
         setShippingAddresses(shippingAddressesArr);
         setBillingAddresses(billingAddressesArr);
@@ -161,37 +86,50 @@ export default function ProfilePage() {
       });
   }, []);
 
-  const { firstName, lastName, dateOfBirth } = profileInfo;
+  const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
 
   return (
     <Box>
-      <Paper component="div" className="p-5" elevation={3}>
-        <Typography align="center" className="m-5">
-          Hello, <strong>{session ? session!.user!.name : 'User'}</strong>! Welcome to your profile!
-        </Typography>
+      <Typography
+        align="center"
+        sx={{
+          fontSize: '18px',
+          fontWeight: 'bold',
+          lineHeight: 1.2,
+          textAlign: 'center',
+          color: '#6195c3',
+        }}
+      >
+        Hello, {session && session!.user!.name}! Welcome to your profile!
+      </Typography>
 
-        <Stack spacing={1}>
-          {/* <FormProvider {...form}>
-            <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate> */}
-              {/* <InputFirstName register={register} errors={errors} name="firstName" /> */}
-              <Typography>First Name: {firstName}</Typography>
-              <Typography>Last Name: {lastName} </Typography>
-              <Typography>Date of Birth: {dateOfBirth}</Typography>
-              <Typography className="text-center">
-                <strong>User Addresses:</strong>
-              </Typography>
-              <AddressAccordions
-                shippingAddress={shippingAddresses}
-                billingAddress={billingAddresses}
-              />
-            {/* </form>
-          </FormProvider> */}
-        </Stack>
-      </Paper>
+      <Stack spacing={1}>
+        <Typography>First Name: {firstName}</Typography>
+        <Typography>Last Name: {lastName} </Typography>
+        <Typography>Date of Birth: {dateOfBirth}</Typography>
+        <Button
+          endIcon={<HomeIcon />}
+          sx={{
+            fontSize: '16px',
+            fontWeight: 'bold',
+            lineHeight: 1.2,
+            textAlign: 'center',
+            color: '#6195c3',
+          }}
+        >
+          User Addresses
+        </Button>
+        <AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} />
+        {firstName && (
+          <UserInfoForm
+            firstName={firstName}
+            lastName={lastName}
+            dateOfBirth={dateOfBirth}
+            emailProp={email}
+            version={version}
+          />
+        )}
+      </Stack>
     </Box>
   );
 }
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

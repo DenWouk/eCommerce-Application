@@ -10,9 +10,12 @@ type TypeAddress = {
 export interface IFormInput {
   email: string;
   password: string;
+  passwordConfirm?: string;
   lastName?: string;
   firstName?: string;
   dateOfBirth: Date | null;
   checkbox?: boolean;
   addresses: (BaseAddress & TypeAddress)[];
+  form?: string;
+  version?: number;
 }

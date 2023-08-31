@@ -3,7 +3,7 @@ import { get, RegisterOptions } from 'react-hook-form';
 import { IFormInput } from '@/src/interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputEmail({ register, name, errors, disabled = false }: ITextParams) {
+export default function InputEmail({ register, name, errors, disabled }: ITextParams) {
   const validateText: RegisterOptions = {
     required: 'Email Address is required',
     validate: {

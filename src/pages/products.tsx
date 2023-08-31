@@ -35,7 +35,7 @@ export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const products = productsResponse?.body?.results;
 
-  console.log(products[0].name['en-US']);
+  console.log(products);
 
   const [page, setPage] = React.useState(1);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -46,10 +46,16 @@ export default function ProductsPage(props: Props) {
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px' }}>
       <Box sx={{ minWidth: '25%' }}>
         <Paper
-          sx={{ position: 'fixed', left: '20px', width: '25%', height: 'calc(100vh - 140px)' }}
+          sx={{
+            position: 'fixed',
+            left: '20px',
+            width: '25%',
+            height: 'calc(100vh - 140px)',
+            padding: '10px',
+          }}
         >
           <Typography gutterBottom variant="h5" component="div">
-            Lizard
+            Filters
           </Typography>
         </Paper>
       </Box>
@@ -60,22 +66,38 @@ export default function ProductsPage(props: Props) {
         </Stack>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {Array.from(Array(9)).map((_, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
+            {Array.from(Array(6)).map((_, index) => (
+              <Grid item xs={3} sm={4} md={4} key={index}>
                 <Card sx={{ maxWidth: 345 }}>
-                  <CardMedia sx={{ height: 140 }} image="/1.jpg" title="green iguana" />
+                  <CardMedia
+                    component="img"
+                    sx={{ height: 140 }}
+                    image={products[index]?.masterVariant.images?.[0]?.url}
+                    title="green iguana"
+                  />
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Lizard
+                    <Typography gutterBottom variant="h6" component="div">
+                      {products[index]?.name['en-US']}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Lizards are a widespread group of squamate reptiles, with over 6,000 species,
-                      ranging across all continents except Antarctica
+
+                    <Typography gutterBottom variant="subtitle1" color="text.secondary">
+                      {`year: ${products[index]?.masterVariant?.attributes?.[2].value}`}
+                    </Typography>
+
+                    <Typography gutterBottom variant="subtitle1" color="text.secondary">
+                      {`odometer: ${products[index]?.masterVariant?.attributes?.[5].value}`}
+                    </Typography>
+
+                    <Typography gutterBottom variant="subtitle1" color="text.secondary">
+                      {`gearbox: ${products[index]?.masterVariant?.attributes?.[4].value[0].label}`}
+                    </Typography>
+
+                    <Typography variant="subtitle1">
+                      {products[index]?.masterVariant?.attributes?.[6].value}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">Share</Button>
-                    <Button size="small">Learn More</Button>
+                    <Button size="small">Details</Button>
                   </CardActions>
                 </Card>
               </Grid>

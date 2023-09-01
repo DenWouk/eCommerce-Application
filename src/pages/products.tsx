@@ -1,16 +1,15 @@
 import React from 'react';
-import { experimentalStyled as styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardMedia,
   Container,
+  Grid,
   Pagination,
+  Paper,
   Stack,
   Typography,
 } from '@mui/material';
@@ -22,14 +21,6 @@ import productModel from '../helpers/commercetools/product';
 type Props = {
   productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
 };
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
 
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;

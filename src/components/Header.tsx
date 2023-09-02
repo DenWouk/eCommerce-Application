@@ -49,7 +49,7 @@ export default function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/"> eCommerce-App</Link>
+            <Link href="/">Classic Cars</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
@@ -117,7 +117,7 @@ export default function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/"> eCommerce-App </Link>
+            <Link href="/">Classic Cars</Link>
           </Typography>
 
           <Box

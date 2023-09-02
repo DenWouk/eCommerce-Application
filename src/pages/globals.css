@@ -29,7 +29,7 @@ html {
 
 .header {
   position: fixed;
-  z-index: 3;
+  z-index: 5;
   background-color: var(--background-color1) !important;
 }
 
@@ -111,7 +111,7 @@ main {
   position: fixed;
   top: unset;
   bottom: 0;
-  z-index: 3;
+  z-index: 5;
   font-size: 16px;
   background-color: var(--background-color1) !important;
   box-shadow:

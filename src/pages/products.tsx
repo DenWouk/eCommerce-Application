@@ -35,13 +35,14 @@ export default function ProductsPage(props: Props) {
 
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px' }}>
-      <Box sx={{ minWidth: '25%' }}>
+      <Box sx={{ minWidth: '26%' }}>
         <Paper
           sx={{
             position: 'fixed',
             left: '20px',
             width: '25%',
             height: 'calc(100vh - 140px)',
+            minWidth: '200px',
             padding: '10px',
           }}
         >

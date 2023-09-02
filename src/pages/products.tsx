@@ -17,6 +17,8 @@ import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
 import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import NamesClients from '../helpers/commercetools/consts';
 import productModel from '../helpers/commercetools/product';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 type Props = {
   productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
@@ -25,6 +27,7 @@ type Props = {
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const products = productsResponse?.body?.results;
+  const router = useRouter();
 
   console.log(products);
 
@@ -58,38 +61,38 @@ export default function ProductsPage(props: Props) {
         </Stack>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {Array.from(Array(6)).map((_, index) => (
-              <Grid item xs={3} sm={4} md={4} key={index}>
+            {products.slice(0, 6).map((product, index) => (
+              <Grid item xs={3} sm={4} md={4} key={product.id}>
                 <Card sx={{ maxWidth: 345 }}>
                   <CardMedia
                     component="img"
                     sx={{ height: 140 }}
-                    image={products[index]?.masterVariant.images?.[0]?.url}
-                    title="green iguana"
+                    image={product?.masterVariant.images?.[0]?.url}
+                    title="car"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h6" component="div">
-                      {products[index]?.name['en-US']}
+                      {product?.name['en-US']}
                     </Typography>
 
                     <Typography gutterBottom variant="subtitle1" color="text.secondary">
-                      {`year: ${products[index]?.masterVariant?.attributes?.[2].value}`}
+                      {`year: ${product?.masterVariant?.attributes?.[2].value}`}
                     </Typography>
 
                     <Typography gutterBottom variant="subtitle1" color="text.secondary">
-                      {`odometer: ${products[index]?.masterVariant?.attributes?.[5].value}`}
+                      {`odometer: ${product?.masterVariant?.attributes?.[5].value}`}
                     </Typography>
 
                     <Typography gutterBottom variant="subtitle1" color="text.secondary">
-                      {`gearbox: ${products[index]?.masterVariant?.attributes?.[4].value[0].label}`}
+                      {`gearbox: ${product?.masterVariant?.attributes?.[4].value[0].label}`}
                     </Typography>
 
                     <Typography variant="subtitle1">
-                      {products[index]?.masterVariant?.attributes?.[6].value}
+                      {product?.masterVariant?.attributes?.[6].value}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    <Button size="small">Details</Button>
+                    <Button component={Link} size="small" href={`/${product.id}`} >Details</Button>
                   </CardActions>
                 </Card>
               </Grid>

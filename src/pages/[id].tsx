@@ -1,40 +1,40 @@
 import React from 'react';
-import { Box, Container, List, ListItem, Paper, Stack, Typography } from '@mui/material';
+import { Box, Container, Paper, Stack, Typography } from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
+import { ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
 import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
 import NamesClients from '../helpers/commercetools/consts';
 import productModel from '../helpers/commercetools/product';
 
 type Props = {
-  productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
+  productResponse: ClientResponse<ProductProjection>;
 };
 
 export default function BasicStack(props: Props) {
-  const { productsResponse } = props;
-  const products = productsResponse?.body?.results;
+  const { productResponse } = props;
+  const product = productResponse?.body;
 
   const images = [
     {
-      original: `${products[0]?.masterVariant.images?.[0]?.url}`,
-      thumbnail: `${products[0]?.masterVariant.images?.[0]?.url}`,
+      original: `${product?.masterVariant.images?.[0]?.url}`,
+      thumbnail: `${product?.masterVariant.images?.[0]?.url}`,
     },
     {
-      original: `${products[0]?.masterVariant.images?.[1]?.url}`,
-      thumbnail: `${products[0]?.masterVariant.images?.[1]?.url}`,
+      original: `${product?.masterVariant.images?.[1]?.url}`,
+      thumbnail: `${product?.masterVariant.images?.[1]?.url}`,
     },
     {
-      original: `${products[0]?.masterVariant.images?.[2]?.url}`,
-      thumbnail: `${products[0]?.masterVariant.images?.[2]?.url}`,
+      original: `${product?.masterVariant.images?.[2]?.url}`,
+      thumbnail: `${product?.masterVariant.images?.[2]?.url}`,
     },
     {
-      original: `${products[0]?.masterVariant.images?.[3]?.url}`,
-      thumbnail: `${products[0]?.masterVariant.images?.[3]?.url}`,
+      original: `${product?.masterVariant.images?.[3]?.url}`,
+      thumbnail: `${product?.masterVariant.images?.[3]?.url}`,
     },
     {
-      original: `${products[0]?.masterVariant.images?.[4]?.url}`,
-      thumbnail: `${products[0]?.masterVariant.images?.[4]?.url}`,
+      original: `${product?.masterVariant.images?.[4]?.url}`,
+      thumbnail: `${product?.masterVariant.images?.[4]?.url}`,
     },
   ];
 
@@ -62,7 +62,7 @@ export default function BasicStack(props: Props) {
                   justifyContent: 'center',
                 }}
               >
-                <Typography variant="h5">{products[0]?.name['en-US']}</Typography>
+                <Typography variant="h5">{product?.name['en-US']}</Typography>
               </Box>
 
               <Box>
@@ -79,29 +79,29 @@ export default function BasicStack(props: Props) {
                 }}
               >
                 <Box>
-                  <Typography variant="h5">{products[0]?.name['en-US']}</Typography>
+                  <Typography variant="h5">{product?.name['en-US']}</Typography>
 
                   <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
-                    {`Price: ${products[0].masterVariant.attributes?.[6].value}`}
+                    {`Price: ${product.masterVariant.attributes?.[6].value}`}
                   </Typography>
 
                   <Typography>
                     <span style={styleSpan}>car ID: </span>
-                    {products[0].key} <br />
+                    {product.key} <br />
                     <span style={styleSpan}>location: </span>
-                    {products[0].masterVariant.attributes?.[8].value} <br />
+                    {product.masterVariant.attributes?.[8].value} <br />
                     <span style={styleSpan}>year: </span>
-                    {products[0].masterVariant.attributes?.[2].value} <br />
+                    {product.masterVariant.attributes?.[2].value} <br />
                     <span style={styleSpan}>odometer: </span>
-                    {products[0].masterVariant.attributes?.[5].value} <br />
+                    {product.masterVariant.attributes?.[5].value} <br />
                     <span style={styleSpan}>engine: </span>
-                    {products[0].masterVariant.attributes?.[9].value} <br />
+                    {product.masterVariant.attributes?.[9].value} <br />
                     <span style={styleSpan}>gearbox: </span>
-                    {products[0].masterVariant.attributes?.[4].value[0].label} <br />
+                    {product.masterVariant.attributes?.[4].value[0].label} <br />
                     <span style={styleSpan}>color: </span>
-                    {products[0].masterVariant.attributes?.[3].value[0].label} <br />
+                    {product.masterVariant.attributes?.[3].value[0].label} <br />
                     <span style={styleSpan}>interior: </span>
-                    {products[0].masterVariant.attributes?.[10].value} <br />
+                    {product.masterVariant.attributes?.[10].value} <br />
                   </Typography>
                 </Box>
               </Box>
@@ -115,35 +115,35 @@ export default function BasicStack(props: Props) {
               p: '20px',
             }}
           >
-            <Typography variant="h5">{products[0]?.name['en-US']}</Typography>
+            <Typography variant="h5">{product?.name['en-US']}</Typography>
 
             <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
-              {`Price: ${products[0].masterVariant.attributes?.[6].value}`}
+              {`Price: ${product.masterVariant.attributes?.[6].value}`}
             </Typography>
 
             <Typography>
               <span style={styleSpan}>car ID: </span>
-              {products[0].key} <br />
+              {product.key} <br />
               <span style={styleSpan}>location: </span>
-              {products[0].masterVariant.attributes?.[8].value} <br />
+              {product.masterVariant.attributes?.[8].value} <br />
               <span style={styleSpan}>year: </span>
-              {products[0].masterVariant.attributes?.[2].value} <br />
+              {product.masterVariant.attributes?.[2].value} <br />
               <span style={styleSpan}>odometer: </span>
-              {products[0].masterVariant.attributes?.[5].value} <br />
+              {product.masterVariant.attributes?.[5].value} <br />
               <span style={styleSpan}>engine: </span>
-              {products[0].masterVariant.attributes?.[9].value} <br />
+              {product.masterVariant.attributes?.[9].value} <br />
               <span style={styleSpan}>gearbox: </span>
-              {products[0].masterVariant.attributes?.[4].value[0].label} <br />
+              {product.masterVariant.attributes?.[4].value[0].label} <br />
               <span style={styleSpan}>color: </span>
-              {products[0].masterVariant.attributes?.[3].value[0].label} <br />
+              {product.masterVariant.attributes?.[3].value[0].label} <br />
               <span style={styleSpan}>interior: </span>
-              {products[0].masterVariant.attributes?.[10].value} <br />
+              {product.masterVariant.attributes?.[10].value} <br />
             </Typography>
           </Paper>
 
           <Paper sx={{ display: 'flex', flexDirection: 'column', gap: '10px', p: '20px' }}>
             <Typography variant="h6">Vehicle Description:</Typography>
-            <Typography>{products[0].description?.['en-US']}</Typography>
+            <Typography>{product.description?.['en-US']}</Typography>
           </Paper>
         </Stack>
       </Box>
@@ -151,11 +151,27 @@ export default function BasicStack(props: Props) {
   );
 }
 
-export const getServerSideProps = ssrWithAuthToken<Props & { authorized: boolean }>(
-  async ({ req, token }) => {
-    const authorized = token?.type === NamesClients.PASSWORD;
-    const productsResponse = await productModel.getProducts(req);
+export const getServerSideProps = ssrWithAuthToken<
+  Props & { authorized: boolean },
+  { id?: string }
+>(async (context) => {
+  const { req, params, token } = context;
+  const { id } = params || {};
+  console.log(id);
 
-    return { props: { authorized, productsResponse } };
+  if (!id) {
+    return { notFound: true };
   }
-);
+
+  const authorized = token?.type === NamesClients.PASSWORD;
+  try {
+    const productResponse = await productModel.getProductById(req, id);
+
+
+    return { props: { authorized, productResponse } };
+  } catch (e) {
+    console.log(e);
+
+    return { notFound: true };
+  }
+});

@@ -17,7 +17,6 @@ import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
 import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import NamesClients from '../helpers/commercetools/consts';
 import productModel from '../helpers/commercetools/product';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 type Props = {
@@ -27,7 +26,6 @@ type Props = {
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const products = productsResponse?.body?.results;
-  const router = useRouter();
 
   console.log(products);
 

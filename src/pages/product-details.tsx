@@ -78,28 +78,32 @@ export default function BasicStack(props: Props) {
                   minWidth: '30%',
                 }}
               >
-                <Typography>
+                <Box>
                   <Typography variant="h5">{products[0]?.name['en-US']}</Typography>
+
                   <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
                     {`Price: ${products[0].masterVariant.attributes?.[6].value}`}
                   </Typography>
-                  <span style={styleSpan}>car ID: </span>
-                  {products[0].key} <br />
-                  <span style={styleSpan}>location: </span>
-                  {products[0].masterVariant.attributes?.[8].value} <br />
-                  <span style={styleSpan}>year: </span>
-                  {products[0].masterVariant.attributes?.[2].value} <br />
-                  <span style={styleSpan}>odometer: </span>
-                  {products[0].masterVariant.attributes?.[5].value} <br />
-                  <span style={styleSpan}>engine: </span>
-                  {products[0].masterVariant.attributes?.[9].value} <br />
-                  <span style={styleSpan}>gearbox: </span>
-                  {products[0].masterVariant.attributes?.[4].value[0].label} <br />
-                  <span style={styleSpan}>color: </span>
-                  {products[0].masterVariant.attributes?.[3].value[0].label} <br />
-                  <span style={styleSpan}>interior: </span>
-                  {products[0].masterVariant.attributes?.[10].value} <br />
-                </Typography>
+
+                  <Typography>
+                    <span style={styleSpan}>car ID: </span>
+                    {products[0].key} <br />
+                    <span style={styleSpan}>location: </span>
+                    {products[0].masterVariant.attributes?.[8].value} <br />
+                    <span style={styleSpan}>year: </span>
+                    {products[0].masterVariant.attributes?.[2].value} <br />
+                    <span style={styleSpan}>odometer: </span>
+                    {products[0].masterVariant.attributes?.[5].value} <br />
+                    <span style={styleSpan}>engine: </span>
+                    {products[0].masterVariant.attributes?.[9].value} <br />
+                    <span style={styleSpan}>gearbox: </span>
+                    {products[0].masterVariant.attributes?.[4].value[0].label} <br />
+                    <span style={styleSpan}>color: </span>
+                    {products[0].masterVariant.attributes?.[3].value[0].label} <br />
+                    <span style={styleSpan}>interior: </span>
+                    {products[0].masterVariant.attributes?.[10].value} <br />
+                  </Typography>
+                </Box>
               </Box>
             </Stack>
           </Paper>

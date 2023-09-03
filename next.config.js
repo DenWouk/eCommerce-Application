@@ -24,6 +24,18 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.rackcdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.learningcontainer.com',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

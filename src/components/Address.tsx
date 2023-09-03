@@ -25,54 +25,12 @@ import { DefNameAddress, TypeAddress } from '@/src/enums/address';
 import { countryPost, ICountryType } from '../enums/countries';
 import { IFormInput } from '../interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
-
-const validateCity = {
-  required: `City is required`,
-  pattern: {
-    value: /^[a-zA-Z]+$/,
-    message: `City must contain at least one letter`,
-  },
-};
-const validateStreet = {
-  required: `Street is required`,
-  pattern: {
-    value: /^\S(.*\S)?$/,
-    message: 'Street must contain at least one character',
-  },
-};
-const validateStreetNumber = {
-  required: `Number is required`,
-  pattern: {
-    value: /^.+$/,
-    message: 'Must contain at least one character',
-  },
-};
-const validatePostalCode = (countryCode: string, value: string) => {
-  const message = 'Invalid ZIP code format, the correct format is';
-  let errorMessage: string | undefined;
-  let pattern;
-  switch (countryCode) {
-    case 'Canada':
-      pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
-      errorMessage = pattern.test(value) ? undefined : `${message} "A1A 1A1" `;
-      break;
-    case 'United States':
-      pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
-      errorMessage = pattern.test(value) ? undefined : `${message} "12345" or "12345-1234"`;
-      break;
-    case 'Germany':
-      pattern = /^\d{5}$/;
-      errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
-      break;
-    case 'France':
-      pattern = /^\d{5}$/;
-      errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
-      break;
-    default:
-      errorMessage = "Didn't choose a country";
-  }
-  return errorMessage || true;
-};
+import {
+  validateCity,
+  validateStreet,
+  validateStreetNumber,
+  validatePostalCode,
+} from '../helpers/addressValidators';
 
 type Props = Omit<ITextParams, 'control'> & {
   control: Control<IFormInput, string>;
@@ -81,9 +39,14 @@ type Props = Omit<ITextParams, 'control'> & {
   getValues: UseFormGetValues<IFormInput>;
 };
 
-function Address({ register, setValue, getValues, errors, control, watch }: Props) {
+function Address({ register, setValue, getValues, errors, control, watch, disabled }: Props) {
   const { setError, clearErrors, getFieldState } = useFormContext<IFormInput, string>();
   const [typeAddresses, setTypeAddresses] = useState([TypeAddress.SHIPPING]);
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'addresses',
+    control,
+  });
 
   const validateCountry = {
     required: 'Country is required',
@@ -114,11 +77,6 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
       }
     };
 
-  const { fields, append, remove } = useFieldArray({
-    name: 'addresses',
-    control,
-  });
-
   const handleAdd = (typeAddress: TypeAddress) => {
     const typeAddressObject =
       typeAddress === TypeAddress.SHIPPING ? { shippingAddress: true } : { billingAddress: true };
@@ -135,6 +93,12 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
     <>
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
+        const countryDefault = countryPost.find((c) => c.code === field.country) || {
+          code: 'US',
+          label: 'United States',
+          phone: '1',
+          suggested: true,
+        };
         return (
           <Stack key={field.id} spacing={1} className="m-10">
             {typeAddresses.length > 1 && (
@@ -151,14 +115,16 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.shippingAddress`}
+                disabled={disabled}
                 hidden={typeAddresses[index] === TypeAddress.SHIPPING}
                 interacts={DefNameAddress.SHIPPING}
                 index={index}
-                label="ShippingAddress"
+                label="Shipping Address"
               />
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.billingAddress`}
+                disabled={disabled}
                 hidden={typeAddresses[index] === TypeAddress.BILLING}
                 interacts={DefNameAddress.BILLING}
                 index={index}
@@ -171,6 +137,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 render={({ field: { onChange, value } }) => (
                   <FormControlLabel
                     label="Default shipping address"
+                    disabled={disabled}
                     control={
                       <Checkbox
                         checked={!!value}
@@ -181,9 +148,9 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                           if (checked) {
                             const values = getValues('addresses');
                             (typeAddresses[index] === TypeAddress.SHIPPING &&
-                              values[index][addressType]) ||
+                              values![index][addressType]) ||
                               setValue(`addresses.${index}.${addressType}`, true);
-                            values.forEach(
+                            values!.forEach(
                               (_, i) =>
                                 i !== index &&
                                 setValue(`addresses.${i}.defaultShippingAddress`, false)
@@ -203,18 +170,21 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 render={({ field: { onChange, value } }) => (
                   <FormControlLabel
                     label="Default billing address"
+                    disabled={disabled}
                     control={
                       <Checkbox
                         checked={!!value}
+                        disabled={disabled}
                         value={value}
                         onChange={(e) => {
                           const addressType = 'billingAddress' as const;
                           const { checked } = e.target;
                           if (checked) {
                             const values = getValues('addresses');
-                            values[index][addressType] ||
+
+                            values![index][addressType] ||
                               setValue(`addresses.${index}.${addressType}`, true);
-                            values.forEach(
+                            values!.forEach(
                               (_, i) =>
                                 checked &&
                                 i !== index &&
@@ -232,10 +202,13 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
 
             <Autocomplete
               className="dark:bg-white"
+              disabled={disabled}
               options={countryPost}
               onInputChange={validateCountryOnSelect(index)}
               autoHighlight
+              isOptionEqualToValue={(option, value) => option.code === value.code}
               getOptionLabel={(option) => option.label}
+              defaultValue={countryDefault}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                   <Image
@@ -252,6 +225,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
                 <TextField
                   {...params}
                   label="Choose a country"
+                  disabled={disabled}
                   inputProps={{
                     ...params.inputProps,
                     autoComplete: 'new-password',
@@ -266,6 +240,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
 
             <TextField
               required
+              disabled={disabled}
               id="outlined-required-city"
               className="dark:bg-white"
               label="City"
@@ -277,6 +252,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
 
             <TextField
               required
+              disabled={disabled}
               id="outlined-required-streetname"
               className="dark:bg-white"
               label="Street Name"
@@ -289,6 +265,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
             <div className="flex flex-nowrap gap-2">
               <TextField
                 required
+                disabled={disabled}
                 id="outlined-required-streetnum"
                 className="dark:bg-white"
                 label="Street Number"
@@ -301,6 +278,7 @@ function Address({ register, setValue, getValues, errors, control, watch }: Prop
 
               <TextField
                 required
+                disabled={disabled}
                 id="outlined-required-postal"
                 className="dark:bg-white"
                 label="Post"

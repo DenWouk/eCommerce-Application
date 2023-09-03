@@ -3,7 +3,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Controller } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputDate({ control }: ITextParams) {
+export default function InputDate({ control, disabled }: ITextParams) {
   const currentDate = new Date();
   function minusYear(date: Date, age: number) {
     const copyDate = new Date(date);
@@ -28,6 +28,7 @@ export default function InputDate({ control }: ITextParams) {
         render={({ field: { ref, onBlur, name, onChange, ...field }, fieldState }) => (
           <DatePicker
             {...field}
+            disabled={disabled}
             inputRef={ref}
             onChange={onChange}
             label="Date of Birth"

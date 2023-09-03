@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import { get } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputFirstName({ register, name, errors }: ITextParams) {
+export default function InputFirstName({ register, name, errors, disabled }: ITextParams) {
   const validateText = {
     required: 'First name is required',
     pattern: {
@@ -15,6 +15,7 @@ export default function InputFirstName({ register, name, errors }: ITextParams) 
   return (
     <TextField
       required
+      disabled={disabled}
       id="outlined-firstname-input"
       label="First Name"
       type="text"

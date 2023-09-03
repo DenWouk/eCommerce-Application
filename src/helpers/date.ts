@@ -11,3 +11,8 @@ export default function formatDate(date: Date | null) {
 
   return `${year}-${month}-${day}`;
 }
+
+export function convertFormatDate(date: string) {
+  const [year, month, day] = date.split('-');
+  return `${month}-${day}-${year}`;
+}

@@ -4,7 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { get, RegisterOptions } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputPassword({ register, name, errors, disabled = false }: ITextParams) {
+export default function InputPassword({ register, name, label, errors, disabled }: ITextParams) {
   const [showPass, setShowPass] = useState(false);
   const togglePassVisibility = () => {
     setShowPass((prevShowPass) => !prevShowPass);
@@ -38,10 +38,10 @@ export default function InputPassword({ register, name, errors, disabled = false
       required
       disabled={disabled}
       id="outlined-password-input"
-      label="Password"
+      label={label}
       type={showPass ? 'text' : 'password'}
       className="dark:bg-white"
-      autoComplete="current-password"
+      // autoComplete="current-password"
       {...register(name, validateText)}
       error={!!error}
       helperText={error?.message}

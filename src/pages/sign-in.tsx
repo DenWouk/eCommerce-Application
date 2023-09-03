@@ -66,7 +66,7 @@ export default function SignInPage() {
       <Stack className="m-5" spacing={1}>
         <InputEmail register={register} errors={errors} name="email" />
 
-        <InputPassword register={register} errors={errors} name="password" />
+        <InputPassword register={register} errors={errors} name="password" label="Password" />
 
         {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 

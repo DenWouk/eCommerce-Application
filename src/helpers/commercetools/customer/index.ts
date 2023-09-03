@@ -1,4 +1,5 @@
 import { CustomerSignin } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/customer';
+import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { Req } from '@/src/types/commercetools';
 
@@ -7,6 +8,10 @@ class CustomerModel {
 
   async getMe(req: Req) {
     return (await this.builder.getBuilder(req)).me().get().execute();
+  }
+
+  async updateMe(req: Req, body: MyCustomerUpdate) {
+    return (await this.builder.getBuilder(req)).me().post({ body }).execute();
   }
 
   async signIn(user: CustomerSignin) {
@@ -19,6 +24,5 @@ class CustomerModel {
       .execute();
   }
 }
-
 const customerModel = new CustomerModel(builderApiRoot);
 export default customerModel;

@@ -8,45 +8,32 @@ import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import { AuthProps } from '@/src/types/auth';
 import isAuthorized from '@/src/helpers/auth';
-import InputEmail from './InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
-import InputFirstName from './InputFirstName';
-import InputLastName from './InputLastName';
-import InputDate from './InputDate';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
-import formatDate, { convertFormatDate } from '../helpers/date';
+import InputPasswordConfirm from './InputPasswordConfirm';
+import InputPassword from './InputPassword';
 
 type UserInfo = {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string | Date;
-  emailProp: string;
+  password: string;
   version: number;
 };
-export default function UserInfoForm({
-  firstName,
-  lastName,
-  dateOfBirth,
-  emailProp,
+export default function UserInfoPassForm({
+  password,
   version,
 }: UserInfo) {
 
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
-      email: emailProp,
-      firstName,
-      lastName,
-      dateOfBirth: new Date(convertFormatDate(dateOfBirth as string)),
-    },
+      password,
+      },
   });
 
   const {
     register,
     setError,
     clearErrors,
-    control,
     handleSubmit,
     formState: { errors },
   } = form;
@@ -60,10 +47,10 @@ export default function UserInfoForm({
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
-      const result = await updateProfile({ ...data, dateOfBirth: dateOfBirthModified as string, version, form: 'generalInfo' });
+      // const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
+      const result = await updateProfile({ ...data, password: password as string, version, form: 'generalInfo' });
       clearErrors('root');
-      console.log(result, 'result after clear');
+      console.log(data, 'data after clear');
 
       if (result?.id) {
         router.push('/profile');
@@ -95,46 +82,22 @@ export default function UserInfoForm({
             }}
             onClick={handleUpdateClick}
           >
-            Edit Your Info
+            Edit Your PassWord
           </Button>
 
-          <InputEmail register={register} errors={errors} name="email" disabled={isDisabled} />
-
-          {/* <InputPassword
+          <InputPassword
             register={register}
             errors={errors}
             name="password"
             disabled={isDisabled}
-          /> */}
-
-          {/* <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" disabled={isDisabled}/> */}
-
-          <InputFirstName
-            register={register}
-            errors={errors}
-            name="firstName"
-            disabled={isDisabled}
           />
 
-          <InputLastName
-            register={register}
-            errors={errors}
-            name="lastName"
-            disabled={isDisabled}
-          />
-
-          <InputDate
-            register={register}
-            control={control}
-            errors={errors}
-            name="dateOfBirth"
-            disabled={isDisabled}
-          />
+          <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" disabled={isDisabled}/>
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
           <Button type="submit" disabled={isDisabled}>
-            Save Changes
+            Confirm Changes
           </Button>
         </Stack>
       </form>

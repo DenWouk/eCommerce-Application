@@ -1,12 +1,14 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Button, Stack, Typography, Tabs, Tab } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import HomeIcon from '@mui/icons-material/Home';
 import getProfile from '../api/getProfile';
-import { countryPost } from '../enums/countries';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 import UserInfoForm from '../components/UserInfoForm';
+import prepareAddresses from '../helpers/profile';
+import AddressForm from '../components/AddressForm';
+import UserInfoPassForm from '../components/UserInfoPassForm';
 
 export default function ProfilePage() {
   const customerData = {
@@ -21,18 +23,23 @@ export default function ProfilePage() {
     billingAddressIds: [],
     isEmailVerified: false,
     stores: [],
-    version: 1,
+    version: 0,
   };
 
   const [profileInfo, setProfileInfo] = useState(customerData);
+  const [allAddresses, setAllAddresses] = useState([] as IBaseAddressProfile[]);
   const [billingAddresses, setBillingAddresses] = useState([] as IBaseAddressProfile[]);
   const [shippingAddresses, setShippingAddresses] = useState([] as IBaseAddressProfile[]);
+  const [passwordInfo, setPassword] = useState(customerData);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const { data: session } = useSession();
 
   useEffect(() => {
     getProfile()
       .then((data) => {
+        setPassword(data)
+        setProfileInfo(data);
         const {
           addresses,
           shippingAddressIds,
@@ -40,44 +47,20 @@ export default function ProfilePage() {
           defaultShippingAddressId,
           defaultBillingAddressId,
         } = data;
+        setAllAddresses([...addresses]);
 
-        const billingAddressesArr: IBaseAddressProfile[] = billingAddressIds
-          .map((addressId: string) => {
-            const addressFind = addresses.find(
-              (address: IBaseAddressProfile) => address.id === addressId
-            );
-            const isDefault = addressFind.id === defaultBillingAddressId;
-            const code = addressFind.country;
-            const countryObj = countryPost.find((country) => country.code === code);
+        const billingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+          billingAddressIds,
+          addresses,
+          defaultBillingAddressId
+        );
 
-            addressFind.countryLabel = countryObj!.label;
-            addressFind.isDefault = Number(isDefault);
-            return addressFind;
-          })
-          .sort(
-            (a1: IBaseAddressProfile, a2: IBaseAddressProfile) =>
-              (a2.isDefault as number) - (a1.isDefault as number)
-          );
+        const shippingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+          shippingAddressIds,
+          addresses,
+          defaultShippingAddressId
+        );
 
-        const shippingAddressesArr: IBaseAddressProfile[] = shippingAddressIds
-          .map((addressId: string) => {
-            const addressFind = addresses.find(
-              (address: IBaseAddressProfile) => address.id === addressId
-            );
-            const isDefault = addressFind.id === defaultShippingAddressId;
-            const code = addressFind.country;
-            const countryObj = countryPost.find((country) => country.code === code);
-
-            addressFind.countryLabel = countryObj!.label;
-            addressFind.isDefault = Number(isDefault);
-            return addressFind;
-          })
-          .sort(
-            (a1: IBaseAddressProfile, a2: IBaseAddressProfile) =>
-              (a2.isDefault as number) - (a1.isDefault as number)
-          );
-
-        setProfileInfo(data);
         setShippingAddresses(shippingAddressesArr);
         setBillingAddresses(billingAddressesArr);
       })
@@ -87,11 +70,23 @@ export default function ProfilePage() {
   }, []);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
+  const { password } = passwordInfo;
+
+ 
+  const handleChange = (index:number) => {
+    setTabIndex(index);
+  }
 
   return (
-    <Box>
+     <div>
+    <Tabs value={tabIndex} aria-label="profile" onChange={(_,index)=>handleChange(index)}>
+      <Tab label="User Info" />
+      <Tab label="Address" />
+      <Tab label="Password" />
+    </Tabs>
       <Typography
         align="center"
+        variant="h2"
         sx={{
           fontSize: '18px',
           fontWeight: 'bold',
@@ -101,13 +96,24 @@ export default function ProfilePage() {
         }}
       >
         Hello, {session && session!.user!.name}! Welcome to your profile!
-      </Typography>
-
+      </Typography> 
       <Stack spacing={1}>
         <Typography>First Name: {firstName}</Typography>
         <Typography>Last Name: {lastName} </Typography>
         <Typography>Date of Birth: {dateOfBirth}</Typography>
-        <Button
+       
+     {tabIndex === 0 && (firstName && 
+     
+     <><UserInfoForm
+            firstName={firstName}
+            lastName={lastName}
+            dateOfBirth={dateOfBirth}
+            emailProp={email}
+            version={version} /><AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} /></> 
+      )}
+        
+     {tabIndex === 1 && (allAddresses && allAddresses.length &&  <>
+     <Button
           endIcon={<HomeIcon />}
           sx={{
             fontSize: '16px',
@@ -119,8 +125,16 @@ export default function ProfilePage() {
         >
           User Addresses
         </Button>
-        <AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} />
-        {firstName && (
+        <AddressForm addresses={allAddresses} version={0}/>
+        </>)}
+     {tabIndex === 2 && <UserInfoPassForm password={password} version={0} />}
+
+      
+        {/* {allAddresses && allAddresses.length && (
+          <AddressForm addresses={allAddresses} version={0} />
+        )} */}
+        {/* <AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} /> */}
+        {/* {firstName && (
           <UserInfoForm
             firstName={firstName}
             lastName={lastName}
@@ -128,8 +142,10 @@ export default function ProfilePage() {
             emailProp={email}
             version={version}
           />
-        )}
+        )} */}
+        {/* <UserInfoPassForm password={password} version={0} /> */}
       </Stack>
-    </Box>
+    {/* </Box> */}
+    </div>
   );
 }

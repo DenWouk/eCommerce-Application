@@ -14,7 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { body } = req;
 
     try {
-      const { email, version, firstName, lastName } = body;
+      const { email, version, firstName, lastName, dateOfBirth} = body;
+      // const {addressId, address:[streetName,streetNumber, postalCode,
+      //   city,
+      //   country]} = bodyAddress; 
       const customerApi = await customerModel.updateMe(req, {
         version,
         actions: [
@@ -30,6 +33,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             action: 'setLastName',
             lastName,
           },
+          {
+            action: 'setDateOfBirth',
+            dateOfBirth,
+          },
+          // {
+          //   action: 'changeAddress',
+          //   addressId: '{{addressId}}',
+          //   address: {
+          //     streetName,
+          //     streetNumber,
+          //     postalCode,
+          //     city,
+          //     country,
+          //   },
+          // },
+          // {
+          //   action: 'setDefaultBillingAddress',
+          //   addressId: '{{addressId}}',
+          // },
+          // {
+          //   "action": "addBillingAddressId",
+          //   "addressId": "{{addressId}}"
+          // }
+         
         ],
       });
       res.status(200).json(customerApi.body);

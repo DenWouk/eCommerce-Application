@@ -13,7 +13,7 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const billingAddresses: number[] = [];
   let defaultShippingAddress: number | undefined;
   let defaultBillingAddress: number | undefined;
-  const addresses: BaseAddress[] = baseAddresses.map((address, i) => {
+  const addresses: BaseAddress[] = baseAddresses!.map((address, i) => {
     const {
       shippingAddress: sA,
       billingAddress: bA,

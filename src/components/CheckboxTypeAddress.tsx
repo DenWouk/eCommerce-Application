@@ -11,7 +11,14 @@ type Props = Omit<ITextParams, 'register' | 'control'> & {
   index: number;
 };
 
-export default function CheckBoxTypeAddress({ name, interacts, index, label, hidden }: Props) {
+export default function CheckBoxTypeAddress({
+  name,
+  interacts,
+  index,
+  label,
+  hidden,
+  disabled,
+}: Props) {
   const { getValues, control, setValue } = useFormContext<IFormInput, string>();
   return (
     <Controller
@@ -23,6 +30,7 @@ export default function CheckBoxTypeAddress({ name, interacts, index, label, hid
           label={label}
           control={
             <Checkbox
+              disabled={disabled}
               checked={!!value}
               value={value}
               onChange={(e) => {

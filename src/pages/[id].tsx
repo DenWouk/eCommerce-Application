@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Paper, Stack, Typography } from '@mui/material';
+import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
@@ -38,7 +38,7 @@ export default function BasicStack(props: Props) {
     },
   ];
 
-  const styleSpan = { fontSize: '16px', color: 'grey' };
+  const styleSpan = { lineHeight: '2', color: 'grey' };
 
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>
@@ -80,10 +80,14 @@ export default function BasicStack(props: Props) {
               >
                 <Box>
                   <Typography variant="h5">{product?.name['en-US']}</Typography>
+                  <Divider />
 
                   <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
-                    {`Price: ${product.masterVariant.attributes?.[6].value}`}
+                    {`Price: $${
+                      (product.masterVariant.prices?.[0].value.centAmount as number) / 100
+                    }`}
                   </Typography>
+                  <Divider />
 
                   <Typography>
                     <span style={styleSpan}>car ID: </span>
@@ -103,6 +107,7 @@ export default function BasicStack(props: Props) {
                     <span style={styleSpan}>interior: </span>
                     {product.masterVariant.attributes?.[10].value} <br />
                   </Typography>
+                  <Divider />
                 </Box>
               </Box>
             </Stack>
@@ -166,7 +171,6 @@ export const getServerSideProps = ssrWithAuthToken<
   const authorized = token?.type === NamesClients.PASSWORD;
   try {
     const productResponse = await productModel.getProductById(req, id);
-
 
     return { props: { authorized, productResponse } };
   } catch (e) {

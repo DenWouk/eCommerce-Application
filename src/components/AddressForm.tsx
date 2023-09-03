@@ -14,7 +14,6 @@ import { showSuccess } from '../helpers/toastify';
 import Address from './Address';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 
-
 export default function AddressForm({
   addresses,
   version,
@@ -22,7 +21,6 @@ export default function AddressForm({
   addresses: IBaseAddressProfile[];
   version: number;
 }) {
-
   const formAddresses = addresses.map((address) => {
     const { id, country, city, streetNumber, streetName, postalCode } = address;
 
@@ -114,7 +112,7 @@ export default function AddressForm({
             watch={watch}
             disabled={isDisabled}
           />
-         
+
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
           <Button type="submit" disabled={isDisabled}>

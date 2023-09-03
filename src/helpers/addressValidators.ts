@@ -1,4 +1,3 @@
-
 export const validateCity = {
   required: `City is required`,
   pattern: {

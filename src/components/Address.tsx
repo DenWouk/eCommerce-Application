@@ -42,7 +42,7 @@ type Props = Omit<ITextParams, 'control'> & {
 function Address({ register, setValue, getValues, errors, control, watch, disabled }: Props) {
   const { setError, clearErrors, getFieldState } = useFormContext<IFormInput, string>();
   const [typeAddresses, setTypeAddresses] = useState([TypeAddress.SHIPPING]);
-  
+
   const { fields, append, remove } = useFieldArray({
     name: 'addresses',
     control,
@@ -93,7 +93,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
     <>
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
-        const countryDefault = countryPost.find(c => c.code === field.country) || {
+        const countryDefault = countryPost.find((c) => c.code === field.country) || {
           code: 'US',
           label: 'United States',
           phone: '1',
@@ -124,7 +124,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.billingAddress`}
-                 disabled={disabled}
+                disabled={disabled}
                 hidden={typeAddresses[index] === TypeAddress.BILLING}
                 interacts={DefNameAddress.BILLING}
                 index={index}
@@ -148,9 +148,9 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                           if (checked) {
                             const values = getValues('addresses');
                             (typeAddresses[index] === TypeAddress.SHIPPING &&
-                              values[index][addressType]) ||
+                              values![index][addressType]) ||
                               setValue(`addresses.${index}.${addressType}`, true);
-                            values.forEach(
+                            values!.forEach(
                               (_, i) =>
                                 i !== index &&
                                 setValue(`addresses.${i}.defaultShippingAddress`, false)
@@ -181,9 +181,10 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                           const { checked } = e.target;
                           if (checked) {
                             const values = getValues('addresses');
-                            values[index][addressType] ||
+
+                            values![index][addressType] ||
                               setValue(`addresses.${index}.${addressType}`, true);
-                            values.forEach(
+                            values!.forEach(
                               (_, i) =>
                                 checked &&
                                 i !== index &&
@@ -205,6 +206,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
               options={countryPost}
               onInputChange={validateCountryOnSelect(index)}
               autoHighlight
+              isOptionEqualToValue={(option, value) => option.code === value.code}
               getOptionLabel={(option) => option.label}
               defaultValue={countryDefault}
               renderOption={(props, option) => (

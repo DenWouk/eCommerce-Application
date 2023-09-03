@@ -11,6 +11,8 @@ type TypeAddress = {
 export interface IFormInput {
   email?: string;
   password?: string;
+  passwordOld?: string;
+  passwordNew?: string;
   passwordConfirm?: string;
   lastName?: string;
   firstName?: string;

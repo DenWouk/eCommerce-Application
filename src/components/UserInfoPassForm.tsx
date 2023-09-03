@@ -11,23 +11,18 @@ import isAuthorized from '@/src/helpers/auth';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
-import InputPasswordConfirm from './InputPasswordConfirm';
 import InputPassword from './InputPassword';
 
 type UserInfo = {
   password: string;
   version: number;
 };
-export default function UserInfoPassForm({
-  password,
-  version,
-}: UserInfo) {
-
+export default function UserInfoPassForm({ password, version }: UserInfo) {
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
       password,
-      },
+    },
   });
 
   const {
@@ -48,9 +43,13 @@ export default function UserInfoPassForm({
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
       // const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
-      const result = await updateProfile({ ...data, password: password as string, version, form: 'generalInfo' });
+      const result = await updateProfile({
+        ...data,
+        password: password as string,
+        version,
+        form: 'generalInfo',
+      });
       clearErrors('root');
-      console.log(data, 'data after clear');
 
       if (result?.id) {
         router.push('/profile');
@@ -88,12 +87,24 @@ export default function UserInfoPassForm({
           <InputPassword
             register={register}
             errors={errors}
-            name="password"
+            name="passwordOld"
+            label="Old Password"
             disabled={isDisabled}
           />
-
-          <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" disabled={isDisabled}/>
-
+          <InputPassword
+            register={register}
+            errors={errors}
+            name="passwordNew"
+            label="New Password"
+            disabled={isDisabled}
+          />
+          <InputPassword
+            register={register}
+            errors={errors}
+            name="passwordConfirm"
+            label="Confirm Password"
+            disabled={isDisabled}
+          />
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
           <Button type="submit" disabled={isDisabled}>

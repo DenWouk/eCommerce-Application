@@ -14,7 +14,7 @@ const Accordion = styled((props: AccordionProps) => (
 ))(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   '&:not(:last-child)': {
-    borderBottom: 0,
+    borderBottom: 1,
   },
   '&:before': {
     display: 'none',
@@ -38,7 +38,7 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
-  borderTop: '1px solid rgba(0, 0, 0, .125)',
+  borderTop: '2px solid #2e7d32',
 }));
 
 interface IAddressAccordionsProps {
@@ -62,7 +62,7 @@ export default function AddressAccordions({
           <Typography> Shipping Address </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {shippingAddress.map((address: IBaseAddressProfile) => (
+          {shippingAddress.map((address: IBaseAddressProfile, index:number) => (
             <Stack key={address.id}>
               <Typography>Country: {address.countryLabel}</Typography>
               <Typography>City: {address.city}</Typography>
@@ -71,14 +71,14 @@ export default function AddressAccordions({
               </Typography>
               <Typography>Zip Code: {address.postalCode}</Typography>
               <Typography>
-                {address.isDefault && (
+                {address.isDefault ? (
                   <CheckRoundedIcon
                     color="success"
                     style={{ position: 'absolute', top: 60, right: 10 }}
                   />
-                )}
+                ):''}
               </Typography>
-              <Divider className="m-5" />
+              {index < shippingAddress.length - 1 && (<Divider className="m-5" />)}
             </Stack>
           ))}
         </AccordionDetails>

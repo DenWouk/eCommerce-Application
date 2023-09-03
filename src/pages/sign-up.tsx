@@ -32,7 +32,7 @@ export default function SignUpPage() {
       dateOfBirth: null,
       addresses: [
         {
-          country: '',
+          country: 'United States',
           city: '',
           streetName: '',
           streetNumber: '',
@@ -97,7 +97,7 @@ export default function SignUpPage() {
 
           <InputEmail register={register} errors={errors} name="email" />
 
-          <InputPassword register={register} errors={errors} name="password" />
+          <InputPassword register={register} errors={errors} name="password" label="Password"/>
 
           <InputFirstName register={register} errors={errors} name="firstName" />
 

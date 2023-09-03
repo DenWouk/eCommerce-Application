@@ -1,7 +1,11 @@
-import { Button, Stack, Typography, Tabs, Tab } from '@mui/material';
+import { Paper, Stack, Typography, Tabs, Tab, Box } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
+import PasswordIcon from '@mui/icons-material/Password';
+import { GetServerSideProps } from 'next';
 import getProfile from '../api/getProfile';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
@@ -9,8 +13,10 @@ import UserInfoForm from '../components/UserInfoForm';
 import prepareAddresses from '../helpers/profile';
 import AddressForm from '../components/AddressForm';
 import UserInfoPassForm from '../components/UserInfoPassForm';
+import isAuthorized from '../helpers/auth';
+import { AuthProps } from '../types/auth';
 
-export default function ProfilePage() {
+export default function ProfilePage({ authorized }: AuthProps) {
   const customerData = {
     id: '',
     dateOfBirth: '',
@@ -26,6 +32,7 @@ export default function ProfilePage() {
     version: 0,
   };
 
+  const router = useRouter();
   const [profileInfo, setProfileInfo] = useState(customerData);
   const [allAddresses, setAllAddresses] = useState([] as IBaseAddressProfile[]);
   const [billingAddresses, setBillingAddresses] = useState([] as IBaseAddressProfile[]);
@@ -36,54 +43,61 @@ export default function ProfilePage() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    getProfile()
-      .then((data) => {
-        setPassword(data)
-        setProfileInfo(data);
-        const {
-          addresses,
-          shippingAddressIds,
-          billingAddressIds,
-          defaultShippingAddressId,
-          defaultBillingAddressId,
-        } = data;
-        setAllAddresses([...addresses]);
+    if (!authorized) {
+      router.push('/sign-in');
+    } else {
+      getProfile()
+        .then((data) => {
+          setPassword(data);
+          setProfileInfo(data);
+          const {
+            addresses,
+            shippingAddressIds,
+            billingAddressIds,
+            defaultShippingAddressId,
+            defaultBillingAddressId,
+          } = data;
+          setAllAddresses([...addresses]);
 
-        const billingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
-          billingAddressIds,
-          addresses,
-          defaultBillingAddressId
-        );
+          const billingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+            billingAddressIds,
+            addresses,
+            defaultBillingAddressId
+          );
 
-        const shippingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
-          shippingAddressIds,
-          addresses,
-          defaultShippingAddressId
-        );
+          const shippingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+            shippingAddressIds,
+            addresses,
+            defaultShippingAddressId
+          );
 
-        setShippingAddresses(shippingAddressesArr);
-        setBillingAddresses(billingAddressesArr);
-      })
-      .catch((err) => {
-        throw err;
-      });
-  }, []);
+          setShippingAddresses(shippingAddressesArr);
+          setBillingAddresses(billingAddressesArr);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    }
+  }, [authorized, router]);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
   const { password } = passwordInfo;
 
- 
-  const handleChange = (index:number) => {
+  const handleChange = (index: number) => {
     setTabIndex(index);
+  };
+
+  if (!authorized) {
+    return '';
   }
 
   return (
-     <div>
-    <Tabs value={tabIndex} aria-label="profile" onChange={(_,index)=>handleChange(index)}>
-      <Tab label="User Info" />
-      <Tab label="Address" />
-      <Tab label="Password" />
-    </Tabs>
+    <Paper elevation={4}>
+      <Tabs value={tabIndex} aria-label="profile" onChange={(_, index) => handleChange(index)}>
+        <Tab label="User Info" icon={<PersonPinIcon />} iconPosition="start" />
+        <Tab label="Address" icon={<HomeIcon />} iconPosition="start" />
+        <Tab label="Password" icon={<PasswordIcon />} iconPosition="start" />
+      </Tabs>
       <Typography
         align="center"
         variant="h2"
@@ -93,59 +107,53 @@ export default function ProfilePage() {
           lineHeight: 1.2,
           textAlign: 'center',
           color: '#6195c3',
+          textTransform: 'uppercase',
+          margin: '15px 15px',
         }}
       >
         Hello, {session && session!.user!.name}! Welcome to your profile!
-      </Typography> 
+      </Typography>
       <Stack spacing={1}>
-        <Typography>First Name: {firstName}</Typography>
-        <Typography>Last Name: {lastName} </Typography>
-        <Typography>Date of Birth: {dateOfBirth}</Typography>
-       
-     {tabIndex === 0 && (firstName && 
-     
-     <><UserInfoForm
-            firstName={firstName}
-            lastName={lastName}
-            dateOfBirth={dateOfBirth}
-            emailProp={email}
-            version={version} /><AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} /></> 
-      )}
-        
-     {tabIndex === 1 && (allAddresses && allAddresses.length &&  <>
-     <Button
-          endIcon={<HomeIcon />}
+        <Box
           sx={{
-            fontSize: '16px',
-            fontWeight: 'bold',
-            lineHeight: 1.2,
-            textAlign: 'center',
-            color: '#6195c3',
+            paddingLeft: '25px',
           }}
         >
-          User Addresses
-        </Button>
-        <AddressForm addresses={allAddresses} version={0}/>
-        </>)}
-     {tabIndex === 2 && <UserInfoPassForm password={password} version={0} />}
+          <Typography>
+            <strong>First Name:</strong> {firstName}{' '}
+          </Typography>
+          <Typography>
+            <strong>Last Name:</strong> {lastName}{' '}
+          </Typography>
+          <Typography>
+            <strong>Date of Birth:</strong> {dateOfBirth}{' '}
+          </Typography>
+        </Box>
 
-      
-        {/* {allAddresses && allAddresses.length && (
+        {tabIndex === 0 && firstName && (
+          <>
+            <UserInfoForm
+              firstName={firstName}
+              lastName={lastName}
+              dateOfBirth={dateOfBirth}
+              emailProp={email}
+              version={version}
+            />
+            <AddressAccordions
+              shippingAddress={shippingAddresses}
+              billingAddress={billingAddresses}
+            />
+          </>
+        )}
+        {tabIndex === 1 && allAddresses && allAddresses.length && (
           <AddressForm addresses={allAddresses} version={0} />
-        )} */}
-        {/* <AddressAccordions shippingAddress={shippingAddresses} billingAddress={billingAddresses} /> */}
-        {/* {firstName && (
-          <UserInfoForm
-            firstName={firstName}
-            lastName={lastName}
-            dateOfBirth={dateOfBirth}
-            emailProp={email}
-            version={version}
-          />
-        )} */}
-        {/* <UserInfoPassForm password={password} version={0} /> */}
+        )}
+        {tabIndex === 2 && <UserInfoPassForm password={password} version={0} />}
       </Stack>
-    {/* </Box> */}
-    </div>
+    </Paper>
   );
 }
+export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
+  const authorized = await isAuthorized({ req });
+  return { props: { authorized } };
+};

@@ -31,7 +31,6 @@ export default function UserInfoForm({
   emailProp,
   version,
 }: UserInfo) {
-
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -60,10 +59,14 @@ export default function UserInfoForm({
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
-      const result = await updateProfile({ ...data, dateOfBirth: dateOfBirthModified as string, version, form: 'generalInfo' });
+      const dateOfBirthModified = formatDate(data.dateOfBirth as Date);
+      const result = await updateProfile({
+        ...data,
+        dateOfBirth: dateOfBirthModified as string,
+        version,
+        form: 'generalInfo',
+      });
       clearErrors('root');
-      console.log(result, 'result after clear');
 
       if (result?.id) {
         router.push('/profile');

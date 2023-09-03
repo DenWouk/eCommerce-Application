@@ -11,7 +11,7 @@ export default function prepareAddresses(
       const addressFindO = addresses.find(
         (address: IBaseAddressProfile) => address.id === addressId
       );
-      const addressFind = {...addressFindO};
+      const addressFind = { ...addressFindO };
       const isDefault = addressFind!.id === defaultAddress;
       const code = addressFind!.country;
       const countryObj = countryPost.find((country) => country.code === code);

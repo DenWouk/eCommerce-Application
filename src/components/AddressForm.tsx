@@ -66,7 +66,9 @@ export default function AddressForm({
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      const result = await updateProfile({ ...data, version, form: 'addressInfo' });
+      const result = await updateProfile({ ...data, version });
+      console.log(result,' ----------------------');
+      
       clearErrors('root');
 
       if (result?.id) {

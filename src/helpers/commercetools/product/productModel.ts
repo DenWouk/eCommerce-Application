@@ -1,70 +1,45 @@
-import { ClientResponse, SuggestionResult } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
-import { Req } from '@/src/types/commercetools';
-import { SortOrder } from '@/src/helpers/commercetools/consts';
-
-const LIMIT = 10;
-
-export type FilterProducts = {
-  search?: string;
-  sort?: string;
-  order?: SortOrder;
-};
+import { FilterProducts, Req } from '@/src/types/commercetools';
+import createQueryArgs from '@/src/helpers/commercetools/product/queryArgs';
+import { LIMIT } from '@/src/helpers/commercetools/consts';
 
 class ProductModel {
   constructor(private builder: TypeBuilderApiRoot) {}
 
+  private async getProductsSuggest(req: Req, search: string, limit?: string) {
+    const suggest = await (
+      await this.builder.getBuilder(req)
+    )
+      .productProjections()
+      .suggest()
+      .get({
+        queryArgs: {
+          limit: (limit && parseInt(limit, 10)) || LIMIT,
+          fuzzy: true,
+          'searchKeywords.en-US': `${search}`,
+        },
+      })
+      .execute();
+
+    const searchWords = Object.values(suggest.body)
+      .flat()
+      .map((value) => value.text);
+    return Array.from(new Set(searchWords.join(' ').split(' ')).values()).join(' ') || undefined;
+  }
+
   async getProducts(req: Req, filter?: FilterProducts) {
-    const { search, sort, order } = filter || {};
-    let suggest: ClientResponse<SuggestionResult> | undefined;
+    const { search, limit } = filter || {};
     let searchString = search;
     if (searchString) {
-      suggest = await (
-        await this.builder.getBuilder(req)
-      )
-        .productProjections()
-        .suggest()
-        .get({
-          queryArgs: {
-            limit: LIMIT,
-            fuzzy: true,
-            'searchKeywords.en-US': `${search}`,
-          },
-        })
-        .execute();
-
-      const searchWords = Object.values(suggest.body)
-        .flat()
-        .map((value) => value.text);
-      searchString = Array.from(new Set(searchWords.join(' ').split(' ')).values()).join(' ');
-      searchString = searchString || search;
+      const suggest = await this.getProductsSuggest(req, searchString, limit);
+      searchString = suggest || search;
     }
+
+    const queryArgs = createQueryArgs({ ...filter, search: searchString });
     return (await this.builder.getBuilder(req))
       .productProjections()
       .search()
-      .get(
-        filter
-          ? {
-              queryArgs: {
-                fuzzy: true,
-                limit: LIMIT,
-                priceCurrency: 'USD',
-                filter: 'country="US"',
-                markMatchingVariants: true,
-                sort: sort && `${sort} ${order}`,
-                'text.en-US': `${searchString}`,
-              },
-            }
-          : {
-              queryArgs: {
-                limit: LIMIT,
-                priceCurrency: 'USD',
-                filter: 'variants.scopedPrice.value.centAmount:range (* to 500000000)',
-                markMatchingVariants: true,
-                localeProjection: 'US',
-              },
-            }
-      )
+      .get({ queryArgs })
       .execute();
   }
 

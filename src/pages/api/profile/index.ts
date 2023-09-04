@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             country: address.country,
           },
         } : {
-          action: 'addDdress',
+          action: 'addAddress',
           address: {
             streetName: address.streetName,
             streetNumber: address.streetNumber,

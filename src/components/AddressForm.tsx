@@ -64,7 +64,6 @@ export default function AddressForm({
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
       const result = await updateProfile({ ...data, version });
-      console.log(result,' ----------------------');
       
       clearErrors('root');
 

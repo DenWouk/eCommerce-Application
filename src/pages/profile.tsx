@@ -138,7 +138,7 @@ export default function ProfilePage() {
         {tabIndex === 1 && allAddresses && allAddresses.length && (
           <AddressForm addresses={allAddresses} version={version || 0} />
         )}
-        {tabIndex === 2 && <UserInfoPassForm password={password || ''} version={version || 0}/>}
+        {tabIndex === 2 && <UserInfoPassForm password={password || ''} version={version || 0} email={email || ''}/>}
       </Stack>
     </Paper>
   );

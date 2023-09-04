@@ -40,6 +40,14 @@ export default function UserInfoPassForm({ email, version }: UserInfo) {
   const handleUpdateClick = async () => {
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
   };
+  const handleCancelClick = async () => {
+    reset({
+      passwordOld: "",
+      password: "",
+      passwordConfirm: ""
+    })
+    setIsDisabled(true);
+  };
 
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
@@ -97,12 +105,8 @@ export default function UserInfoPassForm({ email, version }: UserInfo) {
               textAlign: 'center',
               color: '#f44336',
             }}
-            onClick={() =>
-              reset({
-                passwordOld: "",
-                password: "",
-                passwordConfirm: ""
-              })}
+            onClick={handleCancelClick}
+              
           >
             Cancel
           </Button>}

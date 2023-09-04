@@ -10,6 +10,7 @@ import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import InputPassword from './InputPassword';
 import InputPasswordConfirm from './InputPasswordConfirm';
+import updatePassword from '../api/updatePassword';
 
 type UserInfo = {
   password: string;
@@ -42,11 +43,9 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      // const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
-      const result = await updateProfile({
+      const result = await updatePassword({
         ...data,
-        password: password as string,
-        version
+        version,
       });
       clearErrors('root');
 
@@ -89,7 +88,6 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
             name="passwordOld"
             label="Old Password"
             disabled={isDisabled}
-         
           />
           <InputPassword
             register={register}

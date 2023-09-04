@@ -5,7 +5,7 @@ import { IFormInput } from '../interfaces/IFormInput';
 const { ROOT_APP = '' } = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 export default async function updatePassword(dataUpdate: IFormInput): Promise<Customer> {
-  const data = await fetch(`${ROOT_APP}/api/profile`, {
+  const data = await fetch(`${ROOT_APP}/api/profile/password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(dataUpdate),

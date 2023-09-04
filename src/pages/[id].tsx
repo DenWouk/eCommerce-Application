@@ -96,11 +96,11 @@ export default function BasicStack(props: Props) {
                     {product.masterVariant.attributes?.[8].value} <br />
                     <span style={styleSpan}>year: </span>
                     {product.masterVariant.attributes?.[2].value} <br />
-                    <span style={styleSpan}>odometer: </span>
-                    {product.masterVariant.attributes?.[5].value} <br />
                     <span style={styleSpan}>engine: </span>
                     {product.masterVariant.attributes?.[9].value} <br />
                     <span style={styleSpan}>gearbox: </span>
+                    <span style={styleSpan}>odometer: </span>
+                    {product.masterVariant.attributes?.[5].value} <br />
                     {product.masterVariant.attributes?.[4].value[0].label} <br />
                     <span style={styleSpan}>color: </span>
                     {product.masterVariant.attributes?.[3].value[0].label} <br />

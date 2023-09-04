@@ -71,12 +71,12 @@ export default function ProductsPage(props: Props) {
             {products.slice(0, 6).map((product) => (
               <Grid item xs={3} sm={4} md={4} key={product.id}>
                 <Card className="product-card" sx={{ maxWidth: 345 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                     <ButtonGroup size="small" aria-label="small button group">
                       {buttons}
                     </ButtonGroup>
                   </Box>
-                  
+
                   <CardMedia
                     className="product-card-img0"
                     component="img"
@@ -113,8 +113,6 @@ export default function ProductsPage(props: Props) {
                     title={product?.name['en-US']}
                   />
 
-                 
-
                   <CardContent className="product-card-content">
                     <Typography gutterBottom variant="h5" component="div">
                       {product?.name['en-US']}
@@ -126,9 +124,9 @@ export default function ProductsPage(props: Props) {
 
                     <Typography gutterBottom variant="subtitle1" color="text.secondary">
                       {`year: ${product?.masterVariant?.attributes?.[2].value}`} <br />
-                      {`odometer: ${product?.masterVariant?.attributes?.[5].value}`} <br />
                       {`engine: ${product?.masterVariant?.attributes?.[9].value}`} <br />
-                      {`gearbox: ${product?.masterVariant?.attributes?.[4].value[0].label}`}
+                      {`gearbox: ${product?.masterVariant?.attributes?.[4].value[0].label}`} <br />
+                      {`odometer: ${product?.masterVariant?.attributes?.[5].value}`}
                     </Typography>
                   </CardContent>
 

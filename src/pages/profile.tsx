@@ -1,11 +1,10 @@
 import { Paper, Stack, Typography, Tabs, Tab, Box } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
 import PasswordIcon from '@mui/icons-material/Password';
 import { GetServerSideProps } from 'next';
+import { Customer } from '@commercetools/platform-sdk';
 import getProfile from '../api/getProfile';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
@@ -16,8 +15,8 @@ import UserInfoPassForm from '../components/UserInfoPassForm';
 import isAuthorized from '../helpers/auth';
 import { AuthProps } from '../types/auth';
 
-export default function ProfilePage({ authorized }: AuthProps) {
-  const customerData = {
+export default function ProfilePage() {
+  const customerData:Partial<Customer> = {
     id: '',
     dateOfBirth: '',
     email: '',
@@ -32,7 +31,6 @@ export default function ProfilePage({ authorized }: AuthProps) {
     version: 0,
   };
 
-  const router = useRouter();
   const [profileInfo, setProfileInfo] = useState(customerData);
   const [allAddresses, setAllAddresses] = useState([] as IBaseAddressProfile[]);
   const [billingAddresses, setBillingAddresses] = useState([] as IBaseAddressProfile[]);
@@ -40,12 +38,7 @@ export default function ProfilePage({ authorized }: AuthProps) {
   const [passwordInfo, setPassword] = useState(customerData);
   const [tabIndex, setTabIndex] = useState(0);
 
-  const { data: session } = useSession();
-
   useEffect(() => {
-    if (!authorized) {
-      router.push('/sign-in');
-    } else {
       getProfile()
         .then((data) => {
           setPassword(data);
@@ -77,8 +70,8 @@ export default function ProfilePage({ authorized }: AuthProps) {
         .catch((err) => {
           throw err;
         });
-    }
-  }, [authorized, router]);
+
+  }, []);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
   const { password } = passwordInfo;
@@ -86,10 +79,6 @@ export default function ProfilePage({ authorized }: AuthProps) {
   const handleChange = (index: number) => {
     setTabIndex(index);
   };
-
-  if (!authorized) {
-    return '';
-  }
 
   return (
     <Paper elevation={4}>
@@ -111,7 +100,7 @@ export default function ProfilePage({ authorized }: AuthProps) {
           margin: '15px 15px',
         }}
       >
-        Hello, {session && session!.user!.name}! Welcome to your profile!
+        Hello, {firstName}! Welcome to your profile!
       </Typography>
       <Stack spacing={1}>
         <Box
@@ -134,10 +123,11 @@ export default function ProfilePage({ authorized }: AuthProps) {
           <>
             <UserInfoForm
               firstName={firstName}
-              lastName={lastName}
-              dateOfBirth={dateOfBirth}
-              emailProp={email}
-              version={version}
+              lastName={lastName || ''}
+              dateOfBirth={dateOfBirth  || ''}
+              emailProp={email  || ''}
+              version={version || 0}
+              onUpdate={(customer: Customer)=> setProfileInfo(customer)}
             />
             <AddressAccordions
               shippingAddress={shippingAddresses}
@@ -146,9 +136,9 @@ export default function ProfilePage({ authorized }: AuthProps) {
           </>
         )}
         {tabIndex === 1 && allAddresses && allAddresses.length && (
-          <AddressForm addresses={allAddresses} version={0} />
+          <AddressForm addresses={allAddresses} version={version || 0} />
         )}
-        {tabIndex === 2 && <UserInfoPassForm password={password} version={0} />}
+        {tabIndex === 2 && <UserInfoPassForm password={password || ''} version={version || 0}/>}
       </Stack>
     </Paper>
   );

@@ -1,13 +1,10 @@
 import { Button, Stack } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import { Customer } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
-import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
 import InputEmail from './InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputFirstName from './InputFirstName';
@@ -23,6 +20,7 @@ type UserInfo = {
   dateOfBirth: string | Date;
   emailProp: string;
   version: number;
+  onUpdate: (customer: Customer) => void;
 };
 export default function UserInfoForm({
   firstName,
@@ -30,6 +28,7 @@ export default function UserInfoForm({
   dateOfBirth,
   emailProp,
   version,
+  onUpdate,
 }: UserInfo) {
   const form = useForm<IFormInput>({
     mode: 'onChange',
@@ -56,7 +55,6 @@ export default function UserInfoForm({
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
   };
 
-  const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
       const dateOfBirthModified = formatDate(data.dateOfBirth as Date);
@@ -69,7 +67,7 @@ export default function UserInfoForm({
       clearErrors('root');
 
       if (result?.id) {
-        router.push('/profile');
+        onUpdate(result);
         showSuccess('Successful update!');
         setIsDisabled(true);
       }
@@ -102,16 +100,6 @@ export default function UserInfoForm({
           </Button>
 
           <InputEmail register={register} errors={errors} name="email" disabled={isDisabled} />
-
-          {/* <InputPassword
-            register={register}
-            errors={errors}
-            name="password"
-            disabled={isDisabled}
-          /> */}
-
-          {/* <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" disabled={isDisabled}/> */}
-
           <InputFirstName
             register={register}
             errors={errors}
@@ -144,8 +132,3 @@ export default function UserInfoForm({
     </FormProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

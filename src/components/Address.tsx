@@ -102,7 +102,8 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
         return (
           <Stack key={field.id} spacing={1} className="m-10">
             {typeAddresses.length > 1 && (
-              <Button onClick={() => handleRemove(index)}>remove address</Button>
+              <Button onClick={() => handleRemove(index)}
+               sx={{ fontSize: '18px', fontWeight: 'bold', color: 'red' }}>remove address</Button>
             )}
 
             <div className="form-shipping-address">
@@ -110,7 +111,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                 variant="h4"
                 sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}
               >
-                {typeAddress} address
+                {typeAddress} Address
               </Typography>
 
               <CheckBoxTypeAddress

@@ -2,16 +2,16 @@ import { Button, Stack } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
-import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
+import NamesClients from '@/src/helpers/commercetools/consts';
 import { IFormInput } from '../interfaces/IFormInput';
-import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import InputPassword from './InputPassword';
+import InputPasswordConfirm from './InputPasswordConfirm';
+import updatePassword from '../api/updatePassword';
 
 type UserInfo = {
   password: string;
@@ -30,6 +30,8 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
     setError,
     clearErrors,
     handleSubmit,
+    watch,
+    getValues,
     formState: { errors },
   } = form;
 
@@ -42,13 +44,16 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      // const dateOfBirthModified = formatDate(data.dateOfBirth as Date)
-      const result = await updateProfile({
+      const result = await updatePassword({
         ...data,
-        password: password as string,
         version,
-        form: 'generalInfo',
       });
+
+      await signIn(NamesClients.PASSWORD, {
+      username: data.email,
+      password: data.password,
+      redirect: false,
+    });
       clearErrors('root');
 
       if (result?.id) {
@@ -94,16 +99,19 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
           <InputPassword
             register={register}
             errors={errors}
-            name="passwordNew"
+            watch={watch}
+            name="password"
             label="New Password"
             disabled={isDisabled}
           />
-          <InputPassword
+          <InputPasswordConfirm
             register={register}
             errors={errors}
-            name="passwordConfirm"
+            watch={watch}
+            getValues={getValues}
             label="Confirm Password"
             disabled={isDisabled}
+            name="passwordConfirm"
           />
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
@@ -115,8 +123,3 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
     </FormProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

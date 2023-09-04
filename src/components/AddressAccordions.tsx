@@ -57,58 +57,66 @@ export default function AddressAccordions({
 
   return (
     <div>
-      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography> Shipping Address </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {shippingAddress.map((address: IBaseAddressProfile, index:number) => (
-            <Stack key={address.id}>
-              <Typography>Country: {address.countryLabel}</Typography>
-              <Typography>City: {address.city}</Typography>
-              <Typography>
-                Street: {address.streetName} #{address.streetNumber}
-              </Typography>
-              <Typography>Zip Code: {address.postalCode}</Typography>
-              <Typography>
-                {address.isDefault ? (
-                  <CheckRoundedIcon
-                    color="success"
-                    style={{ position: 'absolute', top: 60, right: 10 }}
-                  />
-                ):''}
-              </Typography>
-              {index < shippingAddress.length - 1 && (<Divider className="m-5" />)}
-            </Stack>
-          ))}
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Typography>Billing Address</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          {billingAddress.map((address: IBaseAddressProfile) => (
-            <Stack key={address.id}>
-              <Typography>Country: {address.country}</Typography>
-              <Typography>City: {address.city}</Typography>
-              <Typography>
-                Street: {address.streetName} #{address.streetNumber}
-              </Typography>
-              <Typography>Zip Code: {address.postalCode}</Typography>
-              <Typography>
-                {address.isDefault && (
-                  <CheckRoundedIcon
-                    color="success"
-                    style={{ position: 'absolute', top: 60, right: 10 }}
-                  />
-                )}
-              </Typography>
-              <Divider className="m-5" />
-            </Stack>
-          ))}
-        </AccordionDetails>
-      </Accordion>
+      {shippingAddress.length > 0 && (
+        <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+          <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+            <Typography> Shipping Address </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {shippingAddress.map((address: IBaseAddressProfile, index: number) => (
+              <Stack key={address.id}>
+                <Typography>Country: {address.countryLabel}</Typography>
+                <Typography>City: {address.city}</Typography>
+                <Typography>
+                  Street: {address.streetName} #{address.streetNumber}
+                </Typography>
+                <Typography>Zip Code: {address.postalCode}</Typography>
+                <Typography>
+                  {address.isDefault ? (
+                    <CheckRoundedIcon
+                      color="success"
+                      style={{ position: 'absolute', top: 60, right: 10 }}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </Typography>
+                {index < shippingAddress.length - 1 && <Divider className="m-5" />}
+              </Stack>
+            ))}
+          </AccordionDetails>
+        </Accordion>
+      )}
+      {billingAddress.length > 0 && (
+        <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
+          <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
+            <Typography>Billing Address</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {billingAddress.map((address: IBaseAddressProfile, index: number) => (
+              <Stack key={address.id}>
+                <Typography>Country: {address.countryLabel}</Typography>
+                <Typography>City: {address.city}</Typography>
+                <Typography>
+                  Street: {address.streetName} #{address.streetNumber}
+                </Typography>
+                <Typography>Zip Code: {address.postalCode}</Typography>
+                <Typography>
+                  {address.isDefault ? (
+                    <CheckRoundedIcon
+                      color="success"
+                      style={{ position: 'absolute', top: 60, right: 10 }}
+                    />
+                  ) : (
+                    ''
+                  )}
+                </Typography>
+                {index < billingAddress.length - 1 && <Divider className="m-5" />}
+              </Stack>
+            ))}
+          </AccordionDetails>
+        </Accordion>
+      )}
     </div>
   );
 }

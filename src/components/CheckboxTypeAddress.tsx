@@ -38,7 +38,7 @@ export default function CheckBoxTypeAddress({
                 const { checked } = e.target;
                 if (!checked) {
                   const values = getValues('addresses');
-                  values[index][typeAddress] &&
+                  values![index][typeAddress] &&
                     setValue(`addresses.${index}.${typeAddress}`, false);
                 }
                 onChange(checked);

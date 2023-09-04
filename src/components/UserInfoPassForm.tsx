@@ -2,16 +2,14 @@ import { Button, Stack } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import ErrorMessage from '@/src/components/ErrorMessage';
-import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import InputPassword from './InputPassword';
+import InputPasswordConfirm from './InputPasswordConfirm';
 
 type UserInfo = {
   password: string;
@@ -30,6 +28,8 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
     setError,
     clearErrors,
     handleSubmit,
+    watch,
+    getValues,
     formState: { errors },
   } = form;
 
@@ -46,8 +46,7 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
       const result = await updateProfile({
         ...data,
         password: password as string,
-        version,
-        form: 'generalInfo',
+        version
       });
       clearErrors('root');
 
@@ -90,20 +89,24 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
             name="passwordOld"
             label="Old Password"
             disabled={isDisabled}
+         
           />
           <InputPassword
             register={register}
             errors={errors}
-            name="passwordNew"
+            watch={watch}
+            name="password"
             label="New Password"
             disabled={isDisabled}
           />
-          <InputPassword
+          <InputPasswordConfirm
             register={register}
             errors={errors}
-            name="passwordConfirm"
+            watch={watch}
+            getValues={getValues}
             label="Confirm Password"
             disabled={isDisabled}
+            name="passwordConfirm"
           />
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
@@ -115,8 +118,3 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
     </FormProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

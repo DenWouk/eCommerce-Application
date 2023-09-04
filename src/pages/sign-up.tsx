@@ -20,6 +20,7 @@ import InputFirstName from '../components/InputFirstName';
 import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
+import InputPasswordConfirm from '../components/InputPasswordConfirm';
 
 export default function SignUpPage() {
   const form = useForm<IFormInput>({
@@ -98,6 +99,8 @@ export default function SignUpPage() {
           <InputEmail register={register} errors={errors} name="email" />
 
           <InputPassword register={register} errors={errors} name="password" label="Password"/>
+
+          {/* <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" label="Confirm Password"/> */}
 
           <InputFirstName register={register} errors={errors} name="firstName" />
 

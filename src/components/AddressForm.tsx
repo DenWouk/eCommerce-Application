@@ -2,12 +2,9 @@ import { Button, Stack } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import ErrorMessage from '@/src/components/ErrorMessage';
-import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
@@ -125,8 +122,3 @@ export default function AddressForm({
     </FormProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

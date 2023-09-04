@@ -16,10 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { body } = req;
 
     try {
-      const { email, version, firstName, lastName, dateOfBirth, addresess } = body;
+      const { email, version, firstName, lastName, dateOfBirth, addressess } = body;
 
-      // const {addressId, address:[streetName,streetNumber, postalCode,
-      //   city,country]} = bodyAddress;
       let actions = [];
       if (email) {
         actions.push({
@@ -45,10 +43,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dateOfBirth,
         });
       }
-      if (addresess && addresess.length) {
-        const addressActions = addresess.map((address: BaseAddress) => ({
+      if (addressess && addressess.length) {
+        const addressActions = addressess.map((address: BaseAddress) => (address.id ? {
           action: 'changeAddress',
           addressId: '{{addressId}}',
+          address: {
+            streetName: address.streetName,
+            streetNumber: address.streetNumber,
+            postalCode: address.postalCode,
+            city: address.city,
+            country: address.country,
+          },
+        } : {
+          action: 'addDdress',
           address: {
             streetName: address.streetName,
             streetNumber: address.streetNumber,
@@ -59,24 +66,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }));
 
         actions = [...actions, ...addressActions];
-        console.log(addressActions, 'addressActions');
       }
 
       const customerApi = await customerModel.updateMe(req, {
         version,
         actions,
-        // actions: [
-        //   {
-        //     action: 'setDefaultBillingAddress',
-        //     addressId: '{{addressId}}',
-        //   },
-        //   {
-        //     action: "addBillingAddressId",
-        //     addressId: "{{addressId}}"
-        //   }
-        // ],
       });
-      console.log(customerApi, 'customerApi');
 
       res.status(200).json(customerApi.body);
     } catch (err: unknown) {

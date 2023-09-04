@@ -30,7 +30,6 @@ const {
   PROJECT_KEY: PK = '',
 } = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
-const passwordClientBuilder = new ClientBuilder();
 const anonymousClientBuilder = new ClientBuilder();
 const unknownClientBuilder = new ClientBuilder();
 
@@ -139,7 +138,7 @@ class BuilderApiRoot {
         flowMiddleware = createAuthForAnonymousSessionFlow(middlewareOptions);
         break;
       case NamesClients.PASSWORD:
-        clientBuilder = passwordClientBuilder;
+        clientBuilder = new ClientBuilder();
         middlewareOptions = this.getAuthOptions(options!, typeClient.value);
         flowMiddleware = createAuthForPasswordFlow(
           <PasswordAuthMiddlewareOptions>middlewareOptions

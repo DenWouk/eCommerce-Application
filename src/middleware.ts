@@ -15,7 +15,7 @@ export default withAuth(
       url.pathname = '/';
       return NextResponse.redirect(url);
     }
-    if (pathname === 'profile' && type !== NamesClients.PASSWORD) {
+    if (pathname === '/profile' && type !== NamesClients.PASSWORD) {
       url.pathname = '/sign-in';
       return NextResponse.redirect(url);
     }

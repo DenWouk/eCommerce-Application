@@ -4,9 +4,10 @@ import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
+import NamesClients from '@/src/helpers/commercetools/consts';
 import { IFormInput } from '../interfaces/IFormInput';
-import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import InputPassword from './InputPassword';
 import InputPasswordConfirm from './InputPasswordConfirm';
@@ -47,6 +48,12 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
         ...data,
         version,
       });
+
+      await signIn(NamesClients.PASSWORD, {
+      username: data.email,
+      password: data.password,
+      redirect: false,
+    });
       clearErrors('root');
 
       if (result?.id) {

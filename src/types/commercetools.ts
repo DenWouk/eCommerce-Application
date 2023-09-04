@@ -1,7 +1,7 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { NextRequest } from 'next/server';
-import NamesClients from '@/src/helpers/commercetools/consts';
+import NamesClients, { SortOrder } from '@/src/helpers/commercetools/consts';
 
 export type UnknownTypeClient = {
   type: NamesClients.UNKNOWN;
@@ -44,4 +44,15 @@ export type FetchedToken = {
   scope: string;
   refresh_token: string;
   token_type: string;
+};
+
+export type FilterProducts = {
+  search?: string;
+  color?: string;
+  sort?: string;
+  facet?: string;
+  limit?: string;
+  order?: SortOrder;
+  from?: string;
+  to?: string;
 };

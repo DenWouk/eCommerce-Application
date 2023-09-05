@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
   Grid,
   Pagination,
   Paper,
+  Stack,
   Typography,
 } from '@mui/material';
 import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
@@ -22,11 +23,31 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import SelectAsync from '@/src/components/SelectAsync';
 import stolenImg from '@/public/stolen.jpg';
+import SortButton from '@/src/components/SortButton';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
 import categoryModel from '../../helpers/commercetools/category/categoryModel';
 import FromToInput from '../../components/FromToInput';
+
+type ValueObjAttributesProduct = {
+  key: string;
+  label: string;
+};
+
+type AttributesProduct = {
+  body: ValueObjAttributesProduct[];
+  color: ValueObjAttributesProduct[];
+  engine: string;
+  interior: string;
+  location: string;
+  make: ValueObjAttributesProduct[];
+  model: string;
+  odometer: number;
+  price: string;
+  transmission: ValueObjAttributesProduct[];
+  year: string;
+};
 
 type Props = {
   productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
@@ -34,10 +55,25 @@ type Props = {
 
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
-  const { results, total = 0, limit } = productsResponse.body;
-  const products = results;
+  const { results: products, total = 0, limit } = productsResponse.body;
+
+  const attributesByUserId: Record<string, AttributesProduct> = useMemo(
+    () =>
+      products.reduce((ac, nx) => {
+        const attributes = nx.masterVariant.attributes?.reduce(
+          (accum, next) => ({ ...accum, [next.name]: next.value }),
+          {}
+        );
+        return { ...ac, [nx.id]: attributes };
+      }, {}),
+    [products]
+  );
+
   const router = useRouter();
   const page = [router.query.page].flat()[0] || '1';
+  const sort = [router.query.sort].flat()[0];
+  const order = [router.query.order].flat()[0];
+  const [activeSortButton, setActiveSortButton] = useState(sort);
 
   const buttons = [
     <Button className="card-btn-img0" key="one" />,
@@ -47,10 +83,10 @@ export default function ProductsPage(props: Props) {
     <Button className="card-btn-img4" key="five" />,
   ];
 
-  const handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePagination = (event: ChangeEvent<unknown>, value: number) => {
     const url = new URL(window.location.href);
     const search = url.searchParams;
-    search.delete('products');
+    search.delete('category');
     value > 1 ? search.set('page', value.toString()) : search.delete('page');
     router.push(url.href);
   };
@@ -78,8 +114,26 @@ export default function ProductsPage(props: Props) {
     const to = [router.query.to].flat()[0];
     from && urlSearch.set('from', from);
     to && urlSearch.set('from', to);
-
+    sort && order && urlSearch.set('sort', sort);
+    sort && order && urlSearch.set('order', order);
     router.push(`/products${urlSearch.toString() && `?${urlSearch}`}`);
+  };
+
+  const handleClick = (sortType: string) => {
+    setActiveSortButton(sortType);
+    const url = new URL(window.location.href);
+    const search = url.searchParams;
+    search.delete('category');
+    search.delete('page');
+    search.set('sort', sortType);
+    const isAscOrder = order === 'asc';
+    const isNewType = sortType === sort;
+    if (sort) {
+      search.set('order', isAscOrder && isNewType ? 'desc' : 'asc');
+    } else {
+      search.set('order', 'asc');
+    }
+    router.push(url.href);
   };
 
   return (
@@ -113,6 +167,7 @@ export default function ProductsPage(props: Props) {
           </Box>
         </Box>
         <Divider sx={{ m: '5px 0' }} />
+
         <form id="products-search" onChange={handleFormChange}>
           <Box
             sx={{
@@ -274,91 +329,111 @@ export default function ProductsPage(props: Props) {
 
         {products.length ? (
           <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+              <Stack direction="row" spacing={1}>
+                <SortButton
+                  isAscDefault={order === 'asc'}
+                  onClick={handleClick}
+                  active={activeSortButton === 'name.en-US'}
+                  targetSort="name.en-US"
+                  label="Name"
+                />
+                <SortButton
+                  isAscDefault={order === 'asc'}
+                  onClick={handleClick}
+                  active={activeSortButton === 'price'}
+                  targetSort="price"
+                  label="Price"
+                />
+              </Stack>
+
               <Pagination
                 count={Math.ceil(total / limit)}
                 page={page ? +page : undefined}
                 onChange={handlePagination}
+                sx={{ m: '0 auto' }}
               />
             </Box>
 
             <Box sx={{ flexGrow: 1 }}>
               <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                {products.slice(0, 9).map((product) => (
-                  <Grid item xs={3} sm={4} md={4} key={product.id}>
-                    <Card className="product-card" sx={{ maxWidth: 345 }}>
-                      <CardMedia
-                        className="product-card-img0"
-                        component="img"
-                        sx={{ height: 'auto' }}
-                        image={product?.masterVariant.images?.[0]?.url}
-                        title={product?.name['en-US']}
-                      />
-                      <CardMedia
-                        className="product-card-img1"
-                        component="img"
-                        sx={{ height: 'auto' }}
-                        image={product?.masterVariant.images?.[1]?.url}
-                        title={product?.name['en-US']}
-                      />
-                      <CardMedia
-                        className="product-card-img2"
-                        component="img"
-                        sx={{ height: 'auto' }}
-                        image={product?.masterVariant.images?.[2]?.url}
-                        title={product?.name['en-US']}
-                      />
-                      <CardMedia
-                        className="product-card-img3"
-                        component="img"
-                        sx={{ height: 'auto' }}
-                        image={product?.masterVariant.images?.[3]?.url}
-                        title={product?.name['en-US']}
-                      />
-                      <CardMedia
-                        className="product-card-img4"
-                        component="img"
-                        sx={{ height: 'auto' }}
-                        image={product?.masterVariant.images?.[4]?.url}
-                        title={product?.name['en-US']}
-                      />
+                {products.map((product) => {
+                  const attributes = attributesByUserId[product.id];
+                  return (
+                    <Grid item xs={3} sm={4} md={4} key={product.id}>
+                      <Card className="product-card" sx={{ maxWidth: 345 }}>
+                        <CardMedia
+                          className="product-card-img0"
+                          component="img"
+                          sx={{ height: 'auto' }}
+                          image={product?.masterVariant.images?.[0]?.url}
+                          title={product?.name['en-US']}
+                        />
+                        <CardMedia
+                          className="product-card-img1"
+                          component="img"
+                          sx={{ height: 'auto' }}
+                          image={product?.masterVariant.images?.[1]?.url}
+                          title={product?.name['en-US']}
+                        />
+                        <CardMedia
+                          className="product-card-img2"
+                          component="img"
+                          sx={{ height: 'auto' }}
+                          image={product?.masterVariant.images?.[2]?.url}
+                          title={product?.name['en-US']}
+                        />
+                        <CardMedia
+                          className="product-card-img3"
+                          component="img"
+                          sx={{ height: 'auto' }}
+                          image={product?.masterVariant.images?.[3]?.url}
+                          title={product?.name['en-US']}
+                        />
+                        <CardMedia
+                          className="product-card-img4"
+                          component="img"
+                          sx={{ height: 'auto' }}
+                          image={product?.masterVariant.images?.[4]?.url}
+                          title={product?.name['en-US']}
+                        />
 
-                      <ButtonGroup
-                        className="img-btns"
-                        size="small"
-                        aria-label="small button group"
-                        sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}
-                      >
-                        {buttons}
-                      </ButtonGroup>
-                      <Divider />
+                        <ButtonGroup
+                          className="img-btns"
+                          size="small"
+                          aria-label="small button group"
+                          sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}
+                        >
+                          {buttons}
+                        </ButtonGroup>
+                        <Divider />
 
-                      <CardContent className="product-card-content">
-                        <Typography gutterBottom variant="h5" component="div">
-                          {product?.name['en-US']}
-                        </Typography>
+                        <CardContent className="product-card-content">
+                          <Typography gutterBottom variant="h5" component="div">
+                            {product?.name['en-US']}
+                          </Typography>
 
-                        <Typography gutterBottom variant="h6" component="div">
-                          {product?.masterVariant?.attributes?.[6].value}{' '}
-                        </Typography>
+                          <Typography gutterBottom variant="h6" component="div">
+                            {attributes?.price || '--/--'}
+                          </Typography>
 
-                        <Typography gutterBottom variant="subtitle1" color="text.secondary">
-                          {`year: ${product?.masterVariant?.attributes?.[2].value}`} <br />
-                          {`engine: ${product?.masterVariant?.attributes?.[9].value}`} <br />
-                          {`gearbox: ${product?.masterVariant?.attributes?.[4].value[0].label}`}{' '}
-                          <br />
-                          {`odometer: ${product?.masterVariant?.attributes?.[5].value}`}
-                        </Typography>
-                      </CardContent>
+                          <Typography gutterBottom variant="subtitle1" color="text.secondary">
+                            {`year: ${attributes?.year || '--/--'}`} <br />
+                            {`engine: ${attributes?.engine || '--/--'}`} <br />
+                            {`gearbox: ${attributes?.transmission?.[0]?.label || '--/--'}`} <br />
+                            {`odometer: ${attributes?.odometer || '--/--'}`}
+                          </Typography>
+                        </CardContent>
 
-                      <CardActions>
-                        <Button component={Link} size="small" href={`/products/${product.id}`}>
-                          Details
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))}
+                        <CardActions>
+                          <Button component={Link} size="small" href={`/products/${product.id}`}>
+                            Details
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
               </Grid>
             </Box>
 

@@ -19,6 +19,7 @@
 
 html {
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 #__next {
@@ -40,7 +41,6 @@ main {
   justify-content: space-evenly;
   align-items: center;
   padding: 90px 0 50px;
-  font-size: 35px;
   font-weight: bold;
   color: var(--color4);
   background: transparent;
@@ -114,36 +114,36 @@ main {
   display: none;
 }
 
-/* .product-card:hover .product-card-img0 {
-  display: none;
-}
-
-.product-card:hover .product-card-img4 {
-  display: block;
-}
-
 .product-card:hover .product-card-content {
   color: var(--color3);
-} */
+}
 
-.card-btn-img0:hover > .product-card-img0 {
+.product-card:hover .img-btns {
+  visibility: visible;
+}
+
+.card-btn-img0:hover .product-card-img0 {
   display: block;
 }
 
-.card-btn-img1:hover > .product-card-img1 {
+.card-btn-img1:hover .product-card-img1 {
   display: block;
 }
 
-.card-btn-img2:hover > .product-card-img2 {
+.card-btn-img2:hover .product-card-img2 {
   display: block;
 }
 
-.card-btn-img3:hover > .product-card-img3 {
+.card-btn-img3:hover .product-card-img3 {
   display: block;
 }
 
-.card-btn-img4:hover > .product-card-img4 {
+.card-btn-img4:hover .product-card-img4 {
   display: block;
+}
+
+.img-btns {
+  visibility: hidden;
 }
 
 .footer {

@@ -78,18 +78,18 @@ export default function FromToInput({ onChange }: Props) {
   return (
     <Box
       sx={{
+        display: 'flex',
+        gap: '5px',
         '&': {
           position: 'relative',
         },
         '& > div:nth-of-type(1) fieldset': {
-          borderTopRightRadius: 0,
-          borderBottomRightRadius: 0,
-          borderRightColor: 'transparent',
+          border: 'solid 2px',
+          borderRadius: '3px',
         },
         '& > div:nth-last-of-type(1) fieldset': {
-          borderTopLeftRadius: 0,
-          borderBottomLeftRadius: 0,
-          marginLeft: '-1px',
+          border: 'solid 2px',
+          borderRadius: '3px',
         },
       }}
     >

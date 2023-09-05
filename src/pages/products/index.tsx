@@ -278,24 +278,17 @@ export default function ProductsPage(props: Props) {
         {products.length ? (
           <>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-              <Box>
-                Price
-                <Button sx={{ minWidth: 0 }}>
-                  <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}
-                </Button>
-                <Button sx={{ minWidth: 0 }}>
-                  <ArrowDropDownIcon sx={{ color: 'grey' }} />
-                </Button>
-              </Box>
-              <Box>
-                Name
-                <Button sx={{ minWidth: 0 }}>
-                  <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}
-                </Button>
-                <Button sx={{ minWidth: 0 }}>
-                  <ArrowDropDownIcon sx={{ color: 'grey' }} />
-                </Button>
-              </Box>
+              {['Price', 'Name'].map((item) => (
+                <Box>
+                  {item}
+                  <Button sx={{ minWidth: 0 }}>
+                    <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}
+                  </Button>
+                  <Button sx={{ minWidth: 0 }}>
+                    <ArrowDropDownIcon sx={{ color: 'grey' }} />
+                  </Button>
+                </Box>
+              ))}
 
               <Pagination
                 count={Math.ceil(total / limit)}

@@ -99,6 +99,12 @@ export default function Header({ authorized }: Props) {
                   <Typography textAlign="center">Contacts</Typography>
                 </MenuItem>
               </Link>
+
+              <Link href="/profile">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Profile</Typography>
+                </MenuItem>
+              </Link>
             </Menu>
           </Box>
 
@@ -143,6 +149,12 @@ export default function Header({ authorized }: Props) {
             <Link href="/contacts">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
                 Contacts
+              </Button>
+            </Link>
+
+            <Link href="/profile">
+              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                Profile
               </Button>
             </Link>
           </Box>

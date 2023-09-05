@@ -18,6 +18,13 @@ type QueryArgs = {
   [key: string]: QueryParam;
 };
 
+function createQueryValue(searchQuery: string | undefined) {
+  return searchQuery
+    ?.split(',')
+    .map((value) => `"${value}"`)
+    .join(',');
+}
+
 export default function createQueryArgs(filter: FilterProducts | undefined) {
   const {
     search,
@@ -41,10 +48,15 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
   const fromTo =
     (from || to) && `variants.scopedPrice.value.centAmount:range (${from || '*'} to ${to || '*'})`;
   fromTo && filterQuery.push(fromTo);
-  color && filterQuery.push(`variants.attributes.color.key:"${color}"`);
-  transmission && filterQuery.push(`variants.attributes.transmission.key:"${transmission}"`);
-  make && filterQuery.push(`variants.attributes.make.key:"${make}"`);
-  body && filterQuery.push(`variants.attributes.body.key:"${body}"`);
+  const colorQuery = createQueryValue(color);
+  colorQuery && filterQuery.push(`variants.attributes.color.key:${colorQuery}`);
+  const transmissionQuery = createQueryValue(transmission);
+  transmissionQuery &&
+    filterQuery.push(`variants.attributes.transmission.key:${transmissionQuery}`);
+  const bodyQuery = createQueryValue(body);
+  bodyQuery && filterQuery.push(`variants.attributes.body.key:${bodyQuery}`);
+  const makeQuery = createQueryValue(make);
+  makeQuery && filterQuery.push(`variants.attributes.make.key:${makeQuery}`);
 
   const limitNumber = (limit && parseInt(limit, 10)) || LIMIT;
   category && filterQuery.push(`categories.id:subtree("${category}")`);

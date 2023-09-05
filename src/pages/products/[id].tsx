@@ -3,9 +3,9 @@ import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
-import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
-import NamesClients from '../helpers/commercetools/consts';
-import productModel from '../helpers/commercetools/product';
+import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
+import NamesClients from '../../helpers/commercetools/consts';
+import productModel from '../../helpers/commercetools/product';
 
 type Props = {
   productResponse: ClientResponse<ProductProjection>;

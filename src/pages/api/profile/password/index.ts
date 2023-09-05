@@ -8,21 +8,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const { password, version, passwordOld } = body;
-      console.log(body);
       
-      console.log({
-        version,
-        currentPassword: passwordOld,
-        newPassword: password
-      });
-      
-
       const customerApi = await customerModel.updatePasswordMe(req, {
         version,
         currentPassword: passwordOld,
         newPassword: password
       });
-console.log(customerApi, "customerApi");
 
       res.status(200).json(customerApi.body);
     } catch (err: unknown) {

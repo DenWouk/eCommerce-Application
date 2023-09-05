@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { signIn } from 'next-auth/react';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
@@ -16,17 +17,16 @@ import updatePassword from '../api/updatePassword';
 type UserInfo = {
   password: string;
   version: number;
+  email: string;
 };
-export default function UserInfoPassForm({ password, version }: UserInfo) {
+export default function UserInfoPassForm({ email, version }: UserInfo) {
   const form = useForm<IFormInput>({
     mode: 'onChange',
-    defaultValues: {
-      password,
-    },
   });
 
   const {
     register,
+    reset,
     setError,
     clearErrors,
     handleSubmit,
@@ -40,6 +40,14 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
   const handleUpdateClick = async () => {
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
   };
+  const handleCancelClick = async () => {
+    reset({
+      passwordOld: "",
+      password: "",
+      passwordConfirm: ""
+    })
+    setIsDisabled(true);
+  };
 
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
@@ -50,10 +58,10 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
       });
 
       await signIn(NamesClients.PASSWORD, {
-      username: data.email,
-      password: data.password,
-      redirect: false,
-    });
+        username: email,
+        password: data.password,
+        redirect: false,
+      });
       clearErrors('root');
 
       if (result?.id) {
@@ -75,7 +83,7 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
     <FormProvider {...form}>
       <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack spacing={1} className="m-5">
-          <Button
+          {isDisabled ? <Button
             endIcon={<EditNoteRoundedIcon />}
             sx={{
               fontSize: '16px',
@@ -87,7 +95,21 @@ export default function UserInfoPassForm({ password, version }: UserInfo) {
             onClick={handleUpdateClick}
           >
             Edit Your PassWord
-          </Button>
+          </Button> : <Button
+            
+            endIcon={<CloseRoundedIcon />}
+            sx={{
+              fontSize: '16px',
+              fontWeight: 'bold',
+              lineHeight: 1.2,
+              textAlign: 'center',
+              color: '#f44336',
+            }}
+            onClick={handleCancelClick}
+              
+          >
+            Cancel
+          </Button>}
 
           <InputPassword
             register={register}

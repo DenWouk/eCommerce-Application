@@ -34,10 +34,6 @@ type Props = {
   productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
 };
 
-function changeCardImage() {
-
-}
-
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const { results, total = 0, limit } = productsResponse.body;
@@ -289,7 +285,7 @@ export default function ProductsPage(props: Props) {
           <>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               {['Price', 'Name'].map((item) => (
-                <Box>
+                <Box key={item}>
                   {item}
                   <Button sx={{ minWidth: 0 }}>
                     <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}

@@ -18,6 +18,7 @@ export default function AddressForm({
   addresses: IBaseAddressProfile[];
   version: number;
 }) {
+  console.log(addresses);
   const formAddresses = addresses.map((address) => {
     const { id, country, city, streetNumber, streetName, postalCode } = address;
 
@@ -63,8 +64,10 @@ export default function AddressForm({
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
+      console.log({ data }, 'on submit');
+
       const result = await updateProfile({ ...data, version });
-      
+
       clearErrors('root');
 
       if (result?.id) {

@@ -4,7 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { get, RegisterOptions } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputPassword({  register, name, label, errors, disabled }: ITextParams) {
+export default function InputPassword({ register, name, label, errors, disabled }: ITextParams) {
   const [showPass, setShowPass] = useState(false);
   const togglePassVisibility = () => {
     setShowPass((prevShowPass) => !prevShowPass);

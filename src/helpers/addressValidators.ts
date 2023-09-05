@@ -20,6 +20,8 @@ export const validateStreetNumber = {
   },
 };
 export const validatePostalCode = (countryCode: string, value: string) => {
+  console.log(countryCode, 'countryCode');
+
   const message = 'Invalid ZIP code format, the correct format is';
   let errorMessage: string | undefined;
   let pattern;

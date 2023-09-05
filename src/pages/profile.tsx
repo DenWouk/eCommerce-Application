@@ -16,7 +16,7 @@ import isAuthorized from '../helpers/auth';
 import { AuthProps } from '../types/auth';
 
 export default function ProfilePage() {
-  const customerData:Partial<Customer> = {
+  const customerData: Partial<Customer> = {
     id: '',
     dateOfBirth: '',
     email: '',
@@ -39,38 +39,38 @@ export default function ProfilePage() {
   const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
-      getProfile()
-        .then((data) => {
-          setPassword(data);
-          setProfileInfo(data);
-          const {
-            addresses,
-            shippingAddressIds,
-            billingAddressIds,
-            defaultShippingAddressId,
-            defaultBillingAddressId,
-          } = data;
-          setAllAddresses([...addresses]);
+    getProfile()
+      .then((data) => {
+        setPassword(data);
+        setProfileInfo(data);
 
-          const billingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
-            billingAddressIds,
-            addresses,
-            defaultBillingAddressId
-          );
+        const {
+          addresses,
+          shippingAddressIds,
+          billingAddressIds,
+          defaultShippingAddressId,
+          defaultBillingAddressId,
+        } = data;
+        setAllAddresses([...addresses]);
 
-          const shippingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
-            shippingAddressIds,
-            addresses,
-            defaultShippingAddressId
-          );
+        const billingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+          billingAddressIds,
+          addresses,
+          defaultBillingAddressId
+        );
 
-          setShippingAddresses(shippingAddressesArr);
-          setBillingAddresses(billingAddressesArr);
-        })
-        .catch((err) => {
-          throw err;
-        });
+        const shippingAddressesArr: IBaseAddressProfile[] = prepareAddresses(
+          shippingAddressIds,
+          addresses,
+          defaultShippingAddressId
+        );
 
+        setShippingAddresses(shippingAddressesArr);
+        setBillingAddresses(billingAddressesArr);
+      })
+      .catch((err) => {
+        throw err;
+      });
   }, []);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
@@ -124,10 +124,10 @@ export default function ProfilePage() {
             <UserInfoForm
               firstName={firstName}
               lastName={lastName || ''}
-              dateOfBirth={dateOfBirth  || ''}
-              emailProp={email  || ''}
+              dateOfBirth={dateOfBirth || ''}
+              emailProp={email || ''}
               version={version || 0}
-              onUpdate={(customer: Customer)=> setProfileInfo(customer)}
+              onUpdate={(customer: Customer) => setProfileInfo(customer)}
             />
             <AddressAccordions
               shippingAddress={shippingAddresses}
@@ -138,7 +138,9 @@ export default function ProfilePage() {
         {tabIndex === 1 && allAddresses && allAddresses.length && (
           <AddressForm addresses={allAddresses} version={version || 0} />
         )}
-        {tabIndex === 2 && <UserInfoPassForm password={password || ''} version={version || 0} email={email || ''}/>}
+        {tabIndex === 2 && (
+          <UserInfoPassForm password={password || ''} version={version || 0} email={email || ''} />
+        )}
       </Stack>
     </Paper>
   );

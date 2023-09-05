@@ -1,4 +1,7 @@
-import { CustomerSignin, MyCustomerChangePassword } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/customer';
+import {
+  CustomerSignin,
+  MyCustomerChangePassword,
+} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/customer';
 import { MyCustomerUpdate } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { Req } from '@/src/types/commercetools';
@@ -13,8 +16,8 @@ class CustomerModel {
   async updateMe(req: Req, body: MyCustomerUpdate) {
     return (await this.builder.getBuilder(req)).me().post({ body }).execute();
   }
-  
-  async updatePasswordMe(req: Req, body: MyCustomerChangePassword){
+
+  async updatePasswordMe(req: Req, body: MyCustomerChangePassword) {
     return (await this.builder.getBuilder(req)).me().password().post({ body }).execute();
   }
 

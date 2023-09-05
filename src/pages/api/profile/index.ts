@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { BaseAddress } from '@commercetools/platform-sdk';
 import customerModel from '@/src/helpers/commercetools/customer';
+import { countryPost } from '@/src/enums/countries';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -16,7 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { body } = req;
 
     try {
-      const { email, version, firstName, lastName, dateOfBirth, addressess } = body;
+      const { email, version, firstName, lastName, dateOfBirth, addresses } = body;
+      console.log({ body });
 
       let actions = [];
       if (email) {
@@ -43,30 +45,46 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dateOfBirth,
         });
       }
-      if (addressess && addressess.length) {
-        const addressActions = addressess.map((address: BaseAddress) => (address.id ? {
-          action: 'changeAddress',
-          addressId: '{{addressId}}',
-          address: {
-            streetName: address.streetName,
-            streetNumber: address.streetNumber,
-            postalCode: address.postalCode,
-            city: address.city,
-            country: address.country,
-          },
-        } : {
-          action: 'addAddress',
-          address: {
-            streetName: address.streetName,
-            streetNumber: address.streetNumber,
-            postalCode: address.postalCode,
-            city: address.city,
-            country: address.country,
-          },
-        }));
+      console.log({ addresses });
+
+      if (addresses && addresses.length) {
+        const addressActions = addresses.map((address: BaseAddress) => {
+          const countryPostFind = countryPost.find(
+            (countryAddress) => countryAddress.label === address.country
+          );
+          if (countryPostFind) {
+            return address.id
+              ? {
+                  action: 'changeAddress',
+                  addressId: address.id,
+                  address: {
+                    streetName: address.streetName,
+                    streetNumber: address.streetNumber,
+                    postalCode: address.postalCode,
+                    city: address.city,
+                    country: countryPostFind.code,
+                  },
+                }
+              : {
+                  action: 'addAddress',
+                  address: {
+                    streetName: address.streetName,
+                    streetNumber: address.streetNumber,
+                    postalCode: address.postalCode,
+                    city: address.city,
+                    country: countryPostFind.code,
+                  },
+                };
+          }
+          return false;
+        });
+
+        addressActions.filter((address: BaseAddress) => address);
 
         actions = [...actions, ...addressActions];
       }
+
+      console.log(actions);
 
       const customerApi = await customerModel.updateMe(req, {
         version,

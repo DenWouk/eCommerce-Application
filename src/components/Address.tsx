@@ -48,6 +48,8 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
     control,
   });
 
+  console.log({ fields });
+
   const validateCountry = {
     required: 'Country is required',
   };
@@ -102,8 +104,12 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
         return (
           <Stack key={field.id} spacing={1} className="m-10">
             {typeAddresses.length > 1 && (
-              <Button onClick={() => handleRemove(index)}
-               sx={{ fontSize: '18px', fontWeight: 'bold', color: 'red' }}>remove address</Button>
+              <Button
+                onClick={() => handleRemove(index)}
+                sx={{ fontSize: '18px', fontWeight: 'bold', color: 'red' }}
+              >
+                remove address
+              </Button>
             )}
 
             <div className="form-shipping-address">
@@ -209,7 +215,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
               autoHighlight
               isOptionEqualToValue={(option, value) => option.code === value.code}
               getOptionLabel={(option) => option.label}
-              defaultValue={countryDefault}
+              // defaultValue={countryDefault}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                   <Image

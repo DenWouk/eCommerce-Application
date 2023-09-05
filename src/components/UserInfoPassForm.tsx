@@ -42,10 +42,10 @@ export default function UserInfoPassForm({ email, version }: UserInfo) {
   };
   const handleCancelClick = async () => {
     reset({
-      passwordOld: "",
-      password: "",
-      passwordConfirm: ""
-    })
+      passwordOld: '',
+      password: '',
+      passwordConfirm: '',
+    });
     setIsDisabled(true);
   };
 
@@ -83,33 +83,35 @@ export default function UserInfoPassForm({ email, version }: UserInfo) {
     <FormProvider {...form}>
       <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack spacing={1} className="m-5">
-          {isDisabled ? <Button
-            endIcon={<EditNoteRoundedIcon />}
-            sx={{
-              fontSize: '16px',
-              fontWeight: 'bold',
-              lineHeight: 1.2,
-              textAlign: 'center',
-              color: '#6195c3',
-            }}
-            onClick={handleUpdateClick}
-          >
-            Edit Your PassWord
-          </Button> : <Button
-            
-            endIcon={<CloseRoundedIcon />}
-            sx={{
-              fontSize: '16px',
-              fontWeight: 'bold',
-              lineHeight: 1.2,
-              textAlign: 'center',
-              color: '#f44336',
-            }}
-            onClick={handleCancelClick}
-              
-          >
-            Cancel
-          </Button>}
+          {isDisabled ? (
+            <Button
+              endIcon={<EditNoteRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#6195c3',
+              }}
+              onClick={handleUpdateClick}
+            >
+              Edit Your PassWord
+            </Button>
+          ) : (
+            <Button
+              endIcon={<CloseRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#f44336',
+              }}
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
+          )}
 
           <InputPassword
             register={register}

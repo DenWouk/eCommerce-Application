@@ -9,7 +9,7 @@ export default function InputEmail({ register, name, errors, disabled }: ITextPa
     validate: {
       noLeadingTrailingWhitespace: (value: IFormInput['email']) =>
         value?.trim() === value ? undefined : 'Email cannot have leading or trailing whitespace',
-        validEmail: (value: IFormInput['email']) =>
+      validEmail: (value: IFormInput['email']) =>
         /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value!) ||
         'Please enter a valid email address',
     },

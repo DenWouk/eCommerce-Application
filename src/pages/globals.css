@@ -118,6 +118,14 @@ main {
   display: none;
 }
 
+.product-card:hover .product-card-img0 {
+  display: none;
+}
+
+.product-card:hover .product-card-img2 {
+  display: block;
+}
+
 .product-card:hover .product-card-content {
   color: var(--color3);
 }

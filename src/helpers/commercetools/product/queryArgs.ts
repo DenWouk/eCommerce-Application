@@ -39,14 +39,15 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
     body,
     facet,
     limit,
-    from,
-    to,
+    from = '',
+    to = '',
     sort = 'lastModifiedAt',
     order = SortOrder.ASC,
   } = filter || {};
   const filterQuery: string[] = [];
   const fromTo =
-    (from || to) && `variants.scopedPrice.value.centAmount:range (${from || '*'} to ${to || '*'})`;
+    (from || to) &&
+    `variants.scopedPrice.value.centAmount:range (${+from * 100 || '*'} to ${+to * 100 || '*'})`;
   fromTo && filterQuery.push(fromTo);
   const colorQuery = createQueryValue(color);
   colorQuery && filterQuery.push(`variants.attributes.color.key:${colorQuery}`);

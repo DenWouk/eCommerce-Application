@@ -71,8 +71,8 @@ export default function FromToInput() {
 
     if (isValid) {
       debounceGetProduct({
-        from: fromTo?.from ? (+fromTo.from * 100).toString() : undefined,
-        to: fromTo?.to ? (+fromTo.to * 100).toString() : undefined,
+        from: fromTo?.from ? (+fromTo.from).toString() : undefined,
+        to: fromTo?.to ? (+fromTo.to).toString() : undefined,
       });
     }
   };

@@ -162,7 +162,6 @@ export const getServerSideProps = ssrWithAuthToken<
 >(async (context) => {
   const { req, params, token } = context;
   const { id } = params || {};
-  console.log(id);
 
   if (!id) {
     return { notFound: true };
@@ -174,8 +173,6 @@ export const getServerSideProps = ssrWithAuthToken<
 
     return { props: { authorized, productResponse } };
   } catch (e) {
-    console.log(e);
-
     return { notFound: true };
   }
 });

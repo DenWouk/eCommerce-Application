@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/react';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
@@ -20,8 +19,6 @@ type Props = {
 };
 
 export default function Header({ authorized }: Props) {
-  const router = useRouter();
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -166,8 +163,8 @@ export default function Header({ authorized }: Props) {
               href=""
               sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
               onClick={async () => {
-                await signOut({ redirect: false });
-                router.push('/');
+                await signOut();
+                // router.push('/');
               }}
             >
               Logout

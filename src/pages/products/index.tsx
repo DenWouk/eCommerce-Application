@@ -1,4 +1,4 @@
-import React from 'react';
+import { FormEvent } from 'react';
 import {
   Box,
   Button,
@@ -74,6 +74,11 @@ export default function ProductsPage(props: Props) {
     );
 
     const urlSearch = new URLSearchParams(result);
+    const from = [router.query.from].flat()[0];
+    const to = [router.query.to].flat()[0];
+    from && urlSearch.set('from', from);
+    to && urlSearch.set('from', to);
+
     router.push(`/products${urlSearch.toString() && `?${urlSearch}`}`);
   };
 
@@ -94,22 +99,21 @@ export default function ProductsPage(props: Props) {
           overflow: 'auto',
         }}
       >
-        <form onChange={handleFormChange}>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start',
-              pl: '10px',
-            }}
-          >
-            <Typography sx={{ ml: '-7px', fontWeight: 'bold' }}>Price:</Typography>
-            <Box sx={{ display: 'flex', width: '100%' }}>
-              <FromToInput />
-            </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'start',
+            pl: '10px',
+          }}
+        >
+          <Typography sx={{ ml: '-7px', fontWeight: 'bold' }}>Price:</Typography>
+          <Box sx={{ display: 'flex', width: '100%' }}>
+            <FromToInput />
           </Box>
-          <Divider sx={{ m: '5px 0' }} />
-
+        </Box>
+        <Divider sx={{ m: '5px 0' }} />
+        <form id="products-search" onChange={handleFormChange}>
           <Box
             sx={{
               display: 'flex',

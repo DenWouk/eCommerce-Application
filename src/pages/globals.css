@@ -115,7 +115,7 @@ main {
 .product-card-img2,
 .product-card-img3,
 .product-card-img4 {
-  display: none;
+  display: none !important;
 }
 
 .product-card:hover .product-card-content {

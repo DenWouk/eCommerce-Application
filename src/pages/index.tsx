@@ -1,7 +1,6 @@
 import { Button } from '@mui/material';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
 
@@ -10,7 +9,6 @@ export type AuthProps = {
 };
 
 export default function Home({ authorized }: AuthProps) {
-  const router = useRouter();
   return (
     <>
       <div className="auth-btns-duplicate">
@@ -59,8 +57,7 @@ export default function Home({ authorized }: AuthProps) {
             href=""
             sx={{ background: '#6195c3fe' }}
             onClick={async () => {
-              await signOut({ redirect: false });
-              router.push('/');
+              await signOut();
             }}
           >
             Logout!

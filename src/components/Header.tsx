@@ -13,6 +13,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import LetterAvatar from './Avatar';
 
 type Props = {
   authorized: boolean | undefined;
@@ -148,27 +149,10 @@ export default function Header({ authorized }: Props) {
                 Contacts
               </Button>
             </Link>
-
-            <Link href="/profile">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Profile
-              </Button>
-            </Link>
           </Box>
 
           {authorized ? (
-            <Button
-              component={Link}
-              variant="contained"
-              href=""
-              sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
-              onClick={async () => {
-                await signOut();
-                // router.push('/');
-              }}
-            >
-              Logout
-            </Button>
+            <LetterAvatar />
           ) : (
             <>
               <Button

@@ -16,6 +16,8 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -113,6 +115,7 @@ export default function ProductsPage(props: Props) {
           </Box>
         </Box>
         <Divider sx={{ m: '5px 0' }} />
+
         <form id="products-search" onChange={handleFormChange}>
           <Box
             sx={{
@@ -274,11 +277,31 @@ export default function ProductsPage(props: Props) {
 
         {products.length ? (
           <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+              <Box>
+                Price
+                <Button sx={{ minWidth: 0 }}>
+                  <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}
+                </Button>
+                <Button sx={{ minWidth: 0 }}>
+                  <ArrowDropDownIcon sx={{ color: 'grey' }} />
+                </Button>
+              </Box>
+              <Box>
+                Name
+                <Button sx={{ minWidth: 0 }}>
+                  <ArrowDropUpIcon sx={{ color: 'grey' }} />{' '}
+                </Button>
+                <Button sx={{ minWidth: 0 }}>
+                  <ArrowDropDownIcon sx={{ color: 'grey' }} />
+                </Button>
+              </Box>
+
               <Pagination
                 count={Math.ceil(total / limit)}
                 page={page ? +page : undefined}
                 onChange={handlePagination}
+                sx={{ m: '0 auto' }}
               />
             </Box>
 

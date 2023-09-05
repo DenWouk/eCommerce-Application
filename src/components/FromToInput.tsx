@@ -86,11 +86,11 @@ export default function FromToInput() {
           position: 'relative',
         },
         '& > div:nth-of-type(1) fieldset': {
-          border: 'solid 2px',
+          border: 'solid 2px grey',
           borderRadius: '3px',
         },
         '& > div:nth-last-of-type(1) fieldset': {
-          border: 'solid 2px',
+          border: 'solid 2px grey',
           borderRadius: '3px',
         },
       }}

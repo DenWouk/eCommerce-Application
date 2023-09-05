@@ -115,7 +115,7 @@ main {
 .product-card-img2,
 .product-card-img3,
 .product-card-img4 {
-  display: none !important;
+  display: none;
 }
 
 .product-card:hover .product-card-content {
@@ -124,26 +124,6 @@ main {
 
 .product-card:hover .img-btns {
   visibility: visible;
-}
-
-.card-btn-img0:hover .product-card-img0 {
-  display: block;
-}
-
-.card-btn-img1:hover .product-card-img1 {
-  display: block;
-}
-
-.card-btn-img2:hover .product-card-img2 {
-  display: block;
-}
-
-.card-btn-img3:hover .product-card-img3 {
-  display: block;
-}
-
-.card-btn-img4:hover .product-card-img4 {
-  display: block;
 }
 
 .img-btns {

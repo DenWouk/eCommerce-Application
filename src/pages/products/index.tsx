@@ -34,6 +34,10 @@ type Props = {
   productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
 };
 
+function changeCardImage() {
+
+}
+
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const { results, total = 0, limit } = productsResponse.body;
@@ -261,6 +265,12 @@ export default function ProductsPage(props: Props) {
           </Box>
           <Divider sx={{ m: '5px 0' }} />
         </form>
+
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Button variant="outlined" sx={{ mt: '10px', color: 'inherit', border: 'solid 2px grey' }}>
+            Reset All
+          </Button>
+        </Box>
       </Paper>
 
       <Container disableGutters sx={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>

@@ -2,7 +2,7 @@ import { ClientResponse, ProductProjectionPagedSearchResponse } from '@commercet
 import getConfig from 'next/config';
 import { FilterProducts } from '@/src/types/commercetools';
 
-const { ROOT_APP = '' } = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
+const { ROOT_APP = '' } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
 
 export default async function getProducts(
   filter: FilterProducts

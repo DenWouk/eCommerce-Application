@@ -43,7 +43,6 @@ export default function ProfilePage() {
       .then((data) => {
         setPassword(data);
         setProfileInfo(data);
-        console.log(data.version, ' profile getProfile');
 
         const {
           addresses,
@@ -147,7 +146,12 @@ export default function ProfilePage() {
           />
         )}
         {tabIndex === 2 && (
-          <UserInfoPassForm password={password || ''} version={version || 0} email={email || ''} />
+          <UserInfoPassForm
+            password={password || ''}
+            version={version || 0}
+            email={email || ''}
+            onUpdate={(customer: Customer) => setProfileInfo(customer)}
+          />
         )}
       </Stack>
     </Paper>

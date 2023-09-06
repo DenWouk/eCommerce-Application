@@ -1,7 +1,7 @@
 import { ClientResponse, CustomerDraft, CustomerSignInResult } from '@commercetools/platform-sdk';
 import getConfig from 'next/config';
 
-const { ROOT_APP = '' } = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
+const { ROOT_APP = '' } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
 export default async function signUp(
   customerDraft: CustomerDraft
 ): Promise<ClientResponse<CustomerSignInResult>> {

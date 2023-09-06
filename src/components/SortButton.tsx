@@ -1,23 +1,24 @@
 import { Chip } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 type Props = {
   targetSort: string;
   label: string;
   active: boolean;
-  onClick: (targetSort: string) => void;
-  isAscDefault: boolean;
+  onClick: (targetSort: string, order: 'asc' | 'desc') => void;
+  order: string | undefined;
 };
 
-export default function SortButton({ targetSort, label, onClick, isAscDefault, active }: Props) {
+export default function SortButton({ targetSort, label, onClick, order, active }: Props) {
+  const isAscDefault = active && order === 'asc';
   const [isAsc, setIsAsc] = useState(isAscDefault);
-  const isNotFirstClick = useRef(false);
+
   const handleClick = () => {
-    isNotFirstClick && setIsAsc((value) => !value);
-    isNotFirstClick.current = true;
-    onClick(targetSort);
+    setIsAsc((value) => !value);
+    onClick(targetSort, !isAsc ? 'asc' : 'desc');
   };
+
   return (
     <Chip
       label={label}

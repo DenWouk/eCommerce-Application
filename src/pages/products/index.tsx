@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -56,7 +56,7 @@ type Props = {
 export default function ProductsPage(props: Props) {
   const { productsResponse } = props;
   const { results: products, total = 0, limit } = productsResponse.body;
-
+  const refId = useRef<NodeJS.Timeout>();
   const attributesByUserId: Record<string, AttributesProduct> = useMemo(
     () =>
       products.reduce((ac, nx) => {
@@ -119,21 +119,22 @@ export default function ProductsPage(props: Props) {
     router.push(`/products${urlSearch.toString() && `?${urlSearch}`}`);
   };
 
-  const handleClick = (sortType: string) => {
-    setActiveSortButton(sortType);
+  const handleClick = (sortValue: string, orderValue: 'asc' | 'desc') => {
+    setActiveSortButton(sortValue);
     const url = new URL(window.location.href);
     const search = url.searchParams;
     search.delete('category');
     search.delete('page');
-    search.set('sort', sortType);
-    const isAscOrder = order === 'asc';
-    const isNewType = sortType === sort;
+    search.set('sort', sortValue);
     if (sort) {
-      search.set('order', isAscOrder && isNewType ? 'desc' : 'asc');
+      search.set('order', orderValue);
     } else {
       search.set('order', 'asc');
     }
-    router.push(url.href);
+    clearTimeout(refId.current);
+    refId.current = setTimeout(() => {
+      router.push(url.href);
+    }, 200);
   };
 
   return (
@@ -332,14 +333,14 @@ export default function ProductsPage(props: Props) {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               <Stack direction="row" spacing={1}>
                 <SortButton
-                  isAscDefault={order === 'asc'}
+                  order={order}
                   onClick={handleClick}
                   active={activeSortButton === 'name.en-US'}
                   targetSort="name.en-US"
                   label="Name"
                 />
                 <SortButton
-                  isAscDefault={order === 'asc'}
+                  order={order}
                   onClick={handleClick}
                   active={activeSortButton === 'price'}
                   targetSort="price"

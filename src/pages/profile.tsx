@@ -43,6 +43,7 @@ export default function ProfilePage() {
       .then((data) => {
         setPassword(data);
         setProfileInfo(data);
+        console.log(data.version, ' profile getProfile');
 
         const {
           addresses,
@@ -136,7 +137,14 @@ export default function ProfilePage() {
           </>
         )}
         {tabIndex === 1 && allAddresses && allAddresses.length && (
-          <AddressForm addresses={allAddresses} version={version || 0} />
+          <AddressForm
+            addresses={allAddresses}
+            version={version || 0}
+            shippingAddressIds={profileInfo.shippingAddressIds as string[]}
+            billingAddressIds={profileInfo.billingAddressIds as string[]}
+            defaultShippingAddressId={profileInfo.defaultShippingAddressId as string}
+            defaultBillingAddressId={profileInfo.defaultBillingAddressId as string}
+          />
         )}
         {tabIndex === 2 && (
           <UserInfoPassForm password={password || ''} version={version || 0} email={email || ''} />

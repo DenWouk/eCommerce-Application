@@ -39,7 +39,7 @@ type Props = Omit<ITextParams, 'control'> & {
   getValues: UseFormGetValues<IFormInput>;
 };
 
-function Address({ register, setValue, getValues, errors, control, watch, disabled }: Props) {
+function Address({ register, setValue, getValues, errors, control, disabled }: Props) {
   const { setError, clearErrors, getFieldState } = useFormContext<IFormInput, string>();
   const [typeAddresses, setTypeAddresses] = useState([TypeAddress.SHIPPING]);
 
@@ -215,13 +215,14 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
               autoHighlight
               isOptionEqualToValue={(option, value) => option.code === value.code}
               getOptionLabel={(option) => option.label}
-              // defaultValue={countryDefault}
+              defaultValue={countryDefault}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                   <Image
                     loading="lazy"
                     width="20"
                     height="20"
+                    className="w-a"
                     src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
                     alt={`${option.code.toLowerCase()}`}
                   />
@@ -292,7 +293,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                 type="string"
                 {...register(`addresses.${index}.postalCode`, {
                   validate: (value) => {
-                    const selectedCountry = watch(`addresses.${index}.country`);
+                    const selectedCountry = getValues(`addresses.${index}.country`);
                     const validationResult = validatePostalCode(selectedCountry, value as string);
 
                     return validationResult || 'Invalid ZIP code format';

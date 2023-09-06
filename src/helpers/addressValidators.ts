@@ -20,25 +20,27 @@ export const validateStreetNumber = {
   },
 };
 export const validatePostalCode = (countryCode: string, value: string) => {
-  console.log(countryCode, 'countryCode');
-
   const message = 'Invalid ZIP code format, the correct format is';
   let errorMessage: string | undefined;
   let pattern;
   switch (countryCode) {
     case 'Canada':
+    case 'CA':
       pattern = /^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$/;
       errorMessage = pattern.test(value) ? undefined : `${message} "A1A 1A1" `;
       break;
     case 'United States':
+    case 'US':
       pattern = /^[0-9]{5}(?:-[0-9]{4})?$/;
       errorMessage = pattern.test(value) ? undefined : `${message} "12345" or "12345-1234"`;
       break;
     case 'Germany':
+    case 'DE':
       pattern = /^\d{5}$/;
       errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
       break;
     case 'France':
+    case 'FR':
       pattern = /^\d{5}$/;
       errorMessage = pattern.test(value) ? undefined : `${message} "12345" `;
       break;

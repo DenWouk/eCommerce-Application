@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { BaseAddress } from '@commercetools/platform-sdk';
+import { BaseAddress, MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 import customerModel from '@/src/helpers/commercetools/customer';
 import { countryPost } from '@/src/enums/countries';
 import { IBaseAddressProfile } from '@/src/interfaces/IBaseAddressProfile';
@@ -19,16 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
       const {
-        email,
         version,
+        email,
         firstName,
         lastName,
         dateOfBirth,
         addresses,
-        shippingAddress,
-        billingAddress,
       } = body;
-      console.log({ body });
 
       let actions = [];
       if (email) {
@@ -49,7 +46,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lastName,
         });
       }
-
       if (dateOfBirth) {
         actions.push({
           action: 'setDateOfBirth',
@@ -67,13 +63,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           );
 
           if (countryPostFind) {
-            console.log(address.shippingAddress, 'shippingAddress');
-
             if (address.shippingAddress) {
               if (address.id) {
                 actions.push({
                   action: 'addShippingAddressId',
-                  addressId: shippingAddress,
+                  addressId: address.id,
                 });
               } else {
                 newShippingAddresses.push(address)
@@ -84,24 +78,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               if (address.id) {
                 actions.push({
                   action: 'addBillingAddressId',
-                  addressId: billingAddress.id,
+                  addressId: address.id,
                 });
               } else {
                 newBillingAddresses.push(address)
               }
             }
-            // if (!shippingAddress) {
-            //   actions.push({
-            //     action: 'removeShippingAddressId',
-            //     addressId: shippingAddress.id,
-            //   });
-            // }
-            // if (!billingAddress) {
-            //   actions.push({
-            //     action: 'removeBillingAddressId',
-            //     addressId: billingAddress.id,
-            //   });
-            // }
             return address.id
               ? {
                   action: 'changeAddress',
@@ -133,24 +115,54 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         actions = [...actions, ...addressActions];
       }
 
-      const customerApi = await customerModel.updateMe(req, {
+      let customerApi = await customerModel.updateMe(req, {
         version,
         actions,
       });
-      // if (newShippingAddresses.length) {
-      //   newShippingAddresses.map((address) => {
-      //     console.log(customerApi, v, 'customerApi');
-      //     return v;
-      //   });
-      // }
-      // if (newBillingAddresses.length) {
-      //   newShippingAddresses.map((v) => {
-      //     console.log(customerApi, v, 'customerApi');
-      //     return v;
-      //   });
-      // }
-      // console.log(customerApi, 'customer=================');
 
+      if (newShippingAddresses.length || newBillingAddresses.length) {
+          const newBillingShippingActions: MyCustomerUpdateAction[] = [];
+
+          if(newShippingAddresses.length){
+            newShippingAddresses.forEach((address: BaseAddress) => {
+              const newAddressFind = customerApi.body.addresses.find((newAddress)=>(
+                address.city === newAddress.city &&
+                address.streetName === newAddress.streetName &&
+                address.streetNumber === newAddress.streetNumber &&
+                address.postalCode === newAddress.postalCode
+                ));
+
+                if(newAddressFind)
+                  newBillingShippingActions.push({
+                    action: 'addShippingAddressId',
+                    addressId: newAddressFind.id,
+                  });
+              });
+          }
+    
+      if (newBillingAddresses.length) {
+        newBillingAddresses.forEach((address: BaseAddress) => {
+          const newAddressFind = customerApi.body.addresses.find((newAddress)=>(
+            // address.country === newAddress.country &&
+            address.city === newAddress.city &&
+            address.streetName === newAddress.streetName &&
+            address.streetNumber === newAddress.streetNumber &&
+            address.postalCode === newAddress.postalCode
+            ));
+            if(newAddressFind)
+            newBillingShippingActions.push({
+              action: 'addBillingAddressId',
+              addressId: newAddressFind.id,
+            });
+        });
+      }
+      if (newBillingShippingActions.length) {
+        customerApi = await customerModel.updateMe(req, {
+          version: customerApi.body.version,
+          actions: newBillingShippingActions,
+        });
+      }
+    }
       res.status(200).json(customerApi.body);
     } catch (err: unknown) {
       res.status(400).json({ message: (err as Error).message });

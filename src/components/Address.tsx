@@ -117,13 +117,14 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
                 variant="h4"
                 sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}
               >
-                {typeAddress} Address
+                {typeAddress} Address #{index + 1}
               </Typography>
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.shippingAddress`}
                 disabled={disabled}
-                hidden={typeAddresses[index] === TypeAddress.SHIPPING}
+                hidden={false}
+                // hidden={typeAddresses[index] === TypeAddress.SHIPPING}
                 interacts={DefNameAddress.SHIPPING}
                 index={index}
                 label="Shipping Address"
@@ -132,7 +133,8 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
               <CheckBoxTypeAddress
                 name={`addresses.${index}.billingAddress`}
                 disabled={disabled}
-                hidden={typeAddresses[index] === TypeAddress.BILLING}
+                // hidden={typeAddresses[index] === TypeAddress.BILLING}
+                hidden={false}
                 interacts={DefNameAddress.BILLING}
                 index={index}
                 label="Billing Address"

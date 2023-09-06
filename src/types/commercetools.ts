@@ -47,7 +47,16 @@ export type FetchedToken = {
 };
 
 export type FilterProducts = {
+  page?: number;
+  category?: string;
+  transmission?: string;
+  body?: string;
+  make?: string;
+  offset?: number;
   search?: string;
+  priceCountry?: string;
+  priceCurrency?: string;
+  localeProjection?: string;
   color?: string;
   sort?: string;
   facet?: string;

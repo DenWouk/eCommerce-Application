@@ -1,7 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { signOut } from 'next-auth/react';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
   AppBar,
@@ -14,14 +12,13 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import LetterAvatar from './Avatar';
 
 type Props = {
   authorized: boolean | undefined;
 };
 
 export default function Header({ authorized }: Props) {
-  const router = useRouter();
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,7 +46,7 @@ export default function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/"> eCommerce-App</Link>
+            <Link href="/">Classic Cars</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
@@ -99,6 +96,12 @@ export default function Header({ authorized }: Props) {
                   <Typography textAlign="center">Contacts</Typography>
                 </MenuItem>
               </Link>
+
+              <Link href="/profile">
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Profile</Typography>
+                </MenuItem>
+              </Link>
             </Menu>
           </Box>
 
@@ -117,7 +120,7 @@ export default function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/"> eCommerce-App </Link>
+            <Link href="/">Classic Cars</Link>
           </Typography>
 
           <Box
@@ -148,18 +151,7 @@ export default function Header({ authorized }: Props) {
           </Box>
 
           {authorized ? (
-            <Button
-              component={Link}
-              variant="contained"
-              href=""
-              sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
-              onClick={async () => {
-                await signOut({ redirect: false });
-                router.push('/');
-              }}
-            >
-              Logout
-            </Button>
+            <LetterAvatar />
           ) : (
             <>
               <Button

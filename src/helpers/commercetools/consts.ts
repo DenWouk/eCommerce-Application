@@ -16,4 +16,4 @@ export const enum SortOrder {
   DESC = 'desc',
 }
 
-export const LIMIT = 10;
+export const LIMIT = 6;

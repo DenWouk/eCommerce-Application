@@ -20,7 +20,7 @@ export default function CategoriesTree({ tree }: Props) {
           <Fragment key={item.id}>
             <ListItemButton onClick={() => hasChild && handleClick(item.id)}>
               <ListItemText primary={item.name} />
-              {hasChild && (open ? <ExpandLess /> : <ExpandMore />)}
+              {hasChild && (open === item.id ? <ExpandLess /> : <ExpandMore />)}
             </ListItemButton>
             <Collapse in={item.id === open} timeout="auto" unmountOnExit>
               {item.children.length > 0 && <CategoriesTree tree={item.children} />}

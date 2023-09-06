@@ -360,6 +360,7 @@ export default function ProductsPage(props: Props) {
               <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 {products.map((product) => {
                   const attributes = attributesByUserId[product.id];
+                  const { price } = product.masterVariant;
                   return (
                     <Grid item xs={3} sm={4} md={4} key={product.id}>
                       <Card className="product-card" sx={{ maxWidth: 345 }}>
@@ -415,7 +416,29 @@ export default function ProductsPage(props: Props) {
                           </Typography>
 
                           <Typography gutterBottom variant="h6" component="div">
-                            {attributes?.price || '--/--'}
+                            {price?.discounted ? (
+                              <>
+                                <del
+                                  style={{
+                                    fontSize: '14px',
+                                    backgroundColor: 'rgba(0,0,0,0.2)',
+                                    borderRadius: '5px',
+                                    padding: '0 3px',
+                                  }}
+                                >
+                                  {`$ ${(price?.value.centAmount || 0) / 100}`}
+                                </del>
+                                <span
+                                  className="bg-blue-300 rounded-md"
+                                  style={{
+                                    marginLeft: '5px',
+                                    padding: '0 3px',
+                                  }}
+                                >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
+                              </>
+                            ) : (
+                              <div>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</div>
+                            )}
                           </Typography>
 
                           <Typography gutterBottom variant="subtitle1" color="text.secondary">

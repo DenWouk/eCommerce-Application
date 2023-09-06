@@ -51,7 +51,6 @@ export default function UserInfoForm({
   } = form;
 
   const [isDisabled, setIsDisabled] = useState(true);
-  const [isUpdated, setIsUpdated] = useState(false);
 
   const handleUpdateClick = async () => {
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
@@ -145,7 +144,7 @@ export default function UserInfoForm({
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button type="submit" disabled={isDisabled} onChange={() => setIsUpdated(true)}>
+          <Button type="submit" disabled={isDisabled}>
             Save Changes
           </Button>
         </Stack>

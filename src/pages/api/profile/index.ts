@@ -21,8 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { version, email, firstName, lastName, dateOfBirth, addresses, currentAddresses } =
         body;
 
-      console.log({ currentAddresses });
-
       let actions = [];
       if (email) {
         actions.push({
@@ -119,7 +117,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           );
 
           if (!existsAddress) {
-            console.log('Delete address', currentAddress);
             actions.push({
               action: 'removeAddress',
               addressId: currentAddress.id,

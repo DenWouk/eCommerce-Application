@@ -49,8 +49,6 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
     control,
   });
 
-  console.log({ fields });
-
   const validateCountry = {
     required: 'Country is required',
   };

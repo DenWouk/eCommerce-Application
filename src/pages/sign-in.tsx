@@ -38,7 +38,6 @@ export default function SignInPage() {
       const result = await signIn(NamesClients.PASSWORD, {
         username: email,
         password,
-        redirect: false,
       });
       clearErrors('root');
       if (result?.ok) {

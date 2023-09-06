@@ -1,5 +1,7 @@
 import AsyncSelectCreatable from 'react-select/async-creatable';
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { components, ControlProps } from 'react-select';
+import React, { useMemo, useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   ClientResponse,
   ProductProjection,
@@ -14,11 +16,15 @@ type Option = {
   label: string;
 };
 
-type Props = {
-  onChange: Dispatch<SetStateAction<ProductProjection[]>>;
-};
+function Control({ children, ...props }: ControlProps<Option, false>) {
+  return (
+    <components.Control {...props}>
+      <SearchIcon className="ml-1" /> {children}
+    </components.Control>
+  );
+}
 
-export default function SelectAsync({ onChange }: Props) {
+export default function SelectAsync() {
   const [foundProducts, setFoundProducts] = useState<ProductProjection[]>([]);
   const router = useRouter();
 
@@ -49,14 +55,18 @@ export default function SelectAsync({ onChange }: Props) {
   };
 
   const handleChange = (value: string | undefined) => {
-    if (!value) {
+    if (typeof value === 'string' && !value.trim()) {
       return;
     }
     const product = foundProducts.find((item) => item.name['en-US'] === value);
     if (product) {
-      router.push(`/${product.id}`);
+      router.push(`/products/${product.id}`);
     } else {
-      onChange(foundProducts);
+      const url = new URL(window.location.href);
+      const search = url.searchParams;
+      search.delete('category');
+      value ? search.set('search', value) : search.delete('search');
+      router.push(url.href);
     }
   };
 
@@ -66,11 +76,14 @@ export default function SelectAsync({ onChange }: Props) {
       formatCreateLabel={(value) => value}
       onChange={(e) => handleChange(e?.value)}
       isClearable
-      className="w-full z-10"
-      placeholder="type ..."
+      className="w-full z-2"
+      placeholder="..."
       cacheOptions
       loadOptions={loadOptions}
       noOptionsMessage={() => 'nothing found'}
+      components={{
+        Control,
+      }}
     />
   );
 }

@@ -2,7 +2,7 @@ import {
   CustomerSignin,
   MyCustomerChangePassword,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/customer';
-import { MyCustomerUpdate } from '@commercetools/platform-sdk';
+import { CustomerDraft, MyCustomerUpdate } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { Req } from '@/src/types/commercetools';
 
@@ -29,6 +29,10 @@ class CustomerModel {
       .login()
       .post({ body: user })
       .execute();
+  }
+
+  async signUp(user: CustomerDraft) {
+    return this.builder.createForCO().customers().post({ body: user }).execute();
   }
 }
 const customerModel = new CustomerModel(builderApiRoot);

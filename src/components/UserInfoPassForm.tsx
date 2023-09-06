@@ -6,6 +6,7 @@ import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { signIn } from 'next-auth/react';
+import { Customer } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import { IFormInput } from '../interfaces/IFormInput';
@@ -18,8 +19,9 @@ type UserInfo = {
   password: string;
   version: number;
   email: string;
+  onUpdate: (customer: Customer) => void;
 };
-export default function UserInfoPassForm({ email, version }: UserInfo) {
+export default function UserInfoPassForm({ email, version, onUpdate }: UserInfo) {
   const form = useForm<IFormInput>({
     mode: 'onChange',
   });
@@ -65,7 +67,8 @@ export default function UserInfoPassForm({ email, version }: UserInfo) {
       clearErrors('root');
 
       if (result?.id) {
-        router.push('/profile');
+        onUpdate(result);
+        await router.push('/profile');
         showSuccess('Successful update!');
         setIsDisabled(true);
       }

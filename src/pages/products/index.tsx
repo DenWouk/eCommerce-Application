@@ -335,14 +335,14 @@ export default function ProductsPage(props: Props) {
                 <SortButton
                   order={order}
                   onClick={handleClick}
-                  active={activeSortButton === 'name.en-US'}
+                  active={!!sort && activeSortButton === 'name.en-US'}
                   targetSort="name.en-US"
                   label="Name"
                 />
                 <SortButton
                   order={order}
                   onClick={handleClick}
-                  active={activeSortButton === 'price'}
+                  active={!!sort && activeSortButton === 'price'}
                   targetSort="price"
                   label="Price"
                 />

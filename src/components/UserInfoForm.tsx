@@ -2,6 +2,7 @@ import { Button, Stack } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { Customer } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
@@ -50,9 +51,13 @@ export default function UserInfoForm({
   } = form;
 
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const handleUpdateClick = async () => {
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
+  };
+  const handleCancelClick = async () => {
+    setIsDisabled(true);
   };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
@@ -85,19 +90,35 @@ export default function UserInfoForm({
     <FormProvider {...form}>
       <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack spacing={1} className="m-5">
-          <Button
-            endIcon={<EditNoteRoundedIcon />}
-            sx={{
-              fontSize: '16px',
-              fontWeight: 'bold',
-              lineHeight: 1.2,
-              textAlign: 'center',
-              color: '#6195c3',
-            }}
-            onClick={handleUpdateClick}
-          >
-            Edit Your Info
-          </Button>
+          {isDisabled ? (
+            <Button
+              endIcon={<EditNoteRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#6195c3',
+              }}
+              onClick={handleUpdateClick}
+            >
+              Edit Your Info
+            </Button>
+          ) : (
+            <Button
+              endIcon={<CloseRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#f44336',
+              }}
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
+          )}
 
           <InputEmail register={register} errors={errors} name="email" disabled={isDisabled} />
           <InputFirstName
@@ -124,7 +145,7 @@ export default function UserInfoForm({
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button type="submit" disabled={isDisabled}>
+          <Button type="submit" disabled={isDisabled} onChange={() => setIsUpdated(true)}>
             Save Changes
           </Button>
         </Stack>

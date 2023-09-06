@@ -18,14 +18,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { body } = req;
 
     try {
-      const {
-        version,
-        email,
-        firstName,
-        lastName,
-        dateOfBirth,
-        addresses,
-      } = body;
+      const { version, email, firstName, lastName, dateOfBirth, addresses, currentAddresses } =
+        body;
+
+      console.log({ currentAddresses });
 
       let actions = [];
       if (email) {
@@ -59,7 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (addresses && addresses.length) {
         const addressActions = addresses.map((address: IBaseAddressProfile) => {
           const countryPostFind = countryPost.find(
-            (countryAddress) => countryAddress.label === address.country || countryAddress.code === address.country
+            (countryAddress) =>
+              countryAddress.label === address.country || countryAddress.code === address.country
           );
 
           if (countryPostFind) {
@@ -70,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   addressId: address.id,
                 });
               } else {
-                newShippingAddresses.push(address)
+                newShippingAddresses.push(address);
               }
             }
 
@@ -81,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                   addressId: address.id,
                 });
               } else {
-                newBillingAddresses.push(address)
+                newBillingAddresses.push(address);
               }
             }
             return address.id
@@ -115,54 +112,73 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         actions = [...actions, ...addressActions];
       }
 
+      if (currentAddresses && currentAddresses.length) {
+        currentAddresses.forEach((currentAddress: BaseAddress) => {
+          const existsAddress = addresses.find(
+            (address: BaseAddress) => address.id === currentAddress.id
+          );
+
+          if (!existsAddress) {
+            console.log('Delete address', currentAddress);
+            actions.push({
+              action: 'removeAddress',
+              addressId: currentAddress.id,
+            });
+          }
+        });
+      }
+
       let customerApi = await customerModel.updateMe(req, {
         version,
         actions,
       });
 
       if (newShippingAddresses.length || newBillingAddresses.length) {
-          const newBillingShippingActions: MyCustomerUpdateAction[] = [];
+        const newBillingShippingActions: MyCustomerUpdateAction[] = [];
 
-          if(newShippingAddresses.length){
-            newShippingAddresses.forEach((address: BaseAddress) => {
-              const newAddressFind = customerApi.body.addresses.find((newAddress)=>(
+        if (newShippingAddresses.length) {
+          newShippingAddresses.forEach((address: BaseAddress) => {
+            const newAddressFind = customerApi.body.addresses.find(
+              (newAddress) =>
+                // address.country === newAddress.country &&
                 address.city === newAddress.city &&
                 address.streetName === newAddress.streetName &&
                 address.streetNumber === newAddress.streetNumber &&
                 address.postalCode === newAddress.postalCode
-                ));
+            );
 
-                if(newAddressFind)
-                  newBillingShippingActions.push({
-                    action: 'addShippingAddressId',
-                    addressId: newAddressFind.id,
-                  });
+            if (newAddressFind)
+              newBillingShippingActions.push({
+                action: 'addShippingAddressId',
+                addressId: newAddressFind.id,
               });
-          }
-    
-      if (newBillingAddresses.length) {
-        newBillingAddresses.forEach((address: BaseAddress) => {
-          const newAddressFind = customerApi.body.addresses.find((newAddress)=>(
-            // address.country === newAddress.country &&
-            address.city === newAddress.city &&
-            address.streetName === newAddress.streetName &&
-            address.streetNumber === newAddress.streetNumber &&
-            address.postalCode === newAddress.postalCode
-            ));
-            if(newAddressFind)
-            newBillingShippingActions.push({
-              action: 'addBillingAddressId',
-              addressId: newAddressFind.id,
-            });
-        });
+          });
+        }
+
+        if (newBillingAddresses.length) {
+          newBillingAddresses.forEach((address: BaseAddress) => {
+            const newAddressFind = customerApi.body.addresses.find(
+              (newAddress) =>
+                // address.country === newAddress.country &&
+                address.city === newAddress.city &&
+                address.streetName === newAddress.streetName &&
+                address.streetNumber === newAddress.streetNumber &&
+                address.postalCode === newAddress.postalCode
+            );
+            if (newAddressFind)
+              newBillingShippingActions.push({
+                action: 'addBillingAddressId',
+                addressId: newAddressFind.id,
+              });
+          });
+        }
+        if (newBillingShippingActions.length) {
+          customerApi = await customerModel.updateMe(req, {
+            version: customerApi.body.version,
+            actions: newBillingShippingActions,
+          });
+        }
       }
-      if (newBillingShippingActions.length) {
-        customerApi = await customerModel.updateMe(req, {
-          version: customerApi.body.version,
-          actions: newBillingShippingActions,
-        });
-      }
-    }
       res.status(200).json(customerApi.body);
     } catch (err: unknown) {
       res.status(400).json({ message: (err as Error).message });

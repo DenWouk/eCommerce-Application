@@ -20,6 +20,7 @@ import {
   Controller,
 } from 'react-hook-form';
 import { useState } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { DefNameAddress, TypeAddress } from '@/src/enums/address';
 import { countryPost, ICountryType } from '../enums/countries';
@@ -103,16 +104,22 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
         };
         return (
           <Stack key={field.id} spacing={1} className="m-10">
-            {typeAddresses.length > 1 && (
-              <Button
-                onClick={() => handleRemove(index)}
-                sx={{ fontSize: '18px', fontWeight: 'bold', color: 'red' }}
-              >
-                remove address
-              </Button>
-            )}
-
             <div className="form-shipping-address">
+              {(typeAddresses.length > 1 || fields.length > 1) && (
+                <Button
+                  endIcon={<CloseRoundedIcon />}
+                  disabled={disabled}
+                  onClick={() => handleRemove(index)}
+                  sx={{
+                    display: 'flex',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#f44336',
+                  }}
+                >
+                  remove address
+                </Button>
+              )}
               <Typography
                 variant="h4"
                 sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}
@@ -309,10 +316,14 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
           </Stack>
         );
       })}
-      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.BILLING)}>
+      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.BILLING)} disabled={disabled}>
         Add billing address
       </Button>
-      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.SHIPPING)}>
+      <Button
+        variant="outlined"
+        onClick={() => handleAdd(TypeAddress.SHIPPING)}
+        disabled={disabled}
+      >
         Add shipping address
       </Button>
     </>

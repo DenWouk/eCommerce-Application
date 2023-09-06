@@ -79,7 +79,8 @@ export default function LetterAvatar() {
             component={Link}
             href=""
             textAlign="center"
-            onClick={async () => {
+            onClick={async (e) => {
+              e.preventDefault();
               await signOut();
             }}
           >

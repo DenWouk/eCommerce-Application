@@ -12,8 +12,7 @@ export default async function handler(req: NextApiRequestWithBody, res: NextApiR
     const customerModel = new CustomerModel();
     try {
       const responseSignUp = await customerModel.signUp(body);
-      console.log(responseSignUp, "send req");
-      
+
       res.status(200).json(responseSignUp);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {

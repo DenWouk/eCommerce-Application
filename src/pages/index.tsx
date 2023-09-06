@@ -56,7 +56,8 @@ export default function Home({ authorized }: AuthProps) {
             variant="contained"
             href=""
             sx={{ background: '#6195c3fe' }}
-            onClick={async () => {
+            onClick={async (e) => {
+              e.preventDefault();
               await signOut();
             }}
           >

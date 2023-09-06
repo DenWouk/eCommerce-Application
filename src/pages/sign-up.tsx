@@ -98,7 +98,7 @@ export default function SignUpPage() {
 
           <InputEmail register={register} errors={errors} name="email" />
 
-          <InputPassword register={register} errors={errors} name="password" label="Password"/>
+          <InputPassword register={register} errors={errors} name="password" label="Password" />
 
           {/* <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" label="Confirm Password"/> */}
 

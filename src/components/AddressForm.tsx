@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
@@ -13,9 +14,17 @@ import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 
 export default function AddressForm({
   addresses,
+  shippingAddressIds,
+  billingAddressIds,
+  defaultShippingAddressId,
+  defaultBillingAddressId,
   version,
 }: {
   addresses: IBaseAddressProfile[];
+  shippingAddressIds: string[];
+  billingAddressIds: string[];
+  defaultShippingAddressId: string;
+  defaultBillingAddressId: string;
   version: number;
 }) {
   const formAddresses = addresses.map((address) => {
@@ -28,13 +37,12 @@ export default function AddressForm({
       streetNumber,
       streetName,
       postalCode,
-      shippingAddress: true,
-      billingAddress: false,
-      defaultShippingAddress: false,
-      defaultBillingAddress: false,
+      shippingAddress: shippingAddressIds.includes(id as string),
+      billingAddress: billingAddressIds.includes(id as string),
+      defaultShippingAddress: defaultShippingAddressId === id,
+      defaultBillingAddress: defaultBillingAddressId === id,
     };
   });
-
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -50,6 +58,7 @@ export default function AddressForm({
     watch,
     getValues,
     setValue,
+    // reset,
     handleSubmit,
     formState: { errors },
   } = form;
@@ -59,12 +68,19 @@ export default function AddressForm({
   const handleUpdateClick = async () => {
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
   };
+  const handleCancelClick = async () => {
+    // reset({
+    //   addresses,
+    //   version,
+    // });
+    setIsDisabled(true);
+  };
 
   const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput): Promise<void> => {
     try {
-      const result = await updateProfile({ ...data, version });
-      
+      const result = await updateProfile({ ...data, currentAddresses: formAddresses, version });
+
       clearErrors('root');
 
       if (result?.id) {
@@ -86,19 +102,35 @@ export default function AddressForm({
     <FormProvider {...form}>
       <form className="form-registration" onSubmit={handleSubmit(onSubmit)} noValidate>
         <Stack spacing={1} className="m-5">
-          <Button
-            endIcon={<EditNoteRoundedIcon />}
-            sx={{
-              fontSize: '16px',
-              fontWeight: 'bold',
-              lineHeight: 1.2,
-              textAlign: 'center',
-              color: '#6195c3',
-            }}
-            onClick={handleUpdateClick}
-          >
-            Edit Your Address
-          </Button>
+          {isDisabled ? (
+            <Button
+              endIcon={<EditNoteRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#6195c3',
+              }}
+              onClick={handleUpdateClick}
+            >
+              Edit Your Address
+            </Button>
+          ) : (
+            <Button
+              endIcon={<CloseRoundedIcon />}
+              sx={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                lineHeight: 1.2,
+                textAlign: 'center',
+                color: '#f44336',
+              }}
+              onClick={handleCancelClick}
+            >
+              Cancel
+            </Button>
+          )}
 
           <Address
             setValue={setValue}

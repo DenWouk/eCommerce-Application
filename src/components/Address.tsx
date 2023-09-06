@@ -20,6 +20,7 @@ import {
   Controller,
 } from 'react-hook-form';
 import { useState } from 'react';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CheckBoxTypeAddress from '@/src/components/CheckboxTypeAddress';
 import { DefNameAddress, TypeAddress } from '@/src/enums/address';
 import { countryPost, ICountryType } from '../enums/countries';
@@ -39,7 +40,7 @@ type Props = Omit<ITextParams, 'control'> & {
   getValues: UseFormGetValues<IFormInput>;
 };
 
-function Address({ register, setValue, getValues, errors, control, watch, disabled }: Props) {
+function Address({ register, setValue, getValues, errors, control, disabled }: Props) {
   const { setError, clearErrors, getFieldState } = useFormContext<IFormInput, string>();
   const [typeAddresses, setTypeAddresses] = useState([TypeAddress.SHIPPING]);
 
@@ -101,23 +102,34 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
         };
         return (
           <Stack key={field.id} spacing={1} className="m-10">
-            {typeAddresses.length > 1 && (
-              <Button onClick={() => handleRemove(index)}
-               sx={{ fontSize: '18px', fontWeight: 'bold', color: 'red' }}>remove address</Button>
-            )}
-
             <div className="form-shipping-address">
+              {(typeAddresses.length > 1 || fields.length > 1) && (
+                <Button
+                  endIcon={<CloseRoundedIcon />}
+                  disabled={disabled}
+                  onClick={() => handleRemove(index)}
+                  sx={{
+                    display: 'flex',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    color: '#f44336',
+                  }}
+                >
+                  remove address
+                </Button>
+              )}
               <Typography
                 variant="h4"
                 sx={{ fontSize: '22px', fontWeight: 'bold', color: 'inherit' }}
               >
-                {typeAddress} Address
+                {typeAddress} Address #{index + 1}
               </Typography>
 
               <CheckBoxTypeAddress
                 name={`addresses.${index}.shippingAddress`}
                 disabled={disabled}
-                hidden={typeAddresses[index] === TypeAddress.SHIPPING}
+                hidden={false}
+                // hidden={typeAddresses[index] === TypeAddress.SHIPPING}
                 interacts={DefNameAddress.SHIPPING}
                 index={index}
                 label="Shipping Address"
@@ -126,7 +138,8 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
               <CheckBoxTypeAddress
                 name={`addresses.${index}.billingAddress`}
                 disabled={disabled}
-                hidden={typeAddresses[index] === TypeAddress.BILLING}
+                // hidden={typeAddresses[index] === TypeAddress.BILLING}
+                hidden={false}
                 interacts={DefNameAddress.BILLING}
                 index={index}
                 label="Billing Address"
@@ -216,6 +229,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                     loading="lazy"
                     width="20"
                     height="20"
+                    className="w-a"
                     src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
                     alt={`${option.code.toLowerCase()}`}
                   />
@@ -286,7 +300,7 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
                 type="string"
                 {...register(`addresses.${index}.postalCode`, {
                   validate: (value) => {
-                    const selectedCountry = watch(`addresses.${index}.country`);
+                    const selectedCountry = getValues(`addresses.${index}.country`);
                     const validationResult = validatePostalCode(selectedCountry, value as string);
 
                     return validationResult || 'Invalid ZIP code format';
@@ -300,10 +314,14 @@ function Address({ register, setValue, getValues, errors, control, watch, disabl
           </Stack>
         );
       })}
-      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.BILLING)}>
+      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.BILLING)} disabled={disabled}>
         Add billing address
       </Button>
-      <Button variant="outlined" onClick={() => handleAdd(TypeAddress.SHIPPING)}>
+      <Button
+        variant="outlined"
+        onClick={() => handleAdd(TypeAddress.SHIPPING)}
+        disabled={disabled}
+      >
         Add shipping address
       </Button>
     </>

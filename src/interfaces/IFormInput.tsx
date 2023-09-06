@@ -19,6 +19,7 @@ export interface IFormInput {
   dateOfBirth?: Date | string | null;
   checkbox?: boolean;
   addresses?: (BaseAddress & TypeAddress)[];
+  currentAddresses?: BaseAddress[];
   form?: string;
   version?: number;
 }

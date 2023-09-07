@@ -5,12 +5,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { Customer } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import Address from './Address';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
+
+type Props = {
+  addresses: IBaseAddressProfile[];
+  shippingAddressIds: string[];
+  billingAddressIds: string[];
+  defaultShippingAddressId: string;
+  defaultBillingAddressId: string;
+  version: number;
+  onUpdate: (customer: Customer) => void;
+};
 
 export default function AddressForm({
   addresses,
@@ -19,14 +30,8 @@ export default function AddressForm({
   defaultShippingAddressId,
   defaultBillingAddressId,
   version,
-}: {
-  addresses: IBaseAddressProfile[];
-  shippingAddressIds: string[];
-  billingAddressIds: string[];
-  defaultShippingAddressId: string;
-  defaultBillingAddressId: string;
-  version: number;
-}) {
+  onUpdate,
+}: Props) {
   const formAddresses = addresses.map((address) => {
     const { id, country, city, streetNumber, streetName, postalCode } = address;
 
@@ -84,7 +89,8 @@ export default function AddressForm({
       clearErrors('root');
 
       if (result?.id) {
-        router.push('/profile');
+        onUpdate(result);
+        await router.push('/profile');
         showSuccess('Successful update!');
         setIsDisabled(true);
       }

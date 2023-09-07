@@ -95,9 +95,9 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
         const countryDefault = countryPost.find((c) => c.code === field.country) || {
-          code: 'US',
-          label: 'United States',
-          phone: '1',
+          code: '',
+          label: '',
+          phone: '',
           suggested: true,
         };
         return (

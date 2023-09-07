@@ -143,6 +143,7 @@ export default function ProfilePage() {
             billingAddressIds={profileInfo.billingAddressIds as string[]}
             defaultShippingAddressId={profileInfo.defaultShippingAddressId as string}
             defaultBillingAddressId={profileInfo.defaultBillingAddressId as string}
+            onUpdate={(customer: Customer) => setProfileInfo(customer)}
           />
         )}
         {tabIndex === 2 && (

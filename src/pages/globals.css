@@ -33,7 +33,7 @@ html {
 }
 
 .header {
-  position: fixed;
+  position: fixed !important;
   z-index: 5;
   background-color: var(--background-color1) !important;
 }
@@ -151,7 +151,7 @@ main {
 }
 
 .footer {
-  position: fixed;
+  position: fixed !important;
   top: unset;
   bottom: 0;
   z-index: 5;

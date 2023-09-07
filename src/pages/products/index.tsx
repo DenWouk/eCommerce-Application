@@ -29,6 +29,7 @@ import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
 import categoryModel from '../../helpers/commercetools/category/categoryModel';
 import FromToInput from '../../components/FromToInput';
+import CategorySelector from '@/src/components/CategorySelector';
 
 type ValueObjAttributesProduct = {
   key: string;
@@ -321,11 +322,21 @@ export default function ProductsPage(props: Props) {
           component="form"
           sx={{
             '& > :not(style)': { width: '25ch' },
+            display: 'flex',
+            flexWrap: 'wrap',
           }}
           noValidate
           autoComplete="off"
         >
           <SelectAsync />
+
+          <Box
+            sx={{
+              m: '0 auto',
+            }}
+          >
+            <CategorySelector />
+          </Box>
         </Box>
 
         {products.length ? (
@@ -365,38 +376,9 @@ export default function ProductsPage(props: Props) {
                     <Grid item xs={3} sm={4} md={4} key={product.id}>
                       <Card className="product-card" sx={{ maxWidth: 345 }}>
                         <CardMedia
-                          className="product-card-img0"
                           component="img"
                           sx={{ height: 'auto' }}
                           image={product?.masterVariant.images?.[0]?.url}
-                          title={product?.name['en-US']}
-                        />
-                        <CardMedia
-                          className="product-card-img1"
-                          component="img"
-                          sx={{ height: 'auto' }}
-                          image={product?.masterVariant.images?.[1]?.url}
-                          title={product?.name['en-US']}
-                        />
-                        <CardMedia
-                          className="product-card-img2"
-                          component="img"
-                          sx={{ height: 'auto' }}
-                          image={product?.masterVariant.images?.[2]?.url}
-                          title={product?.name['en-US']}
-                        />
-                        <CardMedia
-                          className="product-card-img3"
-                          component="img"
-                          sx={{ height: 'auto' }}
-                          image={product?.masterVariant.images?.[3]?.url}
-                          title={product?.name['en-US']}
-                        />
-                        <CardMedia
-                          className="product-card-img4"
-                          component="img"
-                          sx={{ height: 'auto' }}
-                          image={product?.masterVariant.images?.[4]?.url}
                           title={product?.name['en-US']}
                         />
 

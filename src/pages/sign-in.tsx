@@ -3,6 +3,8 @@ import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import LoadingButton from '@/src/components/LoadingButton';
@@ -14,6 +16,10 @@ import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
 
 export default function SignInPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -40,7 +46,8 @@ export default function SignInPage() {
       });
       clearErrors('root');
       if (result?.ok) {
-        window.location.href = '/';
+        await router.push(callbackUrl);
+        // window.location.href = '/';
         showSuccess('Successful login!');
       }
       if (result?.error) {

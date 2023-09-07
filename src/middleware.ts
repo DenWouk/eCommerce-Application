@@ -15,17 +15,17 @@ export default withAuth(
       url.pathname = '/';
       return NextResponse.redirect(url);
     }
-    if (pathname === '/profile' && type !== NamesClients.PASSWORD) {
-      url.pathname = '/sign-in';
-      return NextResponse.redirect(url);
-    }
 
     return NextResponse.next();
   },
   {
     callbacks: {
-      authorized() {
-        return true;
+      authorized({ token, req }) {
+        const path = req.nextUrl.pathname;
+        if (path === '/profile') {
+          return token?.type === NamesClients.PASSWORD;
+        }
+        return path === '/sign-in' || path === '/sign-up';
       },
     },
   }

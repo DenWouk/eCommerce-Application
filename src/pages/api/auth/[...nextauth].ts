@@ -136,6 +136,9 @@ export const authOptions: AuthOptions = {
       return { ...session, type, id, user: { ...session.user, name } };
     },
   },
+  pages: {
+    signIn: '/sign-in',
+  },
   session: {
     maxAge: 180 * 24 * 60 * 60,
   },

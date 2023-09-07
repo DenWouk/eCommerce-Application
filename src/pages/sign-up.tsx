@@ -4,6 +4,8 @@ import Link from 'next/link';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
@@ -21,6 +23,10 @@ import Address from '../components/Address';
 import InputDate from '../components/InputDate';
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
+
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
@@ -69,8 +75,9 @@ export default function SignUpPage() {
       });
       clearErrors('root');
       if (result?.ok) {
-        window.location.href = '/';
         showSuccess('Successful Registration!');
+        await router.push(callbackUrl);
+        // window.location.href = '/';
       }
     } catch (e: unknown) {
       if (e instanceof Error) {

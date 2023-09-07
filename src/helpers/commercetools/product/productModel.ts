@@ -55,7 +55,7 @@ class ProductModel {
     return (await this.builder.getBuilder(req))
       .productProjections()
       .withId({ ID: id })
-      .get()
+      .get({ queryArgs: { priceCurrency: 'USD' } })
       .execute();
   }
 }

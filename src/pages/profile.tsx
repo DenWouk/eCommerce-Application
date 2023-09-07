@@ -43,7 +43,6 @@ export default function ProfilePage() {
       .then((data) => {
         setPassword(data);
         setProfileInfo(data);
-        console.log(data.version, ' profile getProfile');
 
         const {
           addresses,
@@ -72,7 +71,7 @@ export default function ProfilePage() {
       .catch((err) => {
         throw err;
       });
-  }, []);
+  }, [setProfileInfo]);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
   const { password } = passwordInfo;

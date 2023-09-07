@@ -39,7 +39,8 @@ export default function BasicStack(props: Props) {
   ];
 
   const styleSpan = { lineHeight: '2', color: 'grey' };
-
+  const { price } = product.masterVariant;
+  console.log(product);
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>
       <Box sx={{ width: '100%' }}>
@@ -83,9 +84,30 @@ export default function BasicStack(props: Props) {
                   <Divider />
 
                   <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
-                    {`Price: $${
-                      (product.masterVariant.prices?.[0].value.centAmount as number) / 100
-                    }`}
+                    Price:
+                    {price?.discounted ? (
+                      <>
+                        <del
+                          style={{
+                            fontSize: '14px',
+                            backgroundColor: 'rgba(0,0,0,0.2)',
+                            borderRadius: '5px',
+                            padding: '0 3px',
+                          }}
+                        >
+                          {`$ ${(price?.value.centAmount || 0) / 100}`}
+                        </del>
+                        <span
+                          className="bg-blue-300 rounded-md"
+                          style={{
+                            marginLeft: '5px',
+                            padding: '0 3px',
+                          }}
+                        >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
+                      </>
+                    ) : (
+                      <span>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</span>
+                    )}
                   </Typography>
                   <Divider />
 
@@ -123,7 +145,30 @@ export default function BasicStack(props: Props) {
             <Typography variant="h5">{product?.name['en-US']}</Typography>
 
             <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
-              {`Price: ${product.masterVariant.attributes?.[6].value}`}
+              Price:
+              {price?.discounted ? (
+                <>
+                  <del
+                    style={{
+                      fontSize: '14px',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      borderRadius: '5px',
+                      padding: '0 3px',
+                    }}
+                  >
+                    {`$ ${(price?.value.centAmount || 0) / 100}`}
+                  </del>
+                  <span
+                    className="bg-blue-300 rounded-md"
+                    style={{
+                      marginLeft: '5px',
+                      padding: '0 3px',
+                    }}
+                  >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
+                </>
+              ) : (
+                <span>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</span>
+              )}
             </Typography>
 
             <Typography>

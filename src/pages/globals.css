@@ -151,7 +151,7 @@ main {
 }
 
 .footer {
-  position: fixed;
+  position: fixed !important;
   top: unset;
   bottom: 0;
   z-index: 5;

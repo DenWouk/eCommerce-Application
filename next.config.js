@@ -17,6 +17,9 @@ const nextConfig = {
     CLIENT_SECRET_CO: process.env.SECRET_CO,
     SCOPE_CO: process.env.SCOPE_CO,
   },
+  publicRuntimeConfig: {
+    ROOT_APP: process.env.NEXT_PUBLIC_ROOT_APP,
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

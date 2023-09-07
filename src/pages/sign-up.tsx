@@ -1,7 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
@@ -20,7 +19,6 @@ import InputFirstName from '../components/InputFirstName';
 import InputLastName from '../components/InputLastName';
 import Address from '../components/Address';
 import InputDate from '../components/InputDate';
-// import InputPasswordConfirm from '../components/InputPasswordConfirm';
 
 export default function SignUpPage() {
   const form = useForm<IFormInput>({
@@ -59,7 +57,6 @@ export default function SignUpPage() {
     formState: { errors, isSubmitting },
   } = form;
 
-  const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
     try {
@@ -72,7 +69,7 @@ export default function SignUpPage() {
       });
       clearErrors('root');
       if (result?.ok) {
-        router.replace('/');
+        window.location.href = '/';
         showSuccess('Successful Registration!');
       }
     } catch (e: unknown) {
@@ -99,8 +96,6 @@ export default function SignUpPage() {
           <InputEmail register={register} errors={errors} name="email" />
 
           <InputPassword register={register} errors={errors} name="password" label="Password" />
-
-          {/* <InputPasswordConfirm register={register} errors={errors} name="passwordConfirm" label="Confirm Password"/> */}
 
           <InputFirstName register={register} errors={errors} name="firstName" />
 

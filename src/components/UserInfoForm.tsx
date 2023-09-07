@@ -13,7 +13,7 @@ import InputLastName from './InputLastName';
 import InputDate from './InputDate';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
-import formatDate, { convertFormatDate } from '../helpers/date';
+import formatDate from '../helpers/date';
 
 type UserInfo = {
   firstName: string;
@@ -37,7 +37,7 @@ export default function UserInfoForm({
       email: emailProp,
       firstName,
       lastName,
-      dateOfBirth: new Date(convertFormatDate(dateOfBirth as string)),
+      dateOfBirth: new Date(dateOfBirth as string),
     },
   });
 

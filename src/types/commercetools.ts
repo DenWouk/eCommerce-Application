@@ -47,21 +47,40 @@ export type FetchedToken = {
 };
 
 export type FilterProducts = {
-  page?: number;
+  page?: string;
   category?: string;
-  transmission?: string;
-  body?: string;
-  make?: string;
-  offset?: number;
+  transmission?: string | string[];
+  body?: string | string[];
+  make?: string | string[];
+  color?: string | string[];
+  offset?: string;
   search?: string;
   priceCountry?: string;
   priceCurrency?: string;
   localeProjection?: string;
-  color?: string;
   sort?: string;
   facet?: string;
   limit?: string;
   order?: SortOrder;
   from?: string;
   to?: string;
+};
+
+type ValueObjAttributesProduct = {
+  key: string;
+  label: string;
+};
+
+export type AttributesProduct = {
+  body: ValueObjAttributesProduct[];
+  color: ValueObjAttributesProduct[];
+  engine: string;
+  interior: string;
+  location: string;
+  make: ValueObjAttributesProduct[];
+  model: string;
+  odometer: number;
+  price: string;
+  transmission: ValueObjAttributesProduct[];
+  year: string;
 };

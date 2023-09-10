@@ -499,14 +499,12 @@ export const getServerSideProps = ssrWithAuthToken<
   { category: string[] }
 >(async ({ req, token, params, query }) => {
   const authorized = token?.type === NamesClients.PASSWORD;
-  const { page } = query;
   const slugCategory = params?.category?.at(-1);
   try {
     const categoryResponse = slugCategory
       ? await categoryModel.getCategoryBySlug(req, slugCategory)
       : undefined;
     const productsResponse = await productModel.getProducts(req, {
-      page: page ? +page : undefined,
       category: categoryResponse && categoryResponse.body.results[0]?.id,
       ...query,
     });

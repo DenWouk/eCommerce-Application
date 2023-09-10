@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { AppBar, Box, Button, Container, IconButton, Typography } from '@mui/material';
 import RSSicon from '../icons/rss-icon';
 import GhSvg from '../icons/gh-icon';
@@ -10,7 +10,7 @@ const authorsLinks = [
   'https://github.com/DenWouk',
 ];
 
-export default function Footer() {
+function Footer() {
   return (
     <AppBar component="footer" position="static" className="footer">
       <Container
@@ -83,3 +83,5 @@ export default function Footer() {
     </AppBar>
   );
 }
+
+export default memo(Footer);

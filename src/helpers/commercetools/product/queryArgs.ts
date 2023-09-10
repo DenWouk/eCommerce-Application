@@ -1,4 +1,5 @@
 import { QueryParam } from '@commercetools/platform-sdk/dist/declarations/src/generated/shared/utils/common-types';
+import { SuggestionResult } from '@commercetools/platform-sdk';
 import { FilterProducts } from '@/src/types/commercetools';
 import { LIMIT, SortOrder } from '@/src/helpers/commercetools/consts';
 
@@ -18,16 +19,22 @@ type QueryArgs = {
   [key: string]: QueryParam;
 };
 
-function createQueryValue(searchQuery: string | undefined) {
-  return searchQuery
-    ?.split(',')
-    .map((value) => `"${value}"`)
-    .join(',');
+function createQueryValue(searchQuery: string | string[] | undefined) {
+  return (
+    searchQuery &&
+    [searchQuery]
+      .flat()
+      .map((value) => `"${value}"`)
+      .join(',')
+  );
 }
 
-export default function createQueryArgs(filter: FilterProducts | undefined) {
+export default function createQueryArgs(
+  filter: (FilterProducts & { suggest?: SuggestionResult }) | undefined
+) {
   const {
     search,
+    suggest,
     page = 1,
     category,
     priceCountry,
@@ -61,11 +68,17 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
 
   const limitNumber = (limit && parseInt(limit, 10)) || LIMIT;
   category && filterQuery.push(`categories.id:subtree("${category}")`);
+  const suggestions = suggest?.['searchKeywords.en-US'];
+  suggestions?.length &&
+    filterQuery.push(
+      `searchKeywords.en-US.text:${createQueryValue(suggestions.map((value) => value.text))}`
+    );
 
   const queryArgs: QueryArgs = {
     fuzzy: true,
+    where: 'masterVariant(name(en-US="BMW M5"))',
     markMatchingVariants: true,
-    offset: page ? (page - 1) * limitNumber : undefined,
+    offset: page ? (+page - 1) * limitNumber : undefined,
     priceCountry,
     priceCurrency,
     localeProjection,
@@ -74,7 +87,6 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
     sort: sort && `${sort} ${order}`,
     limit: limitNumber,
   };
-  search && (queryArgs['text.en-US'] = search);
-
+  !suggestions?.length && search && (queryArgs['text.en-US'] = search);
   return queryArgs;
 }

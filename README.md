@@ -34,7 +34,7 @@ The Ecommerce Application is a web application built using Next.js, a popular Re
    yarn dev
    ```
 
-   The application should now be accessible at [http://localhost:3000](http://localhost:3000)
+   The application should now be accessible at [http://localhost:3333](http://localhost:3333)
 
 ## Project Structure
 
@@ -104,4 +104,4 @@ To learn more about Next.js, take a look at the following resources:
 ## Deploy
 
 Check out our deploy [Next.js deployment documentation](https://nextjs.org/docs/deployment).
-https://e-commerce-application-eight.vercel.app/
+https://e-commerce-application-silk.vercel.app/

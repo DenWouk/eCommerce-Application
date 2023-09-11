@@ -17,13 +17,16 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { ClientResponse, ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import useSWR, { unstable_serialize } from 'swr';
+import { useSearchParams } from 'next/navigation';
 import SelectAsync from '@/src/components/SelectAsync';
 import stolenImg from '@/public/stolen.jpg';
 import SortButton from '@/src/components/SortButton';
+import getProducts from '@/src/api/products';
+import SWRProvider from '@/src/components/SWRProvider';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -49,13 +52,24 @@ type AttributesProduct = {
   year: string;
 };
 
-type Props = {
-  productsResponse: ClientResponse<ProductProjectionPagedQueryResponse>;
-};
+function ProductsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = [router.query.page].flat()[0] || '1';
+  const sort = [router.query.sort].flat()[0];
+  const order = [router.query.order].flat()[0];
+  const [activeSortButton, setActiveSortButton] = useState(sort);
 
-export default function ProductsPage(props: Props) {
-  const { productsResponse } = props;
-  const { results: products, total = 0, limit } = productsResponse.body;
+  const { data: productsResponse, error } = useSWR(
+    ['/api/products', searchParams.toString()],
+    (keys) => getProducts(keys[1]),
+    {
+      keepPreviousData: true,
+      revalidateOnMount: false,
+    }
+  );
+
+  const { results: products, total = 0, limit } = productsResponse!.body;
   const refId = useRef<NodeJS.Timeout>();
   const attributesByUserId: Record<string, AttributesProduct> = useMemo(
     () =>
@@ -68,12 +82,6 @@ export default function ProductsPage(props: Props) {
       }, {}),
     [products]
   );
-
-  const router = useRouter();
-  const page = [router.query.page].flat()[0] || '1';
-  const sort = [router.query.sort].flat()[0];
-  const order = [router.query.order].flat()[0];
-  const [activeSortButton, setActiveSortButton] = useState(sort);
 
   const buttons = [
     <Button className="card-btn-img0" key="one" />,
@@ -88,35 +96,21 @@ export default function ProductsPage(props: Props) {
     const search = url.searchParams;
     search.delete('category');
     value > 1 ? search.set('page', value.toString()) : search.delete('page');
-    router.push(url.href);
+    router.push(url.href, undefined, { shallow: true });
   };
 
   const handleFormChange = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
-    const result = Array.from(formData.entries()).reduce(
-      (prev, next) => {
-        if (!next[1]) {
-          return prev;
-        }
-        const copyPrev = { ...prev };
-        if (next[0] in copyPrev) {
-          copyPrev[next[0]] += `,${next[1]}`;
-        } else {
-          copyPrev[next[0]] = next[1].toString();
-        }
-        return copyPrev;
-      },
-      {} as Record<string, string>
-    );
-
-    const urlSearch = new URLSearchParams(result);
+    const urlSearch = new URLSearchParams(formData as unknown as URLSearchParams);
     const from = [router.query.from].flat()[0];
     const to = [router.query.to].flat()[0];
     from && urlSearch.set('from', from);
     to && urlSearch.set('from', to);
     sort && order && urlSearch.set('sort', sort);
     sort && order && urlSearch.set('order', order);
-    router.push(`/products${urlSearch.toString() && `?${urlSearch}`}`);
+    router.push(`/products${urlSearch.toString() && `?${urlSearch}`}`, undefined, {
+      shallow: true,
+    });
   };
 
   const handleClick = (sortValue: string, orderValue: 'asc' | 'desc') => {
@@ -133,7 +127,7 @@ export default function ProductsPage(props: Props) {
     }
     clearTimeout(refId.current);
     refId.current = setTimeout(() => {
-      router.push(url.href);
+      router.push(url.href, undefined, { shallow: true });
     }, 200);
   };
 
@@ -328,7 +322,7 @@ export default function ProductsPage(props: Props) {
           <SelectAsync />
         </Box>
 
-        {products.length ? (
+        {products.length && !error ? (
           <>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
               <Stack direction="row" spacing={1}>
@@ -494,25 +488,32 @@ export default function ProductsPage(props: Props) {
   );
 }
 
-export const getServerSideProps = ssrWithAuthToken<
-  Props & { authorized: boolean },
-  { category: string[] }
->(async ({ req, token, params, query }) => {
-  const authorized = token?.type === NamesClients.PASSWORD;
-  const slugCategory = params?.category?.at(-1);
-  try {
-    const categoryResponse = slugCategory
-      ? await categoryModel.getCategoryBySlug(req, slugCategory)
-      : undefined;
-    const productsResponse = await productModel.getProducts(req, {
-      category: categoryResponse && categoryResponse.body.results[0]?.id,
-      ...query,
-    });
-    const categoriesResponse = await categoryModel.getCategories(req);
-    return { props: { authorized, productsResponse, categoriesResponse } };
-  } catch {
-    return {
-      notFound: true,
-    };
+export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { category: string[] }>(
+  async ({ req, token, params, query }) => {
+    const authorized = token?.type === NamesClients.PASSWORD;
+    const slugCategory = params?.category?.at(-1);
+    try {
+      const categoryResponse = slugCategory
+        ? await categoryModel.getCategoryBySlug(req, slugCategory)
+        : undefined;
+      const productsResponse = await productModel.getProducts(req, {
+        category: categoryResponse && categoryResponse.body.results[0]?.id,
+        ...query,
+      });
+      const searchString = req.url?.match(/\?\S+/)?.[0].slice(1) || '';
+
+      return {
+        props: {
+          authorized,
+          fallback: { [unstable_serialize(['/api/products', searchString])]: productsResponse },
+        },
+      };
+    } catch (e) {
+      return {
+        notFound: true,
+      };
+    }
   }
-});
+);
+
+export default SWRProvider(ProductsPage);

@@ -6,9 +6,6 @@ const { ROOT_APP = '' } = getConfig().publicRuntimeConfig as Record<string, stri
 export default async function getProducts(
   searchString: string
 ): Promise<ClientResponse<ProductProjectionPagedSearchResponse>> {
-  // if (Math.random() > 0.5) {
-  //   throw new Error('hello');
-  // }
   const data = await fetch(`${ROOT_APP}/api/products?${searchString}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },

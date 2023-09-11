@@ -1,7 +1,7 @@
 import { QueryParam } from '@commercetools/platform-sdk/dist/declarations/src/generated/shared/utils/common-types';
 import { SuggestionResult } from '@commercetools/platform-sdk';
 import { FilterProducts } from '@/src/types/commercetools';
-import { LIMIT, SortOrder } from '@/src/helpers/commercetools/consts';
+import { LIMIT } from '@/src/helpers/commercetools/consts';
 
 type QueryArgs = {
   where?: string;
@@ -48,8 +48,8 @@ export default function createQueryArgs(
     limit,
     from = '',
     to = '',
-    sort = 'lastModifiedAt',
-    order = SortOrder.ASC,
+    sort,
+    order,
   } = filter || {};
   const filterQuery: string[] = [];
   const fromTo =

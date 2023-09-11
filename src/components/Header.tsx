@@ -12,6 +12,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import LoadingPage from '@/src/components/LoadingPage';
 import LetterAvatar from './Avatar';
 
 type Props = {
@@ -174,6 +175,7 @@ export default function Header({ authorized }: Props) {
             </>
           )}
         </Toolbar>
+        <LoadingPage />
       </Container>
     </AppBar>
   );

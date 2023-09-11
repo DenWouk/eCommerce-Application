@@ -63,7 +63,6 @@ export default function AddressForm({
     watch,
     getValues,
     setValue,
-    // reset,
     handleSubmit,
     formState: { errors },
   } = form;
@@ -74,10 +73,6 @@ export default function AddressForm({
     setIsDisabled((prevIsDisabled) => !prevIsDisabled);
   };
   const handleCancelClick = async () => {
-    // reset({
-    //   addresses,
-    //   version,
-    // });
     setIsDisabled(true);
   };
 
@@ -151,7 +146,7 @@ export default function AddressForm({
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button type="submit" disabled={isDisabled}>
+          <Button type="submit" disabled={isDisabled} style={{ display: isDisabled ? 'none' : 'block' }}>
             Save Changes
           </Button>
         </Stack>

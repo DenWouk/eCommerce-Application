@@ -57,7 +57,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
     (index: number) => (e: unknown, newValue: ICountryType | null | string) => {
       const nameCountryField = `addresses.${index}.country` as const;
       if (countryPost.find(({ label }) => label === newValue)) {
-        clearErrors(nameCountryField);
+        // clearErrors(nameCountryField);
         const namePostalCodeField = `addresses.${index}.postalCode` as const;
         const state = getFieldState(namePostalCodeField);
         const value = getValues(namePostalCodeField) || '';
@@ -77,7 +77,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
         });
       }
     };
-
+    
   const handleAdd = (typeAddress: TypeAddress) => {
     const typeAddressObject =
       typeAddress === TypeAddress.SHIPPING ? { shippingAddress: true } : { billingAddress: true };
@@ -108,6 +108,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
                   endIcon={<CloseRoundedIcon />}
                   disabled={disabled}
                   onClick={() => handleRemove(index)}
+                  style={{ display: disabled ? 'none' : 'flex' }}
                   sx={{
                     display: 'flex',
                     fontSize: '16px',

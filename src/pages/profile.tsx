@@ -71,7 +71,7 @@ export default function ProfilePage() {
       .catch((err) => {
         throw err;
       });
-  }, []);
+  }, [setProfileInfo]);
 
   const { firstName, lastName, dateOfBirth, email, version } = profileInfo;
   const { password } = passwordInfo;

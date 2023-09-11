@@ -3,7 +3,7 @@ import productModel from '@/src/helpers/commercetools/product';
 import { handlerAuthToken } from '@/src/helpers/next/withAuthToken';
 import { FilterProducts } from '@/src/types/commercetools';
 
-type NextApiRequestWithFilter<T extends Partial<Record<string, string | number>>> = Omit<
+type NextApiRequestWithFilter<T extends Partial<Record<string, string | string[]>>> = Omit<
   NextApiRequest,
   'query'
 > & { query: T };

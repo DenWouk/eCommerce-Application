@@ -1,36 +1,35 @@
 import { Chip } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 type Props = {
+  value: string | null;
   targetSort: string;
   label: string;
-  active: boolean;
   onClick: (targetSort: string, order: 'asc' | 'desc') => void;
-  order: string | undefined;
 };
 
-export default function SortButton({ targetSort, label, onClick, order, active }: Props) {
-  const isAscDefault = active && order === 'asc';
-  const [isAsc, setIsAsc] = useState(isAscDefault);
+export default function SortButton({ value, targetSort, label, onClick }: Props) {
+  const isAsc = value !== 'desc';
+  const refIsAsc = useRef(isAsc);
 
   const handleClick = () => {
-    setIsAsc((value) => !value);
-    onClick(targetSort, !isAsc ? 'asc' : 'desc');
+    onClick(targetSort, refIsAsc.current ? 'desc' : 'asc');
+    refIsAsc.current = !refIsAsc.current;
   };
 
   return (
     <Chip
       label={label}
-      color={active ? 'primary' : 'default'}
+      color={value ? 'primary' : 'default'}
       onClick={handleClick}
       onDelete={handleClick}
       deleteIcon={
         <SortIcon
           sx={{
-            transform: `rotateZ(${isAsc ? 180 : 0}deg)`,
+            transform: `rotateZ(${refIsAsc.current ? 180 : 0}deg)`,
           }}
-          style={active ? { color: 'white' } : undefined}
+          style={value ? { color: 'white' } : undefined}
         />
       }
     />

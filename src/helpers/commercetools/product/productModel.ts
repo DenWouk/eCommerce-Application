@@ -1,3 +1,4 @@
+import { SuggestionResult } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { FilterProducts, Req } from '@/src/types/commercetools';
 import createQueryArgs from '@/src/helpers/commercetools/product/queryArgs';
@@ -20,22 +21,24 @@ class ProductModel {
         },
       })
       .execute();
-
-    const searchWords = Object.values(suggest.body)
-      .flat()
-      .map((value) => value.text);
-    return Array.from(new Set(searchWords.join(' ').split(' ')).values()).join(' ') || undefined;
+    return suggest.body;
   }
 
   async getProducts(req: Req, filter?: FilterProducts) {
     const { search, limit } = filter || {};
     let searchString = search;
+    let suggest: SuggestionResult | undefined;
     if (searchString) {
-      const suggest = await this.getProductsSuggest(req, searchString, limit);
-      searchString = suggest || search;
+      suggest = await this.getProductsSuggest(req, searchString, limit);
+      const searchWords = Object.values(suggest)
+        .flat()
+        .map((value) => value.text);
+      searchString =
+        Array.from(new Set(searchWords.join(' ').split(' ')).values()).join(' ') || undefined;
+      searchString = searchString || search;
     }
 
-    const queryArgs = createQueryArgs({ ...filter, search: searchString });
+    const queryArgs = createQueryArgs({ ...filter, search: searchString, suggest });
     return (await this.builder.getBuilder(req))
       .productProjections()
       .search()

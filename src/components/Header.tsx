@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
@@ -19,7 +19,7 @@ type Props = {
   authorized: boolean | undefined;
 };
 
-export default function Header({ authorized }: Props) {
+function Header({ authorized }: Props) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -180,3 +180,5 @@ export default function Header({ authorized }: Props) {
     </AppBar>
   );
 }
+
+export default memo(Header);

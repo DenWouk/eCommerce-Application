@@ -1,6 +1,7 @@
 import { QueryParam } from '@commercetools/platform-sdk/dist/declarations/src/generated/shared/utils/common-types';
+import { SuggestionResult } from '@commercetools/platform-sdk';
 import { FilterProducts } from '@/src/types/commercetools';
-import { LIMIT, SortOrder } from '@/src/helpers/commercetools/consts';
+import { LIMIT } from '@/src/helpers/commercetools/consts';
 
 type QueryArgs = {
   where?: string;
@@ -28,9 +29,12 @@ function createQueryValue(searchQuery: string | string[] | undefined) {
   );
 }
 
-export default function createQueryArgs(filter: FilterProducts | undefined) {
+export default function createQueryArgs(
+  filter: (FilterProducts & { suggest?: SuggestionResult }) | undefined
+) {
   const {
     search,
+    suggest,
     page = 1,
     category,
     priceCountry,
@@ -44,8 +48,8 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
     limit,
     from = '',
     to = '',
-    sort = 'lastModifiedAt',
-    order = SortOrder.ASC,
+    sort,
+    order,
   } = filter || {};
   const filterQuery: string[] = [];
   const fromTo =
@@ -64,9 +68,15 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
 
   const limitNumber = (limit && parseInt(limit, 10)) || LIMIT;
   category && filterQuery.push(`categories.id:subtree("${category}")`);
+  const suggestions = suggest?.['searchKeywords.en-US'];
+  suggestions?.length &&
+    filterQuery.push(
+      `searchKeywords.en-US.text:${createQueryValue(suggestions.map((value) => value.text))}`
+    );
 
   const queryArgs: QueryArgs = {
     fuzzy: true,
+    where: 'masterVariant(name(en-US="BMW M5"))',
     markMatchingVariants: true,
     offset: page ? (+page - 1) * limitNumber : undefined,
     priceCountry,
@@ -77,7 +87,6 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
     sort: sort && `${sort} ${order}`,
     limit: limitNumber,
   };
-  search && (queryArgs['text.en-US'] = search);
-
+  !suggestions?.length && search && (queryArgs['text.en-US'] = search);
   return queryArgs;
 }

@@ -18,11 +18,14 @@ type QueryArgs = {
   [key: string]: QueryParam;
 };
 
-function createQueryValue(searchQuery: string | undefined) {
-  return searchQuery
-    ?.split(',')
-    .map((value) => `"${value}"`)
-    .join(',');
+function createQueryValue(searchQuery: string | string[] | undefined) {
+  return (
+    searchQuery &&
+    [searchQuery]
+      .flat()
+      .map((value) => `"${value}"`)
+      .join(',')
+  );
 }
 
 export default function createQueryArgs(filter: FilterProducts | undefined) {
@@ -65,7 +68,7 @@ export default function createQueryArgs(filter: FilterProducts | undefined) {
   const queryArgs: QueryArgs = {
     fuzzy: true,
     markMatchingVariants: true,
-    offset: page ? (page - 1) * limitNumber : undefined,
+    offset: page ? (+page - 1) * limitNumber : undefined,
     priceCountry,
     priceCurrency,
     localeProjection,

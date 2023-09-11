@@ -12,7 +12,7 @@ import {
 } from '@commercetools/sdk-client-v2';
 import { getToken } from 'next-auth/jwt';
 import NamesClients from '@/src/helpers/commercetools/consts';
-import tokenCache from '@/src/helpers/commercetools/tokenCache';
+import { tokenCache } from '@/src/helpers/commercetools/token';
 import { ClientOptions, ExistingTypeClient, Req, TypeClient } from '@/src/types/commercetools';
 
 const {
@@ -28,11 +28,7 @@ const {
   CLIENT_ID_UNKNOWN = '',
   CLIENT_SECRET_UNKNOWN = '',
   PROJECT_KEY: PK = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
-
-const passwordClientBuilder = new ClientBuilder();
-const anonymousClientBuilder = new ClientBuilder();
-const unknownClientBuilder = new ClientBuilder();
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 export type TypeBuilderApiRoot = BuilderApiRoot;
 
@@ -129,30 +125,26 @@ class BuilderApiRoot {
   ) {
     let middlewareOptions: AuthMiddlewareOptions | PasswordAuthMiddlewareOptions | undefined;
     let flowMiddleware: Middleware | undefined;
-    let clientBuilder: ClientBuilder | undefined;
     const { type } = typeClient;
-
+    tokenCache.clear();
     switch (type) {
       case NamesClients.ANONYMOUS:
-        clientBuilder = anonymousClientBuilder;
-        middlewareOptions = this.getAuthOptions(options!);
+        middlewareOptions = this.getAuthOptions(options);
         flowMiddleware = createAuthForAnonymousSessionFlow(middlewareOptions);
         break;
       case NamesClients.PASSWORD:
-        clientBuilder = passwordClientBuilder;
-        middlewareOptions = this.getAuthOptions(options!, typeClient.value);
+        middlewareOptions = this.getAuthOptions(options, typeClient.value);
         flowMiddleware = createAuthForPasswordFlow(
           <PasswordAuthMiddlewareOptions>middlewareOptions
         );
         break;
       default:
-        clientBuilder = unknownClientBuilder;
-        middlewareOptions = this.getAuthOptions(options!);
+        middlewareOptions = this.getAuthOptions(options);
         flowMiddleware = createAuthForClientCredentialsFlow(middlewareOptions);
         break;
     }
 
-    return clientBuilder
+    return new ClientBuilder()
       .withMiddleware(flowMiddleware)
       .withHttpMiddleware({ host: ROOT_API, fetch })
       .build();

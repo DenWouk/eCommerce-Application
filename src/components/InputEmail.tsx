@@ -3,14 +3,14 @@ import { get, RegisterOptions } from 'react-hook-form';
 import { IFormInput } from '@/src/interfaces/IFormInput';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputEmail({ register, name, errors, disabled = false }: ITextParams) {
+export default function InputEmail({ register, name, errors, disabled }: ITextParams) {
   const validateText: RegisterOptions = {
     required: 'Email Address is required',
     validate: {
       noLeadingTrailingWhitespace: (value: IFormInput['email']) =>
-        value.trim() === value ? undefined : 'Email cannot have leading or trailing whitespace',
+        value?.trim() === value ? undefined : 'Email cannot have leading or trailing whitespace',
       validEmail: (value: IFormInput['email']) =>
-        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value) ||
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value!) ||
         'Please enter a valid email address',
     },
   };

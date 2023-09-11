@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import { get } from 'react-hook-form';
 import { ITextParams } from '../interfaces/ITextParams';
 
-export default function InputLastName({ register, name, errors }: ITextParams) {
+export default function InputLastName({ register, name, errors, disabled }: ITextParams) {
   const validateText = {
     required: 'Last name is required',
     pattern: {
@@ -15,6 +15,7 @@ export default function InputLastName({ register, name, errors }: ITextParams) {
   return (
     <TextField
       required
+      disabled={disabled}
       id="outlined-lastname-input"
       label="Last Name"
       type="text"

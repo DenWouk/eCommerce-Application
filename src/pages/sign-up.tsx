@@ -1,7 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material';
 import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
@@ -32,7 +31,7 @@ export default function SignUpPage() {
       dateOfBirth: null,
       addresses: [
         {
-          country: '',
+          country: 'United States',
           city: '',
           streetName: '',
           streetNumber: '',
@@ -58,7 +57,6 @@ export default function SignUpPage() {
     formState: { errors, isSubmitting },
   } = form;
 
-  const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = async (data: IFormInput) => {
     const { email, password } = data;
     try {
@@ -71,7 +69,7 @@ export default function SignUpPage() {
       });
       clearErrors('root');
       if (result?.ok) {
-        router.replace('/');
+        window.location.href = '/';
         showSuccess('Successful Registration!');
       }
     } catch (e: unknown) {
@@ -97,7 +95,7 @@ export default function SignUpPage() {
 
           <InputEmail register={register} errors={errors} name="email" />
 
-          <InputPassword register={register} errors={errors} name="password" />
+          <InputPassword register={register} errors={errors} name="password" label="Password" />
 
           <InputFirstName register={register} errors={errors} name="firstName" />
 

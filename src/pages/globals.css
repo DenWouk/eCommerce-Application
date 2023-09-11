@@ -19,6 +19,7 @@
 
 html {
   font-size: 16px;
+  overflow-x: hidden;
 }
 
 #__next {
@@ -27,9 +28,13 @@ html {
   min-height: 100vh;
 }
 
+.z-2 {
+  z-index: 2;
+}
+
 .header {
-  position: fixed;
-  z-index: 3;
+  position: fixed !important;
+  z-index: 5;
   background-color: var(--background-color1) !important;
 }
 
@@ -40,7 +45,6 @@ main {
   justify-content: space-evenly;
   align-items: center;
   padding: 90px 0 50px;
-  font-size: 35px;
   font-weight: bold;
   color: var(--color4);
   background: transparent;
@@ -107,11 +111,50 @@ main {
   background-color: var(--background-color3) !important;
 }
 
+.product-card-img1,
+.product-card-img2,
+.product-card-img3,
+.product-card-img4 {
+  display: none !important;
+}
+
+.product-card:hover .product-card-content {
+  color: var(--color3);
+}
+
+.product-card:hover .img-btns {
+  visibility: visible;
+}
+
+.card-btn-img0:hover .product-card-img0 {
+  display: block;
+}
+
+.card-btn-img1:hover .product-card-img1 {
+  display: block;
+}
+
+.card-btn-img2:hover .product-card-img2 {
+  display: block;
+}
+
+.card-btn-img3:hover .product-card-img3 {
+  display: block;
+}
+
+.card-btn-img4:hover .product-card-img4 {
+  display: block;
+}
+
+.img-btns {
+  visibility: hidden;
+}
+
 .footer {
-  position: fixed;
+  position: fixed !important;
   top: unset;
   bottom: 0;
-  z-index: 3;
+  z-index: 5;
   font-size: 16px;
   background-color: var(--background-color1) !important;
   box-shadow:

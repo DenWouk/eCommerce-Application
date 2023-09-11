@@ -1,17 +1,14 @@
 import { Button } from '@mui/material';
-import { GetServerSideProps } from 'next';
-import { getToken } from 'next-auth/jwt';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import NamesClients from '@/src/helpers/commercetools/consts';
+import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
 
 export type AuthProps = {
   authorized: boolean;
 };
 
 export default function Home({ authorized }: AuthProps) {
-  const router = useRouter();
   return (
     <>
       <div className="auth-btns-duplicate">
@@ -59,12 +56,12 @@ export default function Home({ authorized }: AuthProps) {
             variant="contained"
             href=""
             sx={{ background: '#6195c3fe' }}
-            onClick={async () => {
-              await signOut({ redirect: false });
-              router.push('/');
+            onClick={async (e) => {
+              e.preventDefault();
+              await signOut();
             }}
           >
-            Logout
+            Logout!
           </Button>
         )}
       </div>
@@ -72,7 +69,7 @@ export default function Home({ authorized }: AuthProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = (await getToken({ req }))?.type === NamesClients.PASSWORD;
+export const getServerSideProps = ssrWithAuthToken<AuthProps>(async ({ token }) => {
+  const authorized = token?.type === NamesClients.PASSWORD;
   return { props: { authorized } };
-};
+});

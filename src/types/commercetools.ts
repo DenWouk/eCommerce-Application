@@ -1,7 +1,7 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { NextRequest } from 'next/server';
-import NamesClients from '@/src/helpers/commercetools/consts';
+import NamesClients, { SortOrder } from '@/src/helpers/commercetools/consts';
 
 export type UnknownTypeClient = {
   type: NamesClients.UNKNOWN;
@@ -37,3 +37,50 @@ export type ClientOptions = {
 };
 
 export type Req = GetServerSidePropsContext['req'] | NextRequest | NextApiRequest;
+
+export type FetchedToken = {
+  access_token: string;
+  expires_in: number;
+  scope: string;
+  refresh_token: string;
+  token_type: string;
+};
+
+export type FilterProducts = {
+  page?: string;
+  category?: string;
+  transmission?: string | string[];
+  body?: string | string[];
+  make?: string | string[];
+  color?: string | string[];
+  offset?: string;
+  search?: string;
+  priceCountry?: string;
+  priceCurrency?: string;
+  localeProjection?: string;
+  sort?: string;
+  facet?: string;
+  limit?: string;
+  order?: SortOrder;
+  from?: string;
+  to?: string;
+};
+
+type ValueObjAttributesProduct = {
+  key: string;
+  label: string;
+};
+
+export type AttributesProduct = {
+  body: ValueObjAttributesProduct[];
+  color: ValueObjAttributesProduct[];
+  engine: string;
+  interior: string;
+  location: string;
+  make: ValueObjAttributesProduct[];
+  model: string;
+  odometer: number;
+  price: string;
+  transmission: ValueObjAttributesProduct[];
+  year: string;
+};

@@ -7,7 +7,7 @@ const {
   CLIENT_ID_UNKNOWN = '',
   CLIENT_SECRET_UNKNOWN = '',
   PROJECT_KEY = '',
-} = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
+} = getConfig().serverRuntimeConfig as Record<string, string | undefined>;
 
 const scopes = SCOPE_UNKNOWN.split(' ');
 

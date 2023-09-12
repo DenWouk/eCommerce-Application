@@ -18,6 +18,7 @@ export default function InputDate({ control, disabled }: ITextParams) {
       <Controller
         name="dateOfBirth"
         control={control}
+        defaultValue={null}
         rules={{
           required: 'You should be at least 13 years old',
           validate: {

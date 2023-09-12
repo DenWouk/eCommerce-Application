@@ -1,13 +1,10 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { ClientResponse, CustomerSignInResult } from '@commercetools/platform-sdk';
-import getConfig from 'next/config';
-
-const { ROOT_APP = '' } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
 
 export default async function signIn(
   signInData: UserAuthOptions
 ): Promise<ClientResponse<CustomerSignInResult>> {
-  const data = await fetch(`${ROOT_APP}/api/sign-in`, {
+  const data = await fetch('/api/sign-in', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(signInData),

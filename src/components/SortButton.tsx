@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function SortButton({ value, targetSort, label, onClick }: Props) {
-  const isAsc = value !== 'desc';
+  const isAsc = value ? value !== 'desc' : false;
   const refIsAsc = useRef(isAsc);
 
   const handleClick = () => {

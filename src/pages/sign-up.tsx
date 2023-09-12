@@ -24,22 +24,10 @@ export default function SignUpPage() {
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      dateOfBirth: null,
       addresses: [
         {
           country: 'United States',
-          city: '',
-          streetName: '',
-          streetNumber: '',
-          postalCode: '',
           shippingAddress: true,
-          billingAddress: false,
-          defaultShippingAddress: false,
-          defaultBillingAddress: false,
         },
       ],
     },

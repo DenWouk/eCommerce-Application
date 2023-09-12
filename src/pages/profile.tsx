@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography, Tabs, Tab, Box } from '@mui/material';
+import { Paper, Stack, Typography, Tabs, Tab, Box, CircularProgress } from '@mui/material';
 import { useState } from 'react';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
@@ -11,6 +11,7 @@ import UserInfoForm from '../components/UserInfoForm';
 import prepareAddresses from '../helpers/profile';
 import AddressForm from '../components/AddressForm';
 import UserInfoPassForm from '../components/UserInfoPassForm';
+import isAuthorized from '../helpers/auth';
 // import isAuthorized from '../helpers/auth';
 // import { AuthProps } from '../types/auth';
 

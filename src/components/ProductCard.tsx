@@ -55,7 +55,8 @@ export default function ProductCard({ product }: Props) {
               placeholder="blur"
               blurDataURL="data:image/gif;base64,R0lGODlhAQABAPAAAJaWlv///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
               src={product?.masterVariant.images?.[index]?.url || '#'}
-              alt={`car ${product.name}`}
+              sizes="(max-width: 768px) 100vw, (max-width: 900px) 50vw, 33vw"
+              alt={`car ${product.name['en-US']}`}
             />
           </Box>
         ))}

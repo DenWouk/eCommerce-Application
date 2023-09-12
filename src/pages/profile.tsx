@@ -1,10 +1,11 @@
-import { Paper, Stack, Typography, Tabs, Tab, Box } from '@mui/material';
+import { Paper, Stack, Typography, Tabs, Tab, Box, CircularProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
 import PasswordIcon from '@mui/icons-material/Password';
-import { GetServerSideProps } from 'next';
 import { Customer } from '@commercetools/platform-sdk';
+
+// import { GetServerSideProps } from 'next';
 import getProfile from '../api/getProfile';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
@@ -12,8 +13,8 @@ import UserInfoForm from '../components/UserInfoForm';
 import prepareAddresses from '../helpers/profile';
 import AddressForm from '../components/AddressForm';
 import UserInfoPassForm from '../components/UserInfoPassForm';
-import isAuthorized from '../helpers/auth';
-import { AuthProps } from '../types/auth';
+// import isAuthorized from '../helpers/auth';
+// import { AuthProps } from '../types/auth';
 
 export default function ProfilePage() {
   const customerData: Partial<Customer> = {
@@ -37,8 +38,10 @@ export default function ProfilePage() {
   const [shippingAddresses, setShippingAddresses] = useState([] as IBaseAddressProfile[]);
   const [passwordInfo, setPassword] = useState(customerData);
   const [tabIndex, setTabIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     getProfile()
       .then((data) => {
         setPassword(data);
@@ -67,6 +70,8 @@ export default function ProfilePage() {
 
         setShippingAddresses(shippingAddressesArr);
         setBillingAddresses(billingAddressesArr);
+
+        setIsLoading(false);
       })
       .catch((err) => {
         throw err;
@@ -80,7 +85,7 @@ export default function ProfilePage() {
     setTabIndex(index);
   };
 
-  return (
+  return (isLoading ? <CircularProgress /> :
     <Paper elevation={4}>
       <Tabs value={tabIndex} aria-label="profile" onChange={(_, index) => handleChange(index)}>
         <Tab label="User Info" icon={<PersonPinIcon />} iconPosition="start" />
@@ -155,10 +160,5 @@ export default function ProfilePage() {
           />
         )}
       </Stack>
-    </Paper>
-  );
+    </Paper>);
 }
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
-};

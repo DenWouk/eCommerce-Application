@@ -1,9 +1,10 @@
-import { Paper, Stack, Typography, Tabs, Tab, Box, CircularProgress } from '@mui/material';
+import { Paper, Stack, Typography, Tabs, Tab, Box } from '@mui/material';
 import { useState } from 'react';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
 import PasswordIcon from '@mui/icons-material/Password';
 import { Customer } from '@commercetools/platform-sdk';
+import { GetServerSideProps } from 'next';
 import customerModel from '@/src/helpers/commercetools/customer';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
@@ -12,8 +13,7 @@ import prepareAddresses from '../helpers/profile';
 import AddressForm from '../components/AddressForm';
 import UserInfoPassForm from '../components/UserInfoPassForm';
 import isAuthorized from '../helpers/auth';
-// import isAuthorized from '../helpers/auth';
-// import { AuthProps } from '../types/auth';
+import { AuthProps } from '../types/auth';
 
 type Props = {
   customer: Customer;
@@ -24,6 +24,12 @@ export default function ProfilePage({ customer }: Props) {
   const [profileInfo, setProfileInfo] = useState(customer);
 
   const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+    version,
+    password,
     addresses = [],
     shippingAddressIds = [],
     billingAddressIds = [],
@@ -43,13 +49,11 @@ export default function ProfilePage({ customer }: Props) {
     defaultShippingAddressId
   );
 
-  const { firstName, lastName, dateOfBirth, email, version, password } = profileInfo;
-
   const handleChange = (index: number) => {
     setTabIndex(index);
   };
 
-  return (isLoading ? <CircularProgress /> :
+  return (
     <Paper elevation={4}>
       <Tabs value={tabIndex} aria-label="profile" onChange={(_, index) => handleChange(index)}>
         <Tab label="User Info" icon={<PersonPinIcon />} iconPosition="start" />
@@ -108,10 +112,10 @@ export default function ProfilePage({ customer }: Props) {
           <AddressForm
             addresses={addresses}
             version={version}
-            shippingAddressIds={profileInfo.shippingAddressIds as string[]}
-            billingAddressIds={profileInfo.billingAddressIds as string[]}
-            defaultShippingAddressId={profileInfo.defaultShippingAddressId as string}
-            defaultBillingAddressId={profileInfo.defaultBillingAddressId as string}
+            shippingAddressIds={shippingAddressIds}
+            billingAddressIds={billingAddressIds}
+            defaultShippingAddressId={defaultShippingAddressId}
+            defaultBillingAddressId={defaultBillingAddressId}
             onUpdate={setProfileInfo}
           />
         )}
@@ -124,7 +128,8 @@ export default function ProfilePage({ customer }: Props) {
           />
         )}
       </Stack>
-    </Paper>);
+    </Paper>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {

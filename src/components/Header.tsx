@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import {
   AppBar,
   Box,
@@ -14,6 +15,7 @@ import {
 } from '@mui/material';
 import LoadingPage from '@/src/components/LoadingPage';
 import LetterAvatar from './Avatar';
+import { useCartContext } from '../context/CartContext';
 
 type Props = {
   authorized: boolean | undefined;
@@ -21,7 +23,7 @@ type Props = {
 
 function Header({ authorized }: Props) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-
+  const { openCart, cartQuantity } = useCartContext();
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -29,6 +31,12 @@ function Header({ authorized }: Props) {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  // const handlerCartOpen = () => {
+  //   openCart(true)
+  //   console.log('click basket');
+
+  // };
 
   return (
     <AppBar position="static" className="header">
@@ -150,7 +158,36 @@ function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
-
+          <IconButton onClick={openCart}>
+            <ShoppingCartRoundedIcon
+              sx={{
+                color: 'white',
+                display: 'flex',
+                poosition: 'relative',
+              }}
+            />
+            {/* {cartQuantity > 0 && (  */}
+              <Box
+                sx={{
+                  color: 'white',
+                  bgcolor: 'rgba(255, 0, 0, 0.8)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '1rem',
+                  height: '1rem',
+                  fontSize: '0.8rem',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  transform: 'translateX(-25%, -25%)',
+                  left: '1.6rem',
+                  bottom: '0',
+                }}
+              >3
+                {/* {cartQuantity} */}
+              </Box>
+            {/* )} */}
+          </IconButton>
           {authorized ? (
             <LetterAvatar />
           ) : (

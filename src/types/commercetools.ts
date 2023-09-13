@@ -1,6 +1,11 @@
 import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { NextRequest } from 'next/server';
+import {
+  MyCartAddLineItemAction,
+  MyCartChangeLineItemQuantityAction,
+  MyCartRemoveLineItemAction,
+} from '@commercetools/platform-sdk';
 import NamesClients, { SortOrder } from '@/src/helpers/commercetools/consts';
 
 export type UnknownTypeClient = {
@@ -84,3 +89,30 @@ export type AttributesProduct = {
   transmission: ValueObjAttributesProduct[];
   year: string;
 };
+
+type UpdateAction = {
+  id: string;
+  version: number;
+};
+
+export type Action = 'addLineItem' | 'removeLineItem' | 'changeLineItemQuantity';
+
+export type CartAddProductBody = UpdateAction & {
+  actions: Omit<MyCartAddLineItemAction, 'action'>;
+};
+
+export type CartRemoveProductBody = UpdateAction & {
+  actions: Omit<MyCartRemoveLineItemAction, 'action'>;
+};
+
+export type CartChangeQuantityProductBody = UpdateAction & {
+  actions: Omit<MyCartChangeLineItemQuantityAction, 'action'>;
+};
+
+export type UpdateCartWithTypeAction =
+  | { action: Extract<Action, 'addLineItem'>; updateData: CartAddProductBody }
+  | { action: Extract<Action, 'removeLineItem'>; updateData: CartRemoveProductBody }
+  | {
+      action: Extract<Action, 'changeLineItemQuantity'>;
+      updateData: CartChangeQuantityProductBody;
+    };

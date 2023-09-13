@@ -77,7 +77,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
         });
       }
     };
-    
+
   const handleAdd = (typeAddress: TypeAddress) => {
     const typeAddressObject =
       typeAddress === TypeAddress.SHIPPING ? { shippingAddress: true } : { billingAddress: true };

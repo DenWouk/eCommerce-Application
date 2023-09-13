@@ -176,7 +176,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
       }
-      
+
       res.status(200).json(customerApi.body);
     } catch (err: unknown) {
       res.status(400).json({ message: (err as Error).message });

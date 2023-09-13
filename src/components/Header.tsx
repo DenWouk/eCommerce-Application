@@ -32,11 +32,10 @@ function Header({ authorized }: Props) {
     setAnchorElNav(null);
   };
 
-  // const handlerCartOpen = () => {
-  //   openCart(true)
-  //   console.log('click basket');
-
-  // };
+  const handlerCartOpen = () => {
+    console.log('click basket');
+    // openCart(true);
+  };
 
   return (
     <AppBar position="static" className="header">
@@ -158,35 +157,33 @@ function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
-          <IconButton onClick={openCart}>
+          <IconButton onClick={handlerCartOpen} aria-label="cart" size="large">
             <ShoppingCartRoundedIcon
               sx={{
+                mr: '1rem',
                 color: 'white',
                 display: 'flex',
                 poosition: 'relative',
               }}
             />
-            {/* {cartQuantity > 0 && (  */}
-              <Box
-                sx={{
-                  color: 'white',
-                  bgcolor: 'rgba(255, 0, 0, 0.8)',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '1rem',
-                  height: '1rem',
-                  fontSize: '0.8rem',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  transform: 'translateX(-25%, -25%)',
-                  left: '1.6rem',
-                  bottom: '0',
-                }}
-              >3
-                {/* {cartQuantity} */}
-              </Box>
-            {/* )} */}
+            {cartQuantity > 0 && ( 
+            <Box
+              sx={{
+                color: 'white',
+                bgcolor: 'rgba(255, 0, 0, 0.8)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '1rem',
+                height: '1rem',
+                fontSize: '0.8rem',
+                borderRadius: '50%',
+                position: 'absolute',
+                transform: 'translateX(-25%, -25%)',
+                left: '1.6rem',
+                bottom: '0',
+              }}
+            />)} 
           </IconButton>
           {authorized ? (
             <LetterAvatar />

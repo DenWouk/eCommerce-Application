@@ -1,14 +1,31 @@
-import { Box, Typography } from '@mui/material';
-import Image from 'next/image';
-import stolenImg from '@/public/stolen.jpg';
+import { Box, Drawer, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { useState } from 'react';
+import { useCartContext } from '../context/CartContext';
 
-export default function NotFoundProducts() {
+type CartListProps = {
+    // cartItems: cartItems[];
+    isOpen:boolean;
+}
+export default function Cart({ isOpen }:CartListProps) {
+  const [open, setOpen] = useState(false);
+  const { closeCart, cartItems } = useCartContext();
+  // const anchor: Anchor = 'right';
+
+  const handlerOpenDrawer = () => {
+    if(!open){
+    setOpen(true)
+    }
+    setOpen(false)
+};
+  const handlerCloseDrawer = () => setOpen(false);
+
   return (
     <Box sx={{ alignSelf: 'center' }}>
-      <Typography sx={{ textAlign: 'center' }} gutterBottom variant="h5" color="" component="div">
-        Oops, it looks like everything was stolen
-      </Typography>
-      <Image src={stolenImg} width={stolenImg.width} height={stolenImg.height} alt="stolen cars" />
+      <Drawer anchor='right' open={isOpen} onClose={handlerCloseDrawer}>
+        {cartItems.map((item) => (
+          <CartItem key={item.id} {...item}/>
+      ))}
+      </Drawer>
     </Box>
   );
 }

@@ -1,4 +1,6 @@
-import { ReactNode, createContext, useContext, useMemo, useState } from 'react';
+import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react';
+// eslint-disable-next-line import/no-cycle
+import CartList from '../components/CartList';
 
 type ShoppingCartProviderProps = {
   children: ReactNode;
@@ -8,13 +10,15 @@ type ShoppingCartContextType = {
   increaseItems: (id: number) => void;
   decreaseItems: (id: number) => void;
   removeItems: (id: number) => void;
-  //   openCart?: () => boolean;
-  //   cartQuantity?: () => number;
+  openCart?: () => boolean;
+  cartQuantity?: number;
+  cartItems: CartItem[] | undefined;
 };
 type CartItem = {
   id: number;
   quantity: number;
 };
+
 const ShoppingCartContext = createContext({} as ShoppingCartContextType);
 
 export function useCartContext() {
@@ -24,14 +28,21 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState<CartItem[]>();
 
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
+  const openCart = useCallback(() => {
+    setIsOpen(true);
+    return true;
+  }, []);
+  const closeCart = useCallback(() => {
+    setIsOpen(false);
+    return false;
+  }, []);
 
   const cartQuantity = cartItems?.reduce((quantity, item) => item.quantity + quantity, 0);
-  
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getItemsQuantity = (id: number) => cartItems?.find((item) => item.id === id)?.quantity || 0;
 
-  const increaseItems = (id: number) => {
+  const increaseItems = useCallback((id: number) => {
     setCartItems((currItems) => {
       if (currItems!.find((item) => item.id === id) == null) {
         return [...currItems!, { id, quantity: 1 }];
@@ -43,9 +54,9 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
         return item;
       });
     });
-  };
+  }, []);
 
-  const decreaseItems = (id: number) => {
+  const decreaseItems = useCallback((id: number) => {
     setCartItems((currItems) => {
       if (currItems!.find((item) => item.id === id)?.quantity === 1) {
         return currItems?.filter((item) => item.id !== id);
@@ -57,11 +68,12 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
         return item;
       });
     });
-  };
+  }, []);
 
-  const removeItems = (id: number) => {
+  const removeItems = useCallback((id: number) => {
     setCartItems((currItems) => currItems?.filter((item) => item.id !== id));
-  };
+  }, []);
+
   const memoCart = useMemo(
     () => ({
       getItemsQuantity,
@@ -73,7 +85,21 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
       cartItems,
       cartQuantity,
     }),
-    [cartItems, cartQuantity, getItemsQuantity]
+    [
+      getItemsQuantity,
+      increaseItems,
+      decreaseItems,
+      removeItems,
+      openCart,
+      closeCart,
+      cartQuantity,
+      cartItems,
+    ]
   );
-  return <ShoppingCartContext.Provider value={memoCart}>{children}</ShoppingCartContext.Provider>;
+  return (
+    <ShoppingCartContext.Provider value={memoCart}>
+      {children}
+      <CartList isOpen={isOpen}/>
+    </ShoppingCartContext.Provider>
+  );
 }

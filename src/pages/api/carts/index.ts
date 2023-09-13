@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { handlerAuthToken } from '@/src/helpers/next/withAuthToken';
-import { UpdateCartWithTypeAction } from '@/src/types/commercetools';
 import cartModel from '@/src/helpers/commercetools/cart';
+import { UpdateCartWithTypeAction } from '@/src/types/commercetools';
 
 export default handlerAuthToken(async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {

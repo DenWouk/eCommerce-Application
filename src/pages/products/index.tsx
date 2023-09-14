@@ -165,7 +165,6 @@ export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { ca
         category: categoryResponse?.body?.results[0]?.id,
         ...query,
       });
-
       const cart = (await cartModel.getCart(req)).body;
 
       const searchString = req.url?.match(/\?\S+/)?.[0].slice(1) || '';

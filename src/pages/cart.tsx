@@ -1,9 +1,11 @@
 import { Box, Button, Divider, Stack, Typography } from '@mui/material';
-// import { GetServerSideProps } from 'next';
-import { useEffect, useState } from 'react';
-// import cartModel from '../helpers/commercetools/cart/cartModel';
-// import isAuthorized from '../helpers/auth';
-import { getCarts } from '../api/carts';
+import { GetServerSideProps } from 'next';
+import { useContext, useEffect, useState } from 'react';
+import cartModel from '../helpers/commercetools/cart/cartModel';
+import isAuthorized from '../helpers/auth';
+import { AuthProps } from '../types/auth';
+import MyContext from '../contexts/MyContext';
+// import { getCarts } from '../api/carts';
 
 type CartItemProps = {
   id: string;
@@ -12,19 +14,24 @@ type CartItemProps = {
   quantity: number;
 };
 export default function CartPage() {
-  const [cartInfo, setCartInfo] = useState({} as CartItemProps);
-  const { lineItems } = cartInfo;
+  const {state, dispatch} = useContext(MyContext);
+  console.log(state,'--------state-');
+
+  const cartInfo = state.cart;
+  
+  // const [cartInfo, setCartInfo] = useState({} as CartItemProps);
+  const lineItems = cartInfo?.lineItems;
   // const amount = cartInfo.lineItems.length;
-  console.log(cartInfo.lineItems, '???????????????');
+  console.log(lineItems, '???????????????');
   // console.log(amount, 'amount length =====')
 
-  useEffect(() => {
-    getCarts()
-      .then((data) => setCartInfo(data))
-      .catch((err) => {
-        throw err;
-      });
-  }, [setCartInfo]);
+  // useEffect(() => {
+  //   getCarts()
+  //     .then((data) => setCartInfo(data))
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  // }, [setCartInfo]);
 
   return (
     <Box>
@@ -38,10 +45,10 @@ export default function CartPage() {
         My Shopping Cart
       </Typography>
       <Stack spacing={2}>
-        {cartInfo.lineItems ? (
-          cartInfo.lineItems.map((item) => {
+        {lineItems ? (
+          lineItems.map((item) => {
             const { price, name, variant } = item;
-            console.log(cartInfo.variant, 'variant');
+            console.log(variant, 'variant');
             
             return (
               <Box key={item.id}>
@@ -102,15 +109,15 @@ export default function CartPage() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-//   const authorized = await isAuthorized({ req });
-//   try {
+export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
+  const authorized = await isAuthorized({ req });
+  try {
 
-//     // const customerResponse = await cartModel.getCart(req);
-//     return { props: { authorized, customer: customerResponse.body } };
-//   } catch {
-//     return {
-//       notFound: true,
-//     };
-//   }
-// };
+    const cart = await cartModel.getCart(req);    
+    return { props: { authorized, cart } };
+  } catch {
+    return {
+      notFound: true,
+    };
+  }
+};

@@ -8,15 +8,15 @@ import {
   Divider,
   Grid,
   Typography,
-  IconButton,
 } from '@mui/material';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { memo, useContext, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
+import CartIconButton from '@/src/components/CartIconButton';
+import { updateCart } from '@/src/api/carts';
+import MyContext from '@/src/contexts/MyContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -38,13 +38,6 @@ function ProductCard({ product }: Props) {
     [lineItems, product]
   );
   const { price } = product.masterVariant;
-  console.log(product, 'product.id');
-  
-  const { getItemsQuantity, increaseItems, decreaseItems, removeItems } = useCartContext();
-  // console.log(product.id, " product-----------------------------");
-
-const quantity = 6
- // console.log(getItemsQuantity, "quantity product-----------------------------");
   const attributes = useMemo(
     () =>
       product.masterVariant.attributes?.reduce(
@@ -153,6 +146,11 @@ const quantity = 6
           <Button component={Link} size="small" href={`/products/${product.id}`}>
             Details
           </Button>
+          {lineItemId ? (
+            <CartIconButton onClick={handleChange} type="remove" />
+          ) : (
+            <CartIconButton onClick={handleChange} />
+          )}
         </CardActions>
       </Card>
     </Grid>

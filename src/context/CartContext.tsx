@@ -6,16 +6,16 @@ type ShoppingCartProviderProps = {
   children: ReactNode;
 };
 type ShoppingCartContextType = {
-  getItemsQuantity: (id: number) => number;
-  increaseItems: (id: number) => void;
-  decreaseItems: (id: number) => void;
-  removeItems: (id: number) => void;
-  openCart?: () => boolean;
+  getItemsQuantity: (id: string) => number;
+  increaseItems: (id: string) => void;
+  decreaseItems: (id: string) => void;
+  removeItems: (id: string) => void;
+  openCart: () => boolean;
   cartQuantity?: number;
   cartItems: CartItem[] | undefined;
 };
 type CartItem = {
-  id: number;
+  id: string;
   quantity: number;
 };
 
@@ -40,9 +40,9 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
   const cartQuantity = cartItems?.reduce((quantity, item) => item.quantity + quantity, 0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getItemsQuantity = (id: number) => cartItems?.find((item) => item.id === id)?.quantity || 0;
+  const getItemsQuantity = (id: string) => cartItems?.find((item) => item.id === id)?.quantity || 0;
 
-  const increaseItems = useCallback((id: number) => {
+  const increaseItems = useCallback((id: string) => {
     setCartItems((currItems) => {
       if (currItems!.find((item) => item.id === id) == null) {
         return [...currItems!, { id, quantity: 1 }];
@@ -56,7 +56,7 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
     });
   }, []);
 
-  const decreaseItems = useCallback((id: number) => {
+  const decreaseItems = useCallback((id: string) => {
     setCartItems((currItems) => {
       if (currItems!.find((item) => item.id === id)?.quantity === 1) {
         return currItems?.filter((item) => item.id !== id);
@@ -70,7 +70,7 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
     });
   }, []);
 
-  const removeItems = useCallback((id: number) => {
+  const removeItems = useCallback((id: string) => {
     setCartItems((currItems) => currItems?.filter((item) => item.id !== id));
   }, []);
 

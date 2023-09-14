@@ -8,12 +8,16 @@ import {
   Divider,
   Grid,
   Typography,
+  IconButton,
 } from '@mui/material';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
+import { useCartContext } from '../context/CartContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -29,6 +33,13 @@ type Props = {
 
 export default function ProductCard({ product }: Props) {
   const { price } = product.masterVariant;
+  console.log(product, 'product.id');
+  
+  const { getItemsQuantity, increaseItems, decreaseItems, removeItems } = useCartContext();
+  // console.log(product.id, " product-----------------------------");
+
+const quantity = 6
+ // console.log(getItemsQuantity, "quantity product-----------------------------");
   const attributes = useMemo(
     () =>
       product.masterVariant.attributes?.reduce(
@@ -114,6 +125,33 @@ export default function ProductCard({ product }: Props) {
           <Button component={Link} size="small" href={`/products/${product.id}`}>
             Details
           </Button>
+          {quantity === 0 ? (
+            <Button variant="outlined" onClick={()=> increaseItems(product.id)}>+ add to cart</Button>
+          ) : (
+            <div>
+              <Box sx={{ display: 'flex' }}>
+                <IconButton aria-label="remove" size="small" onClick={()=> decreaseItems(product.id)}>
+                  <RemoveRoundedIcon />
+                </IconButton>
+                <Typography>{quantity} in cart</Typography>
+                <IconButton aria-label="add" size="small" onClick={()=> increaseItems(product.id)}>
+                  <AddRoundedIcon />
+                </IconButton>
+              </Box>
+              <Button
+                variant="outlined"
+                sx={{
+                  color: 'red',
+                  margin: 'auto',
+                  padding: 0.5,
+                  fontSize: '0.6rem',
+                  display: 'flex',
+                }}
+                onClick={()=> removeItems(product.id)}>
+                remove
+              </Button>
+            </div>
+          )}
         </CardActions>
       </Card>
     </Grid>

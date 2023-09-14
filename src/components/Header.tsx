@@ -32,10 +32,9 @@ function Header({ authorized }: Props) {
     setAnchorElNav(null);
   };
 
-  const handlerCartOpen = () => {
-    console.log('click basket');
-    // openCart(true);
-  };
+  // const handlerCartOpen = () => {
+  //   console.log('click basket');
+  // };
 
   return (
     <AppBar position="static" className="header">
@@ -157,7 +156,7 @@ function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
-          <IconButton onClick={handlerCartOpen} aria-label="cart" size="large">
+          <IconButton onClick={openCart} aria-label="cart" size="large">
             <ShoppingCartRoundedIcon
               sx={{
                 mr: '1rem',

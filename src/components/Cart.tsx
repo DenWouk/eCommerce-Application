@@ -1,6 +1,7 @@
 import { Box, Drawer, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useState } from 'react';
 import { useCartContext } from '../context/CartContext';
+import CartItem from './CartItem';
 
 type CartListProps = {
     // cartItems: cartItems[];

@@ -94,12 +94,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
     <>
       {fields.map((field, index) => {
         const typeAddress = typeAddresses[index];
-        const countryDefault = countryPost.find((c) => c.code === field.country) || {
-          code: '',
-          label: '',
-          phone: '',
-          suggested: true,
-        };
+        const countryDefault = countryPost.find((c) => c.code === field.country);
         return (
           <Stack key={field.id} spacing={1} className="m-10">
             <div className="form-shipping-address">
@@ -225,15 +220,24 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
               getOptionLabel={(option) => option.label}
               defaultValue={countryDefault}
               renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                  <Image
-                    loading="lazy"
-                    width="20"
-                    height="20"
-                    className="w-a"
-                    src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
-                    alt={`${option.code.toLowerCase()}`}
-                  />
+                <Box component="li" {...props}>
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '20px',
+                      height: '20px',
+                      marginRight: '10px',
+                    }}
+                  >
+                    <Image
+                      loading="lazy"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                      src={`https://cdn.jsdelivr.net/gh/hjnilsson/country-flags@master/svg/${option.code.toLowerCase()}.svg`}
+                      alt={`${option.code.toLowerCase()}`}
+                    />
+                  </span>
                   {option.label} ({option.code}) +{option.phone}
                 </Box>
               )}

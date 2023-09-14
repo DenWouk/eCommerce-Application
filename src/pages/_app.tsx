@@ -3,9 +3,10 @@ import type { AppProps } from 'next/app';
 import { ToastContainer } from 'react-toastify';
 import { SessionProvider } from 'next-auth/react';
 import 'react-toastify/dist/ReactToastify.css';
-import { StrictMode } from 'react';
+import { PropsWithChildren, StrictMode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { SWRConfig, SWRConfiguration } from 'swr';
+import { Cart } from '@commercetools/platform-sdk';
+import { Session } from 'next-auth';
 import Layout from '../components/Layout';
 
 const theme = createTheme({
@@ -16,24 +17,23 @@ const theme = createTheme({
   },
 });
 
-const SWRConfigValue: SWRConfiguration = {
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
+type Props = {
+  session?: Session | null;
+  authorized: boolean | undefined;
+  children: PropsWithChildren;
+  cart: Cart;
 };
 
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps<Props>) {
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
         <SessionProvider session={session}>
           {/* <ShoppingCartProviderProps> */}
           <ToastContainer />
-          <SWRConfig value={SWRConfigValue}>
-            <Layout pageProps={pageProps}>
-              <Component {...pageProps} />
-            </Layout>
-          </SWRConfig>
-          {/* </ShoppingCartProviderProps> */}
+          <Layout pageProps={pageProps}>
+            <Component {...pageProps} />
+          </Layout>
         </SessionProvider>
       </ThemeProvider>
     </StrictMode>

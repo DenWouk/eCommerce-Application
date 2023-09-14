@@ -14,10 +14,9 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ProductProjection } from '@commercetools/platform-sdk';
-import { useMemo } from 'react';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
+import { memo, useContext, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
-import { useCartContext } from '../context/CartContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -31,7 +30,13 @@ type Props = {
   product: ProductProjection;
 };
 
-export default function ProductCard({ product }: Props) {
+function ProductCard({ product }: Props) {
+  const { state, dispatch } = useContext(MyContext);
+  const { id, version, lineItems } = state.cart!;
+  const lineItemId = useMemo(
+    () => lineItems?.find((value) => value.productId === product.id)?.id,
+    [lineItems, product]
+  );
   const { price } = product.masterVariant;
   console.log(product, 'product.id');
   
@@ -48,6 +53,28 @@ const quantity = 6
       ),
     [product]
   );
+
+  const handleChange = async (type: 'add' | 'remove') => {
+    let cart: Cart | undefined;
+    if (type === 'add') {
+      cart = await updateCart('addLineItem', {
+        id,
+        version,
+        actions: { productId: product.id, quantity: 1 },
+      });
+    } else {
+      if (!lineItemId) {
+        throw new Error('lineItem nof found'); // FIXME
+      }
+      cart = await updateCart('removeLineItem', {
+        id,
+        version,
+        actions: { lineItemId, quantity: 1 },
+      });
+    }
+
+    dispatch({ type: 'CHANGE', value: cart });
+  };
 
   return (
     <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -66,7 +93,8 @@ const quantity = 6
               placeholder="blur"
               blurDataURL="data:image/gif;base64,R0lGODlhAQABAPAAAJaWlv///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
               src={product?.masterVariant.images?.[index]?.url || '#'}
-              alt={`car ${product.name}`}
+              sizes="(max-width: 768px) 100vw, (max-width: 900px) 50vw, 33vw"
+              alt={`car ${product.name['en-US']}`}
             />
           </Box>
         ))}
@@ -98,7 +126,7 @@ const quantity = 6
                     padding: '0 3px',
                   }}
                 >
-                  {`$ ${(price?.value.centAmount || 0) / 100}`}
+                  {`$ ${price.value.centAmount / 100}`}
                 </del>
                 <span
                   className="bg-blue-300 rounded-md"
@@ -106,7 +134,7 @@ const quantity = 6
                     marginLeft: '5px',
                     padding: '0 3px',
                   }}
-                >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
+                >{`$ ${price.discounted.value.centAmount / 100}`}</span>
               </>
             ) : (
               <div>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</div>
@@ -121,39 +149,14 @@ const quantity = 6
           </Typography>
         </CardContent>
 
-        <CardActions>
+        <CardActions className="flex justify-between">
           <Button component={Link} size="small" href={`/products/${product.id}`}>
             Details
           </Button>
-          {quantity === 0 ? (
-            <Button variant="outlined" onClick={()=> increaseItems(product.id)}>+ add to cart</Button>
-          ) : (
-            <div>
-              <Box sx={{ display: 'flex' }}>
-                <IconButton aria-label="remove" size="small" onClick={()=> decreaseItems(product.id)}>
-                  <RemoveRoundedIcon />
-                </IconButton>
-                <Typography>{quantity} in cart</Typography>
-                <IconButton aria-label="add" size="small" onClick={()=> increaseItems(product.id)}>
-                  <AddRoundedIcon />
-                </IconButton>
-              </Box>
-              <Button
-                variant="outlined"
-                sx={{
-                  color: 'red',
-                  margin: 'auto',
-                  padding: 0.5,
-                  fontSize: '0.6rem',
-                  display: 'flex',
-                }}
-                onClick={()=> removeItems(product.id)}>
-                remove
-              </Button>
-            </div>
-          )}
         </CardActions>
       </Card>
     </Grid>
   );
 }
+
+export default memo(ProductCard);

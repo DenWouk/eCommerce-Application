@@ -73,6 +73,7 @@ export default function createQueryArgs(
     filterQuery.push(
       `searchKeywords.en-US.text:${createQueryValue(suggestions.map((value) => value.text))}`
     );
+  const defaultSort = search ? 'score desc' : 'lastModifiedAt asc';
 
   const queryArgs: QueryArgs = {
     fuzzy: true,
@@ -84,7 +85,7 @@ export default function createQueryArgs(
     localeProjection,
     filter: filterQuery.length ? filterQuery : ['variants.scopedPrice.value.currencyCode:"USD"'],
     facet: facet || 'variants.scopedPrice.value.currencyCode:"USD" counting products',
-    sort: sort && `${sort} ${order}`,
+    sort: sort ? `${sort} ${order}` : defaultSort,
     limit: limitNumber,
   };
   !suggestions?.length && search && (queryArgs['text.en-US'] = search);

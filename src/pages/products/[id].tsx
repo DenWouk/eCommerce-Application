@@ -40,7 +40,7 @@ export default function BasicStack(props: Props) {
 
   const styleSpan = { lineHeight: '2', color: 'grey' };
   const { price } = product.masterVariant;
-  console.log(product);
+
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>
       <Box sx={{ width: '100%' }}>

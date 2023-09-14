@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import LoadingPage from '@/src/components/LoadingPage';
+import CartIconLink from '@/src/components/CartIconLink';
 import LetterAvatar from './Avatar';
 import { useCartContext } from '../context/CartContext';
 
@@ -156,34 +157,9 @@ function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
-          <IconButton onClick={openCart} aria-label="cart" size="large">
-            <ShoppingCartRoundedIcon
-              sx={{
-                mr: '1rem',
-                color: 'white',
-                display: 'flex',
-                poosition: 'relative',
-              }}
-            />
-            {cartQuantity > 0 && ( 
-            <Box
-              sx={{
-                color: 'white',
-                bgcolor: 'rgba(255, 0, 0, 0.8)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '1rem',
-                height: '1rem',
-                fontSize: '0.8rem',
-                borderRadius: '50%',
-                position: 'absolute',
-                transform: 'translateX(-25%, -25%)',
-                left: '1.6rem',
-                bottom: '0',
-              }}
-            />)} 
-          </IconButton>
+
+          <CartIconLink href="/cart" className="mx-1" />
+
           {authorized ? (
             <LetterAvatar />
           ) : (

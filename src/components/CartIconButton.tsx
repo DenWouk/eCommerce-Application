@@ -1,6 +1,5 @@
 import { Badge, CircularProgress, IconButton } from '@mui/material';
 import { useState } from 'react';
-import { tr } from 'date-fns/locale';
 import GarageSVG from '@/src/components/GarageSVG';
 
 type Props = {

@@ -1,4 +1,4 @@
-import { Cart, CartPagedQueryResponse, ClientResponse } from '@commercetools/platform-sdk';
+import { Cart, CartPagedQueryResponse } from '@commercetools/platform-sdk';
 import {
   Action,
   CartAddProductBody,

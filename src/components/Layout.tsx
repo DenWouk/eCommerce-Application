@@ -15,7 +15,7 @@ const reducer = (state: StateType, { type, value }: ActionType) => {
     case 'CHANGE':
       return {
         ...state,
-        countProductsInCart: value.totalLineItemQuantity || 0,
+        countProductsInCart: value?.totalLineItemQuantity || 0,
         cart: value,
       };
     default:
@@ -35,7 +35,7 @@ export default function Layout({ children, pageProps }: Props) {
   const [state, dispatch] = useReducer(reducer, {
     authorized,
     cart,
-    countProductsInCart: cart.totalLineItemQuantity || 0,
+    countProductsInCart: cart?.totalLineItemQuantity || 0,
   });
   const memoValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 

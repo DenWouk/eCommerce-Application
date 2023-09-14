@@ -11,9 +11,12 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ProductProjection } from '@commercetools/platform-sdk';
-import { useMemo } from 'react';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
+import { memo, useContext, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
+import CartIconButton from '@/src/components/CartIconButton';
+import { updateCart } from '@/src/api/carts';
+import MyContext from '@/src/contexts/MyContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -27,7 +30,13 @@ type Props = {
   product: ProductProjection;
 };
 
-export default function ProductCard({ product }: Props) {
+function ProductCard({ product }: Props) {
+  const { state, dispatch } = useContext(MyContext);
+  const { id, version, lineItems } = state.cart!;
+  const lineItemId = useMemo(
+    () => lineItems?.find((value) => value.productId === product.id)?.id,
+    [lineItems, product]
+  );
   const { price } = product.masterVariant;
   const attributes = useMemo(
     () =>
@@ -37,6 +46,28 @@ export default function ProductCard({ product }: Props) {
       ),
     [product]
   );
+
+  const handleChange = async (type: 'add' | 'remove') => {
+    let cart: Cart | undefined;
+    if (type === 'add') {
+      cart = await updateCart('addLineItem', {
+        id,
+        version,
+        actions: { productId: product.id, quantity: 1 },
+      });
+    } else {
+      if (!lineItemId) {
+        throw new Error('lineItem nof found'); // FIXME
+      }
+      cart = await updateCart('removeLineItem', {
+        id,
+        version,
+        actions: { lineItemId, quantity: 1 },
+      });
+    }
+
+    dispatch({ type: 'CHANGE', value: cart });
+  };
 
   return (
     <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -88,7 +119,7 @@ export default function ProductCard({ product }: Props) {
                     padding: '0 3px',
                   }}
                 >
-                  {`$ ${(price?.value.centAmount || 0) / 100}`}
+                  {`$ ${price.value.centAmount / 100}`}
                 </del>
                 <span
                   className="bg-blue-300 rounded-md"
@@ -96,7 +127,7 @@ export default function ProductCard({ product }: Props) {
                     marginLeft: '5px',
                     padding: '0 3px',
                   }}
-                >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
+                >{`$ ${price.discounted.value.centAmount / 100}`}</span>
               </>
             ) : (
               <div>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</div>
@@ -111,12 +142,19 @@ export default function ProductCard({ product }: Props) {
           </Typography>
         </CardContent>
 
-        <CardActions>
+        <CardActions className="flex justify-between">
           <Button component={Link} size="small" href={`/products/${product.id}`}>
             Details
           </Button>
+          {lineItemId ? (
+            <CartIconButton onClick={handleChange} type="remove" />
+          ) : (
+            <CartIconButton onClick={handleChange} />
+          )}
         </CardActions>
       </Card>
     </Grid>
   );
 }
+
+export default memo(ProductCard);

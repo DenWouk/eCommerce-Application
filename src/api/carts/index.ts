@@ -6,7 +6,7 @@ import {
   CartRemoveProductBody,
 } from '@/src/types/commercetools';
 
-export async function getCarts(): Promise<ClientResponse<CartPagedQueryResponse>> {
+export async function getCarts(): Promise<CartPagedQueryResponse> {
   const data = await fetch('/api/carts').then(async (res) => {
     if (res.ok) {
       return res;
@@ -20,19 +20,19 @@ export async function getCarts(): Promise<ClientResponse<CartPagedQueryResponse>
 export async function updateCart(
   action: Extract<Action, 'addLineItem'>,
   body: CartAddProductBody
-): Promise<ClientResponse<Cart>>;
+): Promise<Cart>;
 export async function updateCart(
   action: Extract<Action, 'removeLineItem'>,
   body: CartRemoveProductBody
-): Promise<ClientResponse<Cart>>;
+): Promise<Cart>;
 export async function updateCart(
   action: Extract<Action, 'changeLineItemQuantity'>,
   body: CartChangeQuantityProductBody
-): Promise<ClientResponse<Cart>>;
+): Promise<Cart>;
 export async function updateCart(
   action: Action,
   body: CartAddProductBody | CartRemoveProductBody | CartChangeQuantityProductBody
-): Promise<ClientResponse<Cart>> {
+): Promise<Cart> {
   const data = await fetch('/api/carts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

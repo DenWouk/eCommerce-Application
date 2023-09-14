@@ -11,6 +11,7 @@ import NotFoundProducts from '@/src/components/NotFoundProducts';
 import ProductsSideBar from '@/src/components/ProductsSideBar';
 import ProductCard from '@/src/components/ProductCard';
 import PaginationMemo from '@/src/components/PaginationMemo';
+import cartModel from '@/src/helpers/commercetools/cart';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -37,7 +38,7 @@ function ProductsPage() {
     }
   );
 
-  const productsResponse = data!;
+  const productsResponse = useMemo(() => data, [data])!;
 
   const { results: products = [], total = 0, limit } = productsResponse?.body || {};
   const refId = useRef<NodeJS.Timeout>();
@@ -50,7 +51,7 @@ function ProductsPage() {
     router.push(url.href, undefined, { shallow: true });
   }, []);
 
-  const handleClick = (sortValue: string, orderValue: 'asc' | 'desc') => {
+  const handleSort = (sortValue: string, orderValue: 'asc' | 'desc') => {
     const url = new URL(window.location.href);
     const search = url.searchParams;
     search.delete('category');
@@ -106,13 +107,13 @@ function ProductsPage() {
               <Stack direction="row" spacing={1}>
                 <SortButton
                   value={sort === 'name.en-US' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="name.en-US"
                   label="Name"
                 />
                 <SortButton
                   value={sort === 'price' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="price"
                   label="Price"
                 />
@@ -159,15 +160,20 @@ export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { ca
       const categoryResponse = slugCategory
         ? await categoryModel.getCategoryBySlug(req, slugCategory)
         : undefined;
+
       const productsResponse = await productModel.getProducts(req, {
-        category: categoryResponse && categoryResponse.body.results[0]?.id,
+        category: categoryResponse?.body?.results[0]?.id,
         ...query,
       });
+
+      const cart = (await cartModel.getCart(req)).body;
+
       const searchString = req.url?.match(/\?\S+/)?.[0].slice(1) || '';
 
       return {
         props: {
           authorized,
+          cart,
           fallback: { [unstable_serialize(['/api/products', searchString])]: productsResponse },
         },
       };

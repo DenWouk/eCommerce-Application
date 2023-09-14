@@ -8,7 +8,7 @@ export default handlerAuthToken(async (req: NextApiRequest, res: NextApiResponse
     await cartModel
       .getCart(req)
       .then((cartsResponse) => {
-        res.status(200).json(cartsResponse);
+        res.status(200).json(cartsResponse.body);
       })
       .catch(() => {
         res.status(400).json({ message: 'Oops, something went wrong, try again later' });
@@ -20,7 +20,7 @@ export default handlerAuthToken(async (req: NextApiRequest, res: NextApiResponse
     await cartModel
       .updateCart(req, body)
       .then((cartsResponse) => {
-        res.status(200).json(cartsResponse);
+        res.status(200).json(cartsResponse.body);
       })
       .catch(() => {
         res.status(400).json({ message: 'Oops, something went wrong, try again later' });

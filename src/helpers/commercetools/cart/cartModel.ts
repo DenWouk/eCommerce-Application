@@ -6,14 +6,21 @@ class CartModel {
   constructor(private builder: TypeBuilderApiRoot) {}
 
   async getCart(req: Req) {
-    return (await this.builder.getBuilder(req)).me().activeCart().get().execute();
+    return (await this.builder.getBuilder(req))
+      .me()
+      .activeCart()
+      .get({ queryArgs: { expand: 'discountCodes[*].discountCode.obj' } })
+      .execute();
   }
 
   async createCart(req: Req) {
     return (await this.builder.getBuilder(req))
       .me()
       .carts()
-      .post({ body: { currency: 'USD' } })
+      .post({
+        body: { currency: 'USD' },
+        queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
+      })
       .execute();
   }
 
@@ -26,7 +33,10 @@ class CartModel {
       .me()
       .carts()
       .withId({ ID: id })
-      .post({ body: { version, actions: [{ ...actions, action } as MyCartUpdateAction] } })
+      .post({
+        body: { version, actions: [{ ...actions, action } as MyCartUpdateAction] },
+        queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
+      })
       .execute();
   }
 }

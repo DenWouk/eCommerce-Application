@@ -1,8 +1,10 @@
 import { Cart, CartPagedQueryResponse } from '@commercetools/platform-sdk';
 import {
   Action,
+  CartAddDiscountCodeBody,
   CartAddProductBody,
   CartChangeQuantityProductBody,
+  CartRemoveDiscountCodeBody,
   CartRemoveProductBody,
 } from '@/src/types/commercetools';
 
@@ -30,8 +32,21 @@ export async function updateCart(
   body: CartChangeQuantityProductBody
 ): Promise<Cart>;
 export async function updateCart(
+  action: Extract<Action, 'addDiscountCode'>,
+  body: CartAddDiscountCodeBody
+): Promise<Cart>;
+export async function updateCart(
+  action: Extract<Action, 'removeDiscountCode'>,
+  body: CartRemoveDiscountCodeBody
+): Promise<Cart>;
+export async function updateCart(
   action: Action,
-  body: CartAddProductBody | CartRemoveProductBody | CartChangeQuantityProductBody
+  body:
+    | CartAddProductBody
+    | CartRemoveProductBody
+    | CartChangeQuantityProductBody
+    | CartAddDiscountCodeBody
+    | CartRemoveDiscountCodeBody
 ): Promise<Cart> {
   const data = await fetch('/api/carts', {
     method: 'POST',

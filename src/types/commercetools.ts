@@ -2,8 +2,10 @@ import { UserAuthOptions } from '@commercetools/sdk-client-v2';
 import { GetServerSidePropsContext, NextApiRequest } from 'next';
 import { NextRequest } from 'next/server';
 import {
+  MyCartAddDiscountCodeAction,
   MyCartAddLineItemAction,
   MyCartChangeLineItemQuantityAction,
+  MyCartRemoveDiscountCodeAction,
   MyCartRemoveLineItemAction,
 } from '@commercetools/platform-sdk';
 import NamesClients, { SortOrder } from '@/src/helpers/commercetools/consts';
@@ -95,7 +97,12 @@ type UpdateAction = {
   version: number;
 };
 
-export type Action = 'addLineItem' | 'removeLineItem' | 'changeLineItemQuantity';
+export type Action =
+  | 'addLineItem'
+  | 'removeLineItem'
+  | 'changeLineItemQuantity'
+  | 'addDiscountCode'
+  | 'removeDiscountCode';
 
 export type CartAddProductBody = UpdateAction & {
   actions: Omit<MyCartAddLineItemAction, 'action'>;
@@ -109,10 +116,20 @@ export type CartChangeQuantityProductBody = UpdateAction & {
   actions: Omit<MyCartChangeLineItemQuantityAction, 'action'>;
 };
 
+export type CartAddDiscountCodeBody = UpdateAction & {
+  actions: Omit<MyCartAddDiscountCodeAction, 'action'>;
+};
+
+export type CartRemoveDiscountCodeBody = UpdateAction & {
+  actions: Omit<MyCartRemoveDiscountCodeAction, 'action'>;
+};
+
 export type UpdateCartWithTypeAction =
   | { action: Extract<Action, 'addLineItem'>; updateData: CartAddProductBody }
   | { action: Extract<Action, 'removeLineItem'>; updateData: CartRemoveProductBody }
   | {
       action: Extract<Action, 'changeLineItemQuantity'>;
       updateData: CartChangeQuantityProductBody;
-    };
+    }
+  | { action: Extract<Action, 'addDiscountCode'>; updateData: CartChangeQuantityProductBody }
+  | { action: Extract<Action, 'removeDiscountCode'>; updateData: CartRemoveDiscountCodeBody };

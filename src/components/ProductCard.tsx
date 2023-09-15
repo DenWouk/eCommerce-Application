@@ -14,9 +14,6 @@ import Link from 'next/link';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { memo, useContext, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
-import CartIconButton from '@/src/components/CartIconButton';
-import { updateCart } from '@/src/api/carts';
-import MyContext from '@/src/contexts/MyContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -109,29 +106,7 @@ function ProductCard({ product }: Props) {
           </Typography>
 
           <Typography gutterBottom variant="h6" component="div">
-            {price?.discounted ? (
-              <>
-                <del
-                  style={{
-                    fontSize: '14px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    borderRadius: '5px',
-                    padding: '0 3px',
-                  }}
-                >
-                  {`$ ${price.value.centAmount / 100}`}
-                </del>
-                <span
-                  className="bg-blue-300 rounded-md"
-                  style={{
-                    marginLeft: '5px',
-                    padding: '0 3px',
-                  }}
-                >{`$ ${price.discounted.value.centAmount / 100}`}</span>
-              </>
-            ) : (
-              <div>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</div>
-            )}
+            <PriceProduct price={price} />
           </Typography>
 
           <Typography gutterBottom variant="subtitle1" color="text.secondary">

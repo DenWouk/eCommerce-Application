@@ -99,7 +99,9 @@ export function CartProvider({ children }: ShoppingCartProviderProps) {
   return (
     <ShoppingCartContext.Provider value={memoCart}>
       {children}
-      <CartList isOpen={isOpen}/>
+      <CartList isOpen={isOpen} />
     </ShoppingCartContext.Provider>
   );
 }
+
+export { useContext };

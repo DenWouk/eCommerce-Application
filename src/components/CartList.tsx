@@ -3,7 +3,7 @@ import { Box, Button, Typography, Container, Divider } from '@mui/material';
 import { useCartContext } from '../context/CartContext';
 //   import { CartItemView } from "./CartItem";
 
-export default function CartList({isOpen}:CartListProps) {
+export default function CartList({ isOpen }: CartListProps) {
   const { cartQuantity, cartItems } = useCartContext();
   return (
     <Container>

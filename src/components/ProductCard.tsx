@@ -14,6 +14,10 @@ import Link from 'next/link';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { memo, useContext, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
+import PriceProduct from '@/src/components/price/PriceProduct';
+import CartIconButton from '@/src/components/CartIconButton';
+import { updateCart } from '@/src/api/carts';
+import MyContext from '@/src/contexts/MyContext';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,

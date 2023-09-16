@@ -4,7 +4,7 @@ import { useContext, useMemo } from 'react';
 import CartIconButton from '@/src/components/CartIconButton';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import { showError } from '@/src/helpers/toastify';
-import { getCarts, updateCart } from '@/src/api/carts';
+import { createCarts, getCarts, updateCart } from '@/src/api/carts';
 import MyContext from '@/src/contexts/MyContext';
 
 type Props = {
@@ -33,6 +33,12 @@ export default function CartChangeCountItemsButton({ productId }: Props) {
             return;
           }
           const newCart = await getCarts();
+          currenId = newCart.id;
+          currenVersion = newCart.version;
+        }
+
+        if (!currenId) {
+          const newCart = await createCarts({ currency: 'USD' });
           currenId = newCart.id;
           currenVersion = newCart.version;
         }

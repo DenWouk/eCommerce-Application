@@ -2,8 +2,9 @@ import React from 'react';
 import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
 import PriceProduct from '@/src/components/price/PriceProduct';
+import cartModel from '@/src/helpers/commercetools/cart';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -160,10 +161,17 @@ export const getServerSideProps = ssrWithAuthToken<
     return { notFound: true };
   }
 
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
   const authorized = token?.type === NamesClients.PASSWORD;
   try {
     const productResponse = await productModel.getProductById(req, id);
-    return { props: { authorized, productResponse } };
+    return { props: { authorized, cart, productResponse } };
   } catch (e) {
     return { notFound: true };
   }

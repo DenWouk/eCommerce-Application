@@ -15,7 +15,7 @@ export default function CartIconButton({ className, type, onClick }: Props) {
     await onClick(type!);
     setIsLoading(false);
   };
-  const typeBadgeContent = type === 'add' ? <>&#x2714;</> : <>&#10006;</>;
+  const typeBadgeContent = type === 'add' ? <>✚</> : <>✖</>;
   const badgeContent = isLoading ? (
     <div className="relative">
       <CircularProgress size={24} sx={{ position: 'absolute', inset: '-6px -7px' }} />

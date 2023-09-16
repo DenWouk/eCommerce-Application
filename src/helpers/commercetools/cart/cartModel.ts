@@ -1,4 +1,4 @@
-import { MyCartUpdateAction } from '@commercetools/platform-sdk';
+import { CartDraft, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { Req, UpdateCartWithTypeAction } from '@/src/types/commercetools';
 
@@ -13,12 +13,12 @@ class CartModel {
       .execute();
   }
 
-  async createCart(req: Req) {
+  async createCart(req: Req, body: CartDraft | null) {
     return (await this.builder.getBuilder(req))
       .me()
       .carts()
       .post({
-        body: { currency: 'USD' },
+        body: body || { currency: 'USD' },
         queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
       })
       .execute();

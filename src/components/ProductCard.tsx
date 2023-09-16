@@ -13,11 +13,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { memo, useContext, useMemo } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { AttributesProduct } from '@/src/types/commercetools';
 import PriceProduct from '@/src/components/price/PriceProduct';
 import CartIconButton from '@/src/components/CartIconButton';
-import { updateCart } from '@/src/api/carts';
+import { getCarts, updateCart } from '@/src/api/carts';
 import MyContext from '@/src/contexts/MyContext';
+import NamesClients from '@/src/helpers/commercetools/consts';
+import { showError } from '@/src/helpers/toastify';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -32,8 +35,9 @@ type Props = {
 };
 
 function ProductCard({ product }: Props) {
+  const { status } = useSession();
   const { state, dispatch } = useContext(MyContext);
-  const { id, version, lineItems } = state.cart!;
+  const { id = '', version = 0, lineItems = [] } = state.cart || {};
   const lineItemId = useMemo(
     () => lineItems?.find((value) => value.productId === product.id)?.id,
     [lineItems, product]
@@ -51,9 +55,22 @@ function ProductCard({ product }: Props) {
   const handleChange = async (type: 'add' | 'remove') => {
     let cart: Cart | undefined;
     if (type === 'add') {
+      let currenId = id;
+      let currenVersion = version;
+      if (status === 'unauthenticated') {
+        const res = await signIn(NamesClients.ANONYMOUS, { redirect: false });
+        if (res?.error) {
+          showError('Oops, something went wrong, try again later');
+          return;
+        }
+        const newCart = await getCarts();
+        currenId = newCart.id;
+        currenVersion = newCart.version;
+      }
+
       cart = await updateCart('addLineItem', {
-        id,
-        version,
+        id: currenId,
+        version: currenVersion,
         actions: { productId: product.id, quantity: 1 },
       });
     } else {

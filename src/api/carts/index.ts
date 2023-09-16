@@ -1,4 +1,4 @@
-import { Cart, CartPagedQueryResponse } from '@commercetools/platform-sdk';
+import { Cart, CartDraft } from '@commercetools/platform-sdk';
 import {
   Action,
   CartAddDiscountCodeBody,
@@ -8,8 +8,23 @@ import {
   CartRemoveProductBody,
 } from '@/src/types/commercetools';
 
-export async function getCarts(): Promise<CartPagedQueryResponse> {
+export async function getCarts(): Promise<Cart> {
   const data = await fetch('/api/carts').then(async (res) => {
+    if (res.ok) {
+      return res;
+    }
+    const bodyRes = await res.json();
+    throw new Error(bodyRes.message);
+  });
+  return data.json();
+}
+
+export async function createCarts(body?: CartDraft): Promise<Cart> {
+  const data = await fetch('/api/carts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : JSON.stringify(null),
+  }).then(async (res) => {
     if (res.ok) {
       return res;
     }
@@ -49,7 +64,7 @@ export async function updateCart(
     | CartRemoveDiscountCodeBody
 ): Promise<Cart> {
   const data = await fetch('/api/carts', {
-    method: 'POST',
+    method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action, updateData: body }),
   }).then(async (res) => {

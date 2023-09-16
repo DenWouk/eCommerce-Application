@@ -26,7 +26,7 @@ const reducer = (state: StateType, { type, value }: ActionType) => {
 type Props = PropsWithChildren & {
   pageProps: {
     authorized: boolean | undefined;
-    cart: Cart;
+    cart: Cart | null;
   };
 };
 

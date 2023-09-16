@@ -131,5 +131,5 @@ export type UpdateCartWithTypeAction =
       action: Extract<Action, 'changeLineItemQuantity'>;
       updateData: CartChangeQuantityProductBody;
     }
-  | { action: Extract<Action, 'addDiscountCode'>; updateData: CartChangeQuantityProductBody }
+  | { action: Extract<Action, 'addDiscountCode'>; updateData: CartAddDiscountCodeBody }
   | { action: Extract<Action, 'removeDiscountCode'>; updateData: CartRemoveDiscountCodeBody };

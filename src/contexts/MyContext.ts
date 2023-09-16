@@ -4,7 +4,7 @@ import { Cart } from '@commercetools/platform-sdk';
 export type StateType = {
   countProductsInCart: number;
   authorized: boolean;
-  cart: Cart | undefined;
+  cart: Cart | null;
 };
 
 export type ActionType = {
@@ -15,7 +15,7 @@ export type ActionType = {
 const initialState: StateType = {
   countProductsInCart: 0,
   authorized: false,
-  cart: undefined,
+  cart: null,
 };
 
 const MyContext = createContext<{ state: StateType; dispatch: Dispatch<ActionType> }>({

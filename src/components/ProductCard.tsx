@@ -54,37 +54,42 @@ function ProductCard({ product }: Props) {
 
   const handleChange = async (type: 'add' | 'remove') => {
     let cart: Cart | undefined;
-    if (type === 'add') {
-      let currenId = id;
-      let currenVersion = version;
-      if (status === 'unauthenticated') {
-        const res = await signIn(NamesClients.ANONYMOUS, { redirect: false });
-        if (res?.error) {
+    try {
+      if (type === 'add') {
+        let currenId = id;
+        let currenVersion = version;
+        if (status === 'unauthenticated') {
+          const res = await signIn(NamesClients.ANONYMOUS, { redirect: false });
+          if (res?.error) {
+            showError('Oops, something went wrong, try again later');
+            return;
+          }
+          const newCart = await getCarts();
+          currenId = newCart.id;
+          currenVersion = newCart.version;
+        }
+
+        cart = await updateCart('addLineItem', {
+          id: currenId,
+          version: currenVersion,
+          actions: { productId: product.id, quantity: 1 },
+        });
+      } else {
+        if (!lineItemId) {
           showError('Oops, something went wrong, try again later');
           return;
         }
-        const newCart = await getCarts();
-        currenId = newCart.id;
-        currenVersion = newCart.version;
+        cart = await updateCart('removeLineItem', {
+          id,
+          version,
+          actions: { lineItemId, quantity: 1 },
+        });
       }
 
-      cart = await updateCart('addLineItem', {
-        id: currenId,
-        version: currenVersion,
-        actions: { productId: product.id, quantity: 1 },
-      });
-    } else {
-      if (!lineItemId) {
-        throw new Error('lineItem nof found'); // FIXME
-      }
-      cart = await updateCart('removeLineItem', {
-        id,
-        version,
-        actions: { lineItemId, quantity: 1 },
-      });
+      dispatch({ type: 'CHANGE', value: cart });
+    } catch {
+      showError('Oops, something went wrong, try again later');
     }
-
-    dispatch({ type: 'CHANGE', value: cart });
   };
 
   return (

@@ -29,12 +29,13 @@ class CartModel {
       action,
       updateData: { id, version, actions },
     } = body;
+    const actionsArr = [actions].flat().map((item) => ({ ...item, action }));
     return (await this.builder.getBuilder(req))
       .me()
       .carts()
       .withId({ ID: id })
       .post({
-        body: { version, actions: [{ ...actions, action } as MyCartUpdateAction] },
+        body: { version, actions: actionsArr as MyCartUpdateAction[] },
         queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
       })
       .execute();

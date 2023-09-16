@@ -5,6 +5,7 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import { Cart, ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
 import PriceProduct from '@/src/components/price/PriceProduct';
 import cartModel from '@/src/helpers/commercetools/cart';
+import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -15,8 +16,8 @@ type Props = {
 
 export default function BasicStack(props: Props) {
   const { productResponse } = props;
-  const product = productResponse.body;
-  const { price, attributes, images } = product.masterVariant;
+  const { id, key = '', name, description, masterVariant } = productResponse.body;
+  const { price, attributes, images } = masterVariant;
 
   const imageGalleryItem =
     images?.map(({ url }) => ({
@@ -25,6 +26,31 @@ export default function BasicStack(props: Props) {
     })) || [];
 
   const styleSpan = { lineHeight: '2', color: 'grey' };
+
+  const productData = (
+    <Typography>
+      <span style={styleSpan}>car ID: </span>
+      {key} <br />
+      {attributes && (
+        <>
+          <span style={styleSpan}>location: </span>
+          {attributes[8]?.value} <br />
+          <span style={styleSpan}>year: </span>
+          {attributes[2]?.value} <br />
+          <span style={styleSpan}>odometer: </span>
+          {attributes[5]?.value} <br />
+          <span style={styleSpan}>engine: </span>
+          {attributes[9]?.value} <br />
+          <span style={styleSpan}>gearbox: </span>
+          {attributes[4]?.value[0].label} <br />
+          <span style={styleSpan}>color: </span>
+          {attributes[3]?.value[0].label} <br />
+          <span style={styleSpan}>interior: </span>
+          {attributes[10]?.value} <br />
+        </>
+      )}
+    </Typography>
+  );
 
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>
@@ -48,7 +74,7 @@ export default function BasicStack(props: Props) {
                   justifyContent: 'center',
                 }}
               >
-                <Typography variant="h5">{product.name['en-US']}</Typography>
+                <Typography variant="h5">{name['en-US']}</Typography>
               </Box>
 
               <Box>
@@ -65,37 +91,19 @@ export default function BasicStack(props: Props) {
                 }}
               >
                 <Box>
-                  <Typography variant="h5">{product.name['en-US']}</Typography>
+                  <Typography variant="h5">{name['en-US']}</Typography>
                   <Divider />
 
-                  <Typography variant="h6" sx={{ py: '10px', display: 'flex', gap: '4px' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ py: '10px', display: 'flex', gap: '4px', alignItems: 'center' }}
+                  >
                     Price:
                     <PriceProduct price={price} />
+                    <CartChangeCountItemsButton productId={id} />
                   </Typography>
                   <Divider />
-
-                  <Typography>
-                    <span style={styleSpan}>car ID: </span>
-                    {product.key} <br />
-                    {attributes && (
-                      <>
-                        <span style={styleSpan}>location: </span>
-                        {attributes[8]?.value} <br />
-                        <span style={styleSpan}>year: </span>
-                        {attributes[2]?.value} <br />
-                        <span style={styleSpan}>engine: </span>
-                        {attributes[9]?.value} <br />
-                        <span style={styleSpan}>gearbox: </span>
-                        <span style={styleSpan}>odometer: </span>
-                        {attributes[5]?.value} <br />
-                        {attributes[4]?.value[0].label} <br />
-                        <span style={styleSpan}>color: </span>
-                        {attributes[3]?.value[0].label} <br />
-                        <span style={styleSpan}>interior: </span>
-                        {attributes[10]?.value} <br />
-                      </>
-                    )}
-                  </Typography>
+                  {productData}
                   <Divider />
                 </Box>
               </Box>
@@ -109,40 +117,22 @@ export default function BasicStack(props: Props) {
               p: '20px',
             }}
           >
-            <Typography variant="h5">{product?.name['en-US']}</Typography>
+            <Typography variant="h5">{name['en-US']}</Typography>
 
-            <Typography variant="h6" sx={{ py: '10px', display: 'flex', gap: '4px' }}>
+            <Typography
+              variant="h6"
+              sx={{ py: '10px', display: 'flex', gap: '4px', alignItems: 'center' }}
+            >
               Price:
               <PriceProduct price={price} />
+              <CartChangeCountItemsButton productId={id} />
             </Typography>
-
-            <Typography>
-              <span style={styleSpan}>car ID: </span>
-              {product.key} <br />
-              {attributes && (
-                <>
-                  <span style={styleSpan}>location: </span>
-                  {attributes[8]?.value} <br />
-                  <span style={styleSpan}>year: </span>
-                  {attributes[2]?.value} <br />
-                  <span style={styleSpan}>odometer: </span>
-                  {attributes[5]?.value} <br />
-                  <span style={styleSpan}>engine: </span>
-                  {attributes[9]?.value} <br />
-                  <span style={styleSpan}>gearbox: </span>
-                  {attributes[4]?.value[0].label} <br />
-                  <span style={styleSpan}>color: </span>
-                  {attributes[3]?.value[0].label} <br />
-                  <span style={styleSpan}>interior: </span>
-                  {attributes[10]?.value} <br />
-                </>
-              )}
-            </Typography>
+            {productData}
           </Paper>
 
           <Paper sx={{ display: 'flex', flexDirection: 'column', gap: '10px', p: '20px' }}>
             <Typography variant="h6">Vehicle Description:</Typography>
-            <Typography>{product.description?.['en-US']}</Typography>
+            <Typography>{description?.['en-US']}</Typography>
           </Paper>
         </Stack>
       </Box>

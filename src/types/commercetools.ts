@@ -109,7 +109,9 @@ export type CartAddProductBody = UpdateAction & {
 };
 
 export type CartRemoveProductBody = UpdateAction & {
-  actions: Omit<MyCartRemoveLineItemAction, 'action'>;
+  actions:
+    | Omit<MyCartRemoveLineItemAction, 'action'>
+    | Omit<MyCartRemoveLineItemAction, 'action'>[];
 };
 
 export type CartChangeQuantityProductBody = UpdateAction & {

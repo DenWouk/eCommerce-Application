@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import Link from 'next/link';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 import {
   AppBar,
   Box,
@@ -16,7 +15,6 @@ import {
 import LoadingPage from '@/src/components/LoadingPage';
 import CartIconLink from '@/src/components/CartIconLink';
 import LetterAvatar from './Avatar';
-import { useCartContext } from '../context/CartContext';
 
 type Props = {
   authorized: boolean | undefined;
@@ -24,7 +22,6 @@ type Props = {
 
 function Header({ authorized }: Props) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const { openCart, cartQuantity } = useCartContext();
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -32,10 +29,6 @@ function Header({ authorized }: Props) {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  // const handlerCartOpen = () => {
-  //   console.log('click basket');
-  // };
 
   return (
     <AppBar position="static" className="header">

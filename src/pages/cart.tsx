@@ -61,11 +61,6 @@ export default function CartPage() {
       showError('Oops, something went wrong, try again later');
     }
   };
-  // const { lineItems } = state.cart;
-  const totalCostValue = lineItems.reduce(
-    (total, item) => total + item.totalPrice.centAmount / 100,
-    0
-  );
 
   return (
     <Box>
@@ -107,7 +102,7 @@ export default function CartPage() {
 
         <Box mt={2} mb={6}>
           <div className="cart-total">
-            <h4>${totalCostValue}</h4>
+            <h4>${(totalPrice?.centAmount || 0) / 100}</h4>
           </div>
           {!!discountCodes.length &&
             discountCodes.map(({ discountCode }) => (

@@ -103,7 +103,7 @@ export default function CartPage() {
                 <Box mt={3}>{totalPrice.centAmount / 100}</Box>
                 <Box mt={2}>
                   <IconButton onClick={() => handleChange('delete', productId, lineItemId)}>
-                  <DeleteRoundedIcon />
+                    <DeleteRoundedIcon />
                   </IconButton>
                 </Box>
               </Grid>

@@ -27,8 +27,30 @@ export default function BasicStack(props: Props) {
 
   const styleSpan = { lineHeight: '2', color: 'grey' };
 
-  const { price } = product.masterVariant;
-
+  const productData = (
+    <Typography>
+      <span style={styleSpan}>car ID: </span>
+      {key} <br />
+      {attributes && (
+        <>
+          <span style={styleSpan}>location: </span>
+          {attributes[8]?.value} <br />
+          <span style={styleSpan}>year: </span>
+          {attributes[2]?.value} <br />
+          <span style={styleSpan}>odometer: </span>
+          {attributes[5]?.value} <br />
+          <span style={styleSpan}>engine: </span>
+          {attributes[9]?.value} <br />
+          <span style={styleSpan}>gearbox: </span>
+          {attributes[4]?.value[0].label} <br />
+          <span style={styleSpan}>color: </span>
+          {attributes[3]?.value[0].label} <br />
+          <span style={styleSpan}>interior: </span>
+          {attributes[10]?.value} <br />
+        </>
+      )}
+    </Typography>
+  );
 
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>

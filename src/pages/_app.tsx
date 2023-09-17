@@ -7,13 +7,23 @@ import { PropsWithChildren, StrictMode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Cart } from '@commercetools/platform-sdk';
 import { Session } from 'next-auth';
+import { Roboto } from 'next/font/google';
 import Layout from '../components/Layout';
+
+export const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 const theme = createTheme({
   palette: {
     primary: {
       main: '#6195c3',
     },
+  },
+  typography: {
+    fontFamily: roboto.style.fontFamily,
   },
 });
 

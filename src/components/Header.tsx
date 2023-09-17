@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import LoadingPage from '@/src/components/LoadingPage';
+import CartIconLink from '@/src/components/CartIconLink';
 import LetterAvatar from './Avatar';
 
 type Props = {
@@ -150,6 +151,8 @@ function Header({ authorized }: Props) {
               </Button>
             </Link>
           </Box>
+
+          <CartIconLink href="/cart" className="mx-1" />
 
           {authorized ? (
             <LetterAvatar />

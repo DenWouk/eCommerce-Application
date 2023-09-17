@@ -4,17 +4,16 @@ import { Box, Container, Divider, Link, Paper, Typography } from '@mui/material'
 
 export default function AboutUsPage() {
   return (
-    <>
-      <Container
+    <Container
         className="welcome-page-container"
         sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
       >
-        <Paper className={'welcome-page-content1'}>
+        <Paper className="welcome-page-content1">
           <Typography variant="h4" className="content-title">
             About the team:
           </Typography>
 
-          <Box className={'content-item'}>
+          <Box className="content-item">
             <Avatar
               className="content-item-img"
               src="../Tanya.jpg"
@@ -24,7 +23,7 @@ export default function AboutUsPage() {
             <Typography variant="h5" className="content-item-title">
               Tanya
             </Typography>
-            <Typography variant="subtitle1" className={'content-item-about-team'}>
+            <Typography variant="subtitle1" className="content-item-about-team">
               Participation in the project: <br />
               -
               <br />
@@ -56,7 +55,7 @@ export default function AboutUsPage() {
             <Typography variant="h5" className="content-item-title">
               Kirill
             </Typography>
-            <Typography variant="subtitle1" className={'content-item-about-team'}>
+            <Typography variant="subtitle1" className="content-item-about-team">
               Participation in the project: <br />
               -
               <br />
@@ -80,7 +79,7 @@ export default function AboutUsPage() {
             <Divider variant="fullWidth" orientation="vertical" />
           </Box>
 
-          <Box className={'content-item'}>
+          <Box className="content-item">
             <Avatar
               className="content-item-img"
               src="../Denis.jpg"
@@ -121,6 +120,5 @@ export default function AboutUsPage() {
           </Typography>
         </Paper>
       </Container>
-    </>
   );
 }

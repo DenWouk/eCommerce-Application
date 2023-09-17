@@ -98,9 +98,6 @@ export default function CartPage() {
                     <Divider />
                     <PriceProduct price={price} />
                   </Box>
-                  <Typography variant="subtitle1" sx={{ color: '#6195c3' }}>
-                    Have a promo?
-                  </Typography>
                 </Box>
 
                 <Box

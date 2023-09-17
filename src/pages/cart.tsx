@@ -109,7 +109,19 @@ export default function CartPage() {
               </Box>
             ))}
 
-          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography sx={{ fontSize: '16px', fontWeight: 'bold', color: '#6195c3' }}>
+              Have a promo?
+            </Typography>
+
             <form onSubmit={handleAddDiscountCode}>
               <TextField required name="discountCode" />
               <Button

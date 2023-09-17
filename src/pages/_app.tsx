@@ -21,7 +21,7 @@ type Props = {
   session?: Session | null;
   authorized: boolean | undefined;
   children: PropsWithChildren;
-  cart: Cart;
+  cart: Cart | null;
 };
 
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps<Props>) {

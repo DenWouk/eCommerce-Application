@@ -3,6 +3,7 @@ import { Box, Container, Grid, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 import useSWR, { unstable_serialize } from 'swr';
 import { useSearchParams } from 'next/navigation';
+import { Cart } from '@commercetools/platform-sdk';
 import SelectAsync from '@/src/components/SelectAsync';
 import SortButton from '@/src/components/SortButton';
 import getProducts from '@/src/api/products';
@@ -156,6 +157,13 @@ export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { ca
   async ({ req, token, params, query }) => {
     const authorized = token?.type === NamesClients.PASSWORD;
     const slugCategory = params?.category?.at(-1);
+    let cart: Cart | null;
+    try {
+      cart = (await cartModel.getCart(req)).body;
+    } catch {
+      cart = null;
+    }
+
     try {
       const categoryResponse = slugCategory
         ? await categoryModel.getCategoryBySlug(req, slugCategory)
@@ -165,10 +173,8 @@ export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { ca
         category: categoryResponse?.body?.results[0]?.id,
         ...query,
       });
-      const cart = (await cartModel.getCart(req)).body;
 
       const searchString = req.url?.match(/\?\S+/)?.[0].slice(1) || '';
-
       return {
         props: {
           authorized,

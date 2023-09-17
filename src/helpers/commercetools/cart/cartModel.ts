@@ -1,4 +1,4 @@
-import { MyCartUpdateAction } from '@commercetools/platform-sdk';
+import { CartDraft, MyCartUpdateAction } from '@commercetools/platform-sdk';
 import builderApiRoot, { TypeBuilderApiRoot } from '@/src/helpers/commercetools/builderApiRoot';
 import { Req, UpdateCartWithTypeAction } from '@/src/types/commercetools';
 
@@ -6,14 +6,21 @@ class CartModel {
   constructor(private builder: TypeBuilderApiRoot) {}
 
   async getCart(req: Req) {
-    return (await this.builder.getBuilder(req)).me().activeCart().get().execute();
+    return (await this.builder.getBuilder(req))
+      .me()
+      .activeCart()
+      .get({ queryArgs: { expand: 'discountCodes[*].discountCode.obj' } })
+      .execute();
   }
 
-  async createCart(req: Req) {
+  async createCart(req: Req, body: CartDraft | null) {
     return (await this.builder.getBuilder(req))
       .me()
       .carts()
-      .post({ body: { currency: 'USD' } })
+      .post({
+        body: body || { currency: 'USD' },
+        queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
+      })
       .execute();
   }
 
@@ -22,11 +29,15 @@ class CartModel {
       action,
       updateData: { id, version, actions },
     } = body;
+    const actionsArr = [actions].flat().map((item) => ({ ...item, action }));
     return (await this.builder.getBuilder(req))
       .me()
       .carts()
       .withId({ ID: id })
-      .post({ body: { version, actions: [{ ...actions, action } as MyCartUpdateAction] } })
+      .post({
+        body: { version, actions: actionsArr as MyCartUpdateAction[] },
+        queryArgs: { expand: 'discountCodes[*].discountCode.obj' },
+      })
       .execute();
   }
 }

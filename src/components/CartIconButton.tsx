@@ -1,6 +1,12 @@
-import { Badge, CircularProgress, IconButton } from '@mui/material';
+import { Badge, Box, CircularProgress, IconButton, SxProps, Theme } from '@mui/material';
 import { useState } from 'react';
 import GarageSVG from '@/src/components/GarageSVG';
+
+const sx = (isAdd: boolean): SxProps<Theme> | undefined => ({
+  position: 'relative',
+  transform: `rotateZ(${isAdd ? 45 : 0}deg)`,
+  transition: 'transform 0.3s linear',
+});
 
 type Props = {
   onClick: (type: 'add' | 'remove') => Promise<void>;
@@ -15,20 +21,25 @@ export default function CartIconButton({ className, type, onClick }: Props) {
     await onClick(type!);
     setIsLoading(false);
   };
-  const typeBadgeContent = type === 'add' ? <>&#x2714;</> : <>&#10006;</>;
-  const badgeContent = isLoading ? (
-    <div className="relative">
-      <CircularProgress size={24} sx={{ position: 'absolute', inset: '-6px -7px' }} />
-      <div>{typeBadgeContent}</div>
-    </div>
-  ) : (
-    <div className="relative">{typeBadgeContent}</div>
+
+  const badgeContent = (
+    <>
+      {isLoading && (
+        <CircularProgress size={24} sx={{ position: 'absolute', inset: '-6px -7px' }} />
+      )}
+      ✖
+    </>
   );
+
   const disableColor = isLoading ? 'gray' : undefined;
   return (
     <IconButton className={className} onClick={handleClick} disabled={isLoading}>
       <Badge
-        badgeContent={badgeContent}
+        badgeContent={
+          <Box className="relative" sx={sx(type === 'add')}>
+            {badgeContent}
+          </Box>
+        }
         sx={{ '.MuiBadge-badge': { p: 0, bgcolor: disableColor } }}
         color={type === 'remove' ? 'error' : 'success'}
       >

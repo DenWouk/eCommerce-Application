@@ -3,12 +3,14 @@ import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
+import { Cart } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import LoadingButton from '@/src/components/LoadingButton';
 import { AuthProps } from '@/src/types/auth';
 import isAuthorized from '@/src/helpers/auth';
 import { showSuccess } from '@/src/helpers/toastify';
+import cartModel from '@/src/helpers/commercetools/cart';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputEmail from '../components/InputEmail';
 import InputPassword from '../components/InputPassword';
@@ -81,5 +83,13 @@ export default function SignInPage() {
 }
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
   const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
+
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
+  return { props: { authorized, cart } };
 };

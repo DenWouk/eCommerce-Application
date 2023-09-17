@@ -3,9 +3,10 @@ import { useState } from 'react';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import HomeIcon from '@mui/icons-material/Home';
 import PasswordIcon from '@mui/icons-material/Password';
-import { Customer } from '@commercetools/platform-sdk';
 import { GetServerSideProps } from 'next';
+import { Cart, Customer } from '@commercetools/platform-sdk';
 import customerModel from '@/src/helpers/commercetools/customer';
+import cartModel from '@/src/helpers/commercetools/cart';
 import AddressAccordions from '../components/AddressAccordions';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 import UserInfoForm from '../components/UserInfoForm';
@@ -134,9 +135,17 @@ export default function ProfilePage({ customer }: Props) {
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
   const authorized = await isAuthorized({ req });
+
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
   try {
     const customerResponse = await customerModel.getMe(req);
-    return { props: { authorized, customer: customerResponse.body } };
+    return { props: { authorized, cart, customer: customerResponse.body } };
   } catch {
     return {
       notFound: true,

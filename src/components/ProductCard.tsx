@@ -11,13 +11,11 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Cart, ProductProjection } from '@commercetools/platform-sdk';
-import { memo, useContext, useMemo } from 'react';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { memo, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
 import PriceProduct from '@/src/components/price/PriceProduct';
-import CartIconButton from '@/src/components/CartIconButton';
-import { updateCart } from '@/src/api/carts';
-import MyContext from '@/src/contexts/MyContext';
+import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
 
 const buttons = [
   <Button className="card-btn-img0" key="one" />,
@@ -32,12 +30,6 @@ type Props = {
 };
 
 function ProductCard({ product }: Props) {
-  const { state, dispatch } = useContext(MyContext);
-  const { id, version, lineItems } = state.cart!;
-  const lineItemId = useMemo(
-    () => lineItems?.find((value) => value.productId === product.id)?.id,
-    [lineItems, product]
-  );
   const { price } = product.masterVariant;
   const attributes = useMemo(
     () =>
@@ -47,28 +39,6 @@ function ProductCard({ product }: Props) {
       ),
     [product]
   );
-
-  const handleChange = async (type: 'add' | 'remove') => {
-    let cart: Cart | undefined;
-    if (type === 'add') {
-      cart = await updateCart('addLineItem', {
-        id,
-        version,
-        actions: { productId: product.id, quantity: 1 },
-      });
-    } else {
-      if (!lineItemId) {
-        throw new Error('lineItem nof found'); // FIXME
-      }
-      cart = await updateCart('removeLineItem', {
-        id,
-        version,
-        actions: { lineItemId, quantity: 1 },
-      });
-    }
-
-    dispatch({ type: 'CHANGE', value: cart });
-  };
 
   return (
     <Grid item xs={12} sm={6} md={4} key={product.id}>
@@ -109,8 +79,14 @@ function ProductCard({ product }: Props) {
             {product?.name['en-US']}
           </Typography>
 
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography
+            className="flex justify-between items-center"
+            gutterBottom
+            variant="h6"
+            component="div"
+          >
             <PriceProduct price={price} />
+            <CartChangeCountItemsButton productId={product.id} />
           </Typography>
 
           <Typography gutterBottom variant="subtitle1" color="text.secondary">
@@ -121,15 +97,10 @@ function ProductCard({ product }: Props) {
           </Typography>
         </CardContent>
 
-        <CardActions className="flex justify-between">
+        <CardActions>
           <Button component={Link} size="small" href={`/products/${product.id}`}>
             Details
           </Button>
-          {lineItemId ? (
-            <CartIconButton onClick={handleChange} type="remove" />
-          ) : (
-            <CartIconButton onClick={handleChange} />
-          )}
         </CardActions>
       </Card>
     </Grid>

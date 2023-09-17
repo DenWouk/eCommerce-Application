@@ -1,8 +1,10 @@
 import { Button } from '@mui/material';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
+import { Cart } from '@commercetools/platform-sdk';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
+import cartModel from '@/src/helpers/commercetools/cart';
 
 export type AuthProps = {
   authorized: boolean;
@@ -69,7 +71,15 @@ export default function Home({ authorized }: AuthProps) {
   );
 }
 
-export const getServerSideProps = ssrWithAuthToken<AuthProps>(async ({ token }) => {
+export const getServerSideProps = ssrWithAuthToken<AuthProps>(async ({ token, req }) => {
   const authorized = token?.type === NamesClients.PASSWORD;
-  return { props: { authorized } };
+
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
+  return { props: { authorized, cart } };
 });

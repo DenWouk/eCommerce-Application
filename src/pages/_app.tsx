@@ -29,6 +29,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
     <StrictMode>
       <ThemeProvider theme={theme}>
         <SessionProvider session={session}>
+          {/* <ShoppingCartProviderProps> */}
           <ToastContainer />
           <Layout pageProps={pageProps}>
             <Component {...pageProps} />

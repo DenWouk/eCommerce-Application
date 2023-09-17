@@ -54,10 +54,10 @@ export type FetchedToken = {
 export type FilterProducts = {
   page?: string;
   category?: string;
-  transmission?: string | string[];
-  body?: string | string[];
-  make?: string | string[];
-  color?: string | string[];
+  transmission?: string;
+  body?: string;
+  make?: string;
+  color?: string;
   offset?: string;
   search?: string;
   priceCountry?: string;

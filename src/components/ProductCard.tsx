@@ -91,7 +91,7 @@ export default function ProductCard({ product }: Props) {
         </CardContent>
 
         <CardActions>
-          <Button component={Link} size="small" href={`/products/${product.id}`}>
+          <Button component={Link} size="small" href={`/products/product/${product.id}`}>
             Details
           </Button>
         </CardActions>

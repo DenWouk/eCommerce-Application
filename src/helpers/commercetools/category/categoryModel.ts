@@ -8,7 +8,7 @@ class CategoryModel {
     return (await this.builder.getBuilder(req))
       .categories()
       .get({
-        queryArgs: { limit: 200 },
+        queryArgs: { limit: 200, expand: 'parent.obj' },
       })
       .execute();
   }
@@ -18,7 +18,9 @@ class CategoryModel {
   }
 
   async getCategoryBySlug(req: Req, slug?: string) {
-    const queryArgs = slug ? { where: `slug(en-US="${slug}")` } : undefined;
+    const queryArgs = slug
+      ? { where: `slug(en-US="${slug}")`, expand: 'ancestors[*].obj' }
+      : undefined;
     return (await this.builder.getBuilder(req)).categories().get({ queryArgs }).execute();
   }
 }

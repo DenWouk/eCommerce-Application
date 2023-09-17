@@ -57,6 +57,7 @@ export default function SelectAsync() {
       return;
     }
     const url = new URL(window.location.href);
+    url.pathname = 'products';
     const search = url.searchParams;
     search.delete('category');
     search.delete('page');

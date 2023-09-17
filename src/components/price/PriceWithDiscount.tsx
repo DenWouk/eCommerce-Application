@@ -25,7 +25,7 @@ export default function PriceWithDiscount({ price, priceWithDiscount }: Props) {
               padding: '0 3px',
             }}
           >
-            {`$ ${price}`}
+            {`$${price}`}
           </del>
           <span
             className="bg-blue-300 rounded-md"
@@ -33,10 +33,10 @@ export default function PriceWithDiscount({ price, priceWithDiscount }: Props) {
               marginLeft: '5px',
               padding: '0 3px',
             }}
-          >{`$ ${priceWithDiscount}`}</span>
+          >{`$${priceWithDiscount}`}</span>
         </>
       ) : (
-        <div>{`$ ${price}`}</div>
+        <div>{`$${price}`}</div>
       )}
     </Typography>
   );

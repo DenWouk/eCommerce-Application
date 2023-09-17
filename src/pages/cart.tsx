@@ -13,7 +13,6 @@ import { showError } from '../helpers/toastify';
 export default function CartPage() {
   const { state, dispatch } = useContext(MyContext);
   const { lineItems = [], version = 0, id = '', discountCodes = [], totalPrice } = state.cart || {};
-console.log(totalPrice, 'totalPrice');
 
   const actionsForClearCart = useMemo(
     () =>

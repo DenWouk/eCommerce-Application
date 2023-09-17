@@ -88,13 +88,13 @@ function Header({ authorized }: Props) {
 
               <Link href="/products">
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Products</Typography>
+                  <Typography textAlign="center">Cars</Typography>
                 </MenuItem>
               </Link>
 
-              <Link href="/contacts">
+              <Link href="/about-us">
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Contacts</Typography>
+                  <Typography textAlign="center">About us</Typography>
                 </MenuItem>
               </Link>
 
@@ -140,13 +140,13 @@ function Header({ authorized }: Props) {
 
             <Link href="/products">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Products
+                Cars
               </Button>
             </Link>
 
-            <Link href="/contacts">
+            <Link href="/about-us">
               <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Contacts
+                About us
               </Button>
             </Link>
           </Box>

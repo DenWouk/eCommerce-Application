@@ -40,12 +40,12 @@ export default function Layout({ children, pageProps }: Props) {
   const memoValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
   return (
-    <SWRConfig value={SWRConfigValue}>
-      <MyContext.Provider value={memoValue}>
+    <MyContext.Provider value={memoValue}>
+      <SWRConfig value={SWRConfigValue}>
         <Header authorized={pageProps.authorized} />
         <main>{children}</main>
         <Footer />
-      </MyContext.Provider>
-    </SWRConfig>
+      </SWRConfig>
+    </MyContext.Provider>
   );
 }

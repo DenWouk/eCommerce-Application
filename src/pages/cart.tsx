@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Divider, Paper, TextField, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { FormEventHandler, useContext, useMemo } from 'react';
 import { MyCartRemoveLineItemAction } from '@commercetools/platform-sdk';
@@ -157,8 +149,6 @@ export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req })
     const cart = (await cartModel.getCart(req)).body;
     return { props: { authorized, cart } };
   } catch {
-    return {
-      notFound: true,
-    };
+    return { props: { authorized, cart: null } };
   }
 };

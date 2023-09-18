@@ -11,6 +11,7 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  Link as LinkMui,
 } from '@mui/material';
 import LoadingPage from '@/src/components/LoadingPage';
 import CartIconLink from '@/src/components/CartIconLink';
@@ -47,7 +48,9 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/">Classic Cars</Link>
+            <LinkMui color="inherit" underline="hover" component={Link} href="/">
+              Classic Cars
+            </LinkMui>
           </Typography>
 
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
@@ -80,23 +83,23 @@ function Header({ authorized }: Props) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              <Link href="/">
+              <LinkMui component={Link} underline="hover" href="/">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Main</Typography>
                 </MenuItem>
-              </Link>
+              </LinkMui>
 
-              <Link href="/products">
+              <LinkMui component={Link} underline="hover" href="/products">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Cars</Typography>
                 </MenuItem>
-              </Link>
+              </LinkMui>
 
-              <Link href="/about-us">
+              <LinkMui component={Link} underline="hover" href="/about-us">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">About us</Typography>
                 </MenuItem>
-              </Link>
+              </LinkMui>
             </Menu>
           </Box>
 
@@ -114,37 +117,52 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/"> Classic Cars</Link>
+            <LinkMui component={Link} underline="hover" href="/">
+              Classic Cars
+            </LinkMui>
           </Typography>
 
           <Box
             sx={{
               flexGrow: 1,
+              alignItems: 'center',
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'center',
               gap: '40px',
             }}
           >
-            <Link href="/">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Main
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/"
+            >
+              MAIN
+            </LinkMui>
 
-            <Link href="/products">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Cars
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/products"
+            >
+              CARS
+            </LinkMui>
 
-            <Link href="/about-us">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                About us
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/about-us"
+            >
+              ABOUT US
+            </LinkMui>
           </Box>
 
-          <CartIconLink href="/cart" className="mx-1" />
+          <CartIconLink href="/cart" className="mx-2" />
 
           {authorized ? (
             <LetterAvatar />
@@ -159,7 +177,6 @@ function Header({ authorized }: Props) {
                   ml: '20px',
                   mr: '5px',
                   fontSize: '10px',
-                  background: '#6195c3fe',
                 }}
               >
                 Sign in
@@ -169,13 +186,14 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-up"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
+                sx={{ width: '80px', mr: '5px', fontSize: '10px' }}
               >
                 Sign up
               </Button>
             </>
           )}
         </Toolbar>
+
         <LoadingPage />
       </Container>
     </AppBar>

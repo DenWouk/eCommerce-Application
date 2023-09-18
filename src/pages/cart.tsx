@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Divider, Paper, TextField, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { FormEventHandler, useContext, useMemo } from 'react';
 import { MyCartRemoveLineItemAction } from '@commercetools/platform-sdk';
@@ -108,38 +100,32 @@ export default function CartPage() {
             ))}
 
           <Box
+            component="form"
+            onSubmit={handleAddDiscountCode}
             sx={{
               display: 'flex',
               flexWrap: 'wrap',
               gap: '10px',
-              justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
             <Typography sx={{ fontSize: '16px', fontWeight: 'bold', color: '#6195c3' }}>
               Have a promo?
             </Typography>
-
-            <form onSubmit={handleAddDiscountCode}>
-              <TextField required name="discountCode" />
-              <Button
-                type="submit"
-                sx={{ width: '125px', height: '33px', ml: '5px', border: 'solid 2px' }}
-              >
-                apply
-              </Button>
-            </form>
+            <TextField required name="discountCode" size="small" />
+            <Button type="submit" variant="outlined" sx={{ width: '125px', ml: '5px' }}>
+              apply
+            </Button>
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'end' }}>
             <Button
               onClick={handleClearCart}
+              variant="outlined"
+              color="error"
               sx={{
                 width: '125px',
                 height: '33px',
-                p: 0,
-                color: '#CE5959',
-                border: 'solid 2px #CE5959',
               }}
             >
               clear cart

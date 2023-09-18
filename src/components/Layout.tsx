@@ -1,6 +1,7 @@
 import { PropsWithChildren, useMemo, useReducer } from 'react';
 import { Cart } from '@commercetools/platform-sdk';
 import { SWRConfig, SWRConfiguration } from 'swr';
+import { CssBaseline, StyledEngineProvider } from '@mui/material';
 import MyContext, { ActionType, StateType } from '@/src/contexts/MyContext';
 import Footer from './Footer';
 import Header from './Header';
@@ -42,9 +43,12 @@ export default function Layout({ children, pageProps }: Props) {
   return (
     <SWRConfig value={SWRConfigValue}>
       <MyContext.Provider value={memoValue}>
-        <Header authorized={pageProps.authorized} />
-        <main>{children}</main>
-        <Footer />
+        <StyledEngineProvider injectFirst>
+          <CssBaseline />
+          <Header authorized={pageProps.authorized} />
+          <main>{children}</main>
+          <Footer />
+        </StyledEngineProvider>
       </MyContext.Provider>
     </SWRConfig>
   );

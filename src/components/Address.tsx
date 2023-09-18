@@ -96,7 +96,7 @@ function Address({ register, setValue, getValues, errors, control, disabled }: P
         const typeAddress = typeAddresses[index];
         const countryDefault = countryPost.find((c) => c.code === field.country);
         return (
-          <Stack key={field.id} spacing={1} className="m-10">
+          <Stack key={field.id} spacing={1}>
             <div className="form-shipping-address">
               {(typeAddresses.length > 1 || fields.length > 1) && (
                 <Button

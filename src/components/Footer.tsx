@@ -35,25 +35,32 @@ function Footer() {
 
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-evenly' }}>
           {authors.map((author, i) => (
-            <a key={author} rel="noopener noreferrer" href={authorsLinks[i]} target="_blank">
-              <Button sx={{ color: 'inherit', display: 'block', p: '0 5px' }}>
-                <Typography
-                  variant="subtitle1"
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '3px',
-                    fontFamily: 'monospace',
-                    fontSize: 'inherit',
-                    fontWeight: 700,
-                    color: 'inherit',
-                    textDecoration: 'none',
-                    textTransform: 'none',
-                  }}
-                >
-                  {GhSvg()}
-                  {author}
-                </Typography>
+            <a
+              key={author}
+              rel="noopener noreferrer"
+              href={authorsLinks[i]}
+              target="_blank"
+              style={{
+                textDecoration: 'none',
+                textTransform: 'none',
+              }}
+            >
+              <Button
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '3px',
+                  fontFamily: 'monospace',
+                  fontSize: 'inherit',
+                  fontWeight: 700,
+                  color: '#fefefe',
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                  p: '0 5px',
+                }}
+              >
+                {GhSvg()}
+                {author}
               </Button>
             </a>
           ))}

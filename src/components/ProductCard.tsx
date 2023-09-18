@@ -42,7 +42,7 @@ function ProductCard({ product }: Props) {
 
   return (
     <Grid item xs={12} sm={6} md={4} key={product.id}>
-      <Card className="product-card" sx={{ maxWidth: 345 }}>
+      <Card className="product-card" sx={{ maxWidth: 345, m: '0 auto' }}>
         {[0, 1, 2, 3, 4].map((index) => (
           <Box
             className={`product-card-img${index}`}
@@ -75,7 +75,20 @@ function ProductCard({ product }: Props) {
         <Divider />
 
         <CardContent className="product-card-content">
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography
+            gutterBottom
+            variant="h6"
+            component={Link}
+            href={`/products/${product.id}`}
+            sx={{
+              color: 'inherit',
+              textTransform: 'none',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
             {product?.name['en-US']}
           </Typography>
 
@@ -83,13 +96,24 @@ function ProductCard({ product }: Props) {
             className="flex justify-between items-center"
             gutterBottom
             variant="h6"
-            component="div"
+            component={Link}
+            href={`/products/${product.id}`}
+            sx={{
+              color: 'inherit',
+              textTransform: 'none',
+              textDecoration: 'none',
+            }}
           >
             <PriceProduct price={price} />
             <CartChangeCountItemsButton productId={product.id} />
           </Typography>
 
-          <Typography gutterBottom variant="subtitle1" color="text.secondary">
+          <Typography
+            gutterBottom
+            variant="subtitle1"
+            color="text.secondary"
+            sx={{ whiteSpace: 'nowrap' }}
+          >
             {`year: ${attributes?.year || '--/--'}`} <br />
             {`engine: ${attributes?.engine || '--/--'}`} <br />
             {`gearbox: ${attributes?.transmission?.[0]?.label || '--/--'}`} <br />

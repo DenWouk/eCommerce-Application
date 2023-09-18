@@ -3,17 +3,14 @@ import { FieldError, FormProvider, SubmitHandler, useForm } from 'react-hook-for
 import Link from 'next/link';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
-import { GetServerSideProps } from 'next';
-import { Cart } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
 import LoadingButton from '@/src/components/LoadingButton';
 import { AuthProps } from '@/src/types/auth';
-import isAuthorized from '@/src/helpers/auth';
 import signUp from '@/src/api/signUp';
 import { showSuccess } from '@/src/helpers/toastify';
-import cartModel from '@/src/helpers/commercetools/cart';
+import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -114,15 +111,7 @@ export default function SignUpPage() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
-  const authorized = await isAuthorized({ req });
-
-  let cart: Cart | null;
-  try {
-    cart = (await cartModel.getCart(req)).body;
-  } catch {
-    cart = null;
-  }
-
-  return { props: { authorized, cart } };
-};
+export const getServerSideProps = ssrWithAuthToken<AuthProps>(async ({ token }) => {
+  const authorized = token?.type === NamesClients.PASSWORD;
+  return { props: { authorized } };
+});

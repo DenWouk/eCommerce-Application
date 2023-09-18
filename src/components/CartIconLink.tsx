@@ -1,8 +1,10 @@
 import { Badge, IconButton, Tooltip } from '@mui/material';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import useSWR from 'swr';
 import GarageSVG from '@/src/components/GarageSVG';
 import MyContext from '@/src/contexts/MyContext';
+import { getCarts } from '@/src/api/carts';
 
 type Props = {
   className?: string;
@@ -10,7 +12,13 @@ type Props = {
 };
 
 export default function CartIconLink({ className, href }: Props) {
-  const { state } = useContext(MyContext);
+  const { state, dispatch } = useContext(MyContext);
+  const { data } = useSWR(state.cart || '/api/carts', getCarts);
+
+  useEffect(() => {
+    data && dispatch({ type: 'CHANGE', value: data });
+  }, [data, dispatch]);
+
   return (
     <Tooltip title="Shopping cart">
       <IconButton

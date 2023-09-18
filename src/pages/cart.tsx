@@ -143,8 +143,6 @@ export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req })
     const cart = (await cartModel.getCart(req)).body;
     return { props: { authorized, cart } };
   } catch {
-    return {
-      notFound: true,
-    };
+    return { props: { authorized, cart: null } };
   }
 };

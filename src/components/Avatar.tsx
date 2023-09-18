@@ -24,7 +24,11 @@ function stringToColor(string: string) {
   return color;
 }
 
-function stringAvatar(name: string) {
+function stringAvatar(name?: string) {
+  if (!name) {
+    return undefined;
+  }
+
   return {
     sx: {
       bgcolor: stringToColor(name),
@@ -47,8 +51,17 @@ export default function LetterAvatar() {
   return (
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
-        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar {...stringAvatar('John Smith')} />
+        <IconButton
+          onClick={handleOpenUserMenu}
+          sx={(theme) => ({
+            p: 0,
+            '&:hover': {
+              bgcolor: 'white',
+              '& path': { fill: theme.palette.primary.main },
+            },
+          })}
+        >
+          <Avatar {...stringAvatar()} sx={{ border: '2px solid white', bgcolor: 'transparent' }} />
         </IconButton>
       </Tooltip>
 

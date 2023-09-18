@@ -63,7 +63,7 @@ export default function Home({ authorized }: AuthProps) {
               await signOut();
             }}
           >
-            Logout!
+            Logout
           </Button>
         )}
       </div>

@@ -2,7 +2,10 @@ import React from 'react';
 import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
+import PriceProduct from '@/src/components/price/PriceProduct';
+import cartModel from '@/src/helpers/commercetools/cart';
+import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -13,34 +16,42 @@ type Props = {
 
 export default function BasicStack(props: Props) {
   const { productResponse } = props;
-  const product = productResponse?.body;
+  const { id, key = '', name, description, masterVariant } = productResponse.body;
+  const { price, attributes, images } = masterVariant;
 
-  const images = [
-    {
-      original: `${product?.masterVariant.images?.[0]?.url}`,
-      thumbnail: `${product?.masterVariant.images?.[0]?.url}`,
-    },
-    {
-      original: `${product?.masterVariant.images?.[1]?.url}`,
-      thumbnail: `${product?.masterVariant.images?.[1]?.url}`,
-    },
-    {
-      original: `${product?.masterVariant.images?.[2]?.url}`,
-      thumbnail: `${product?.masterVariant.images?.[2]?.url}`,
-    },
-    {
-      original: `${product?.masterVariant.images?.[3]?.url}`,
-      thumbnail: `${product?.masterVariant.images?.[3]?.url}`,
-    },
-    {
-      original: `${product?.masterVariant.images?.[4]?.url}`,
-      thumbnail: `${product?.masterVariant.images?.[4]?.url}`,
-    },
-  ];
+  const imageGalleryItem =
+    images?.map(({ url }) => ({
+      original: url,
+      thumbnail: url,
+    })) || [];
 
   const styleSpan = { lineHeight: '2', color: 'grey' };
-  const { price } = product.masterVariant;
-  console.log(product);
+
+  const productData = (
+    <Typography>
+      <span style={styleSpan}>car ID: </span>
+      {key} <br />
+      {attributes && (
+        <>
+          <span style={styleSpan}>location: </span>
+          {attributes[8]?.value} <br />
+          <span style={styleSpan}>year: </span>
+          {attributes[2]?.value} <br />
+          <span style={styleSpan}>odometer: </span>
+          {attributes[5]?.value} <br />
+          <span style={styleSpan}>engine: </span>
+          {attributes[9]?.value} <br />
+          <span style={styleSpan}>gearbox: </span>
+          {attributes[4]?.value[0].label} <br />
+          <span style={styleSpan}>color: </span>
+          {attributes[3]?.value[0].label} <br />
+          <span style={styleSpan}>interior: </span>
+          {attributes[10]?.value} <br />
+        </>
+      )}
+    </Typography>
+  );
+
   return (
     <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px', flex: '1 1 auto' }}>
       <Box sx={{ width: '100%' }}>
@@ -63,11 +74,11 @@ export default function BasicStack(props: Props) {
                   justifyContent: 'center',
                 }}
               >
-                <Typography variant="h5">{product?.name['en-US']}</Typography>
+                <Typography variant="h5">{name['en-US']}</Typography>
               </Box>
 
               <Box>
-                <ImageGallery items={images} />
+                <ImageGallery items={imageGalleryItem} />
               </Box>
 
               <Box
@@ -80,55 +91,19 @@ export default function BasicStack(props: Props) {
                 }}
               >
                 <Box>
-                  <Typography variant="h5">{product?.name['en-US']}</Typography>
+                  <Typography variant="h5">{name['en-US']}</Typography>
                   <Divider />
 
-                  <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ py: '10px', display: 'flex', gap: '4px', alignItems: 'center' }}
+                  >
                     Price:
-                    {price?.discounted ? (
-                      <>
-                        <del
-                          style={{
-                            fontSize: '14px',
-                            backgroundColor: 'rgba(0,0,0,0.2)',
-                            borderRadius: '5px',
-                            padding: '0 3px',
-                          }}
-                        >
-                          {`$ ${(price?.value.centAmount || 0) / 100}`}
-                        </del>
-                        <span
-                          className="bg-blue-300 rounded-md"
-                          style={{
-                            marginLeft: '5px',
-                            padding: '0 3px',
-                          }}
-                        >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
-                      </>
-                    ) : (
-                      <span>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</span>
-                    )}
+                    <PriceProduct price={price} />
+                    <CartChangeCountItemsButton productId={id} />
                   </Typography>
                   <Divider />
-
-                  <Typography>
-                    <span style={styleSpan}>car ID: </span>
-                    {product.key} <br />
-                    <span style={styleSpan}>location: </span>
-                    {product.masterVariant.attributes?.[8].value} <br />
-                    <span style={styleSpan}>year: </span>
-                    {product.masterVariant.attributes?.[2].value} <br />
-                    <span style={styleSpan}>engine: </span>
-                    {product.masterVariant.attributes?.[9].value} <br />
-                    <span style={styleSpan}>gearbox: </span>
-                    <span style={styleSpan}>odometer: </span>
-                    {product.masterVariant.attributes?.[5].value} <br />
-                    {product.masterVariant.attributes?.[4].value[0].label} <br />
-                    <span style={styleSpan}>color: </span>
-                    {product.masterVariant.attributes?.[3].value[0].label} <br />
-                    <span style={styleSpan}>interior: </span>
-                    {product.masterVariant.attributes?.[10].value} <br />
-                  </Typography>
+                  {productData}
                   <Divider />
                 </Box>
               </Box>
@@ -142,58 +117,22 @@ export default function BasicStack(props: Props) {
               p: '20px',
             }}
           >
-            <Typography variant="h5">{product?.name['en-US']}</Typography>
+            <Typography variant="h5">{name['en-US']}</Typography>
 
-            <Typography variant="h6" sx={{ pt: '10px', pb: '10px' }}>
+            <Typography
+              variant="h6"
+              sx={{ py: '10px', display: 'flex', gap: '4px', alignItems: 'center' }}
+            >
               Price:
-              {price?.discounted ? (
-                <>
-                  <del
-                    style={{
-                      fontSize: '14px',
-                      backgroundColor: 'rgba(0,0,0,0.2)',
-                      borderRadius: '5px',
-                      padding: '0 3px',
-                    }}
-                  >
-                    {`$ ${(price?.value.centAmount || 0) / 100}`}
-                  </del>
-                  <span
-                    className="bg-blue-300 rounded-md"
-                    style={{
-                      marginLeft: '5px',
-                      padding: '0 3px',
-                    }}
-                  >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
-                </>
-              ) : (
-                <span>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</span>
-              )}
+              <PriceProduct price={price} />
+              <CartChangeCountItemsButton productId={id} />
             </Typography>
-
-            <Typography>
-              <span style={styleSpan}>car ID: </span>
-              {product.key} <br />
-              <span style={styleSpan}>location: </span>
-              {product.masterVariant.attributes?.[8].value} <br />
-              <span style={styleSpan}>year: </span>
-              {product.masterVariant.attributes?.[2].value} <br />
-              <span style={styleSpan}>odometer: </span>
-              {product.masterVariant.attributes?.[5].value} <br />
-              <span style={styleSpan}>engine: </span>
-              {product.masterVariant.attributes?.[9].value} <br />
-              <span style={styleSpan}>gearbox: </span>
-              {product.masterVariant.attributes?.[4].value[0].label} <br />
-              <span style={styleSpan}>color: </span>
-              {product.masterVariant.attributes?.[3].value[0].label} <br />
-              <span style={styleSpan}>interior: </span>
-              {product.masterVariant.attributes?.[10].value} <br />
-            </Typography>
+            {productData}
           </Paper>
 
           <Paper sx={{ display: 'flex', flexDirection: 'column', gap: '10px', p: '20px' }}>
             <Typography variant="h6">Vehicle Description:</Typography>
-            <Typography>{product.description?.['en-US']}</Typography>
+            <Typography>{description?.['en-US']}</Typography>
           </Paper>
         </Stack>
       </Box>
@@ -212,11 +151,17 @@ export const getServerSideProps = ssrWithAuthToken<
     return { notFound: true };
   }
 
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
   const authorized = token?.type === NamesClients.PASSWORD;
   try {
     const productResponse = await productModel.getProductById(req, id);
-
-    return { props: { authorized, productResponse } };
+    return { props: { authorized, cart, productResponse } };
   } catch (e) {
     return { notFound: true };
   }

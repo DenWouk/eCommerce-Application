@@ -6,15 +6,15 @@ import { useState } from 'react';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Customer } from '@commercetools/platform-sdk';
+import type { Address as TypeAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import { IFormInput } from '../interfaces/IFormInput';
 import updateProfile from '../api/updateProfile';
 import { showSuccess } from '../helpers/toastify';
 import Address from './Address';
-import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 
 type Props = {
-  addresses: IBaseAddressProfile[];
+  addresses: TypeAddress[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
   defaultShippingAddressId: string;
@@ -146,7 +146,11 @@ export default function AddressForm({
 
           {errors?.root?.server && <ErrorMessage message={errors.root.server.message || ''} />}
 
-          <Button type="submit" disabled={isDisabled} style={{ display: isDisabled ? 'none' : 'block' }}>
+          <Button
+            type="submit"
+            disabled={isDisabled}
+            style={{ display: isDisabled ? 'none' : 'block' }}
+          >
             Save Changes
           </Button>
         </Stack>

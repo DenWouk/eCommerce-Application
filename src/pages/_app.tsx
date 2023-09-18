@@ -3,10 +3,18 @@ import type { AppProps } from 'next/app';
 import { ToastContainer } from 'react-toastify';
 import { SessionProvider } from 'next-auth/react';
 import 'react-toastify/dist/ReactToastify.css';
-import { StrictMode } from 'react';
+import { PropsWithChildren, StrictMode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { SWRConfig, SWRConfiguration } from 'swr';
+import { Cart } from '@commercetools/platform-sdk';
+import { Session } from 'next-auth';
+import { Roboto } from 'next/font/google';
 import Layout from '../components/Layout';
+
+export const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 const theme = createTheme({
   palette: {
@@ -14,24 +22,28 @@ const theme = createTheme({
       main: '#6195c3',
     },
   },
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  },
 });
 
-const SWRConfigValue: SWRConfiguration = {
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
+type Props = {
+  session?: Session | null;
+  authorized: boolean | undefined;
+  children: PropsWithChildren;
+  cart: Cart | null;
 };
 
-export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps<Props>) {
   return (
     <StrictMode>
       <ThemeProvider theme={theme}>
         <SessionProvider session={session}>
+          {/* <ShoppingCartProviderProps> */}
           <ToastContainer />
-          <SWRConfig value={SWRConfigValue}>
-            <Layout pageProps={pageProps}>
-              <Component {...pageProps} />
-            </Layout>
-          </SWRConfig>
+          <Layout pageProps={pageProps}>
+            <Component {...pageProps} />
+          </Layout>
         </SessionProvider>
       </ThemeProvider>
     </StrictMode>

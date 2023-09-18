@@ -4,6 +4,7 @@ import Link from 'next/link';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { GetServerSideProps } from 'next';
+import { Cart } from '@commercetools/platform-sdk';
 import ErrorMessage from '@/src/components/ErrorMessage';
 import NamesClients from '@/src/helpers/commercetools/consts';
 import createCustomerDraft from '@/src/helpers/commercetools/customerDraft';
@@ -12,6 +13,7 @@ import { AuthProps } from '@/src/types/auth';
 import isAuthorized from '@/src/helpers/auth';
 import signUp from '@/src/api/signUp';
 import { showSuccess } from '@/src/helpers/toastify';
+import cartModel from '@/src/helpers/commercetools/cart';
 import InputEmail from '../components/InputEmail';
 import { IFormInput } from '../interfaces/IFormInput';
 import InputPassword from '../components/InputPassword';
@@ -24,22 +26,10 @@ export default function SignUpPage() {
   const form = useForm<IFormInput>({
     mode: 'onChange',
     defaultValues: {
-      email: '',
-      password: '',
-      firstName: '',
-      lastName: '',
-      dateOfBirth: null,
       addresses: [
         {
           country: 'United States',
-          city: '',
-          streetName: '',
-          streetNumber: '',
-          postalCode: '',
           shippingAddress: true,
-          billingAddress: false,
-          defaultShippingAddress: false,
-          defaultBillingAddress: false,
         },
       ],
     },
@@ -126,5 +116,13 @@ export default function SignUpPage() {
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
   const authorized = await isAuthorized({ req });
-  return { props: { authorized } };
+
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
+  return { props: { authorized, cart } };
 };

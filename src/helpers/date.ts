@@ -1,7 +1,4 @@
-export default function formatDate(date: Date | null) {
-  if (!date) {
-    return undefined;
-  }
+export default function formatDate(date: Date) {
   const year = date.getFullYear().toString();
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();

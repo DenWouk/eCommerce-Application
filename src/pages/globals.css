@@ -246,6 +246,10 @@ main {
   color: var(--color5);
 }
 
+.css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 5px;
+}
+
 @media (max-width: 640px) {
   .welcome-page-content1 {
     flex-direction: column;
@@ -255,7 +259,6 @@ main {
   .content-item {
     width: 90%;
   }
-}
 
 @media (max-width: 420px) {
   .footer {

@@ -97,18 +97,11 @@ function Header({ authorized }: Props) {
                   <Typography textAlign="center">About us</Typography>
                 </MenuItem>
               </Link>
-
-              <Link href="/profile">
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Profile</Typography>
-                </MenuItem>
-              </Link>
             </Menu>
           </Box>
 
           <Typography
             variant="h6"
-            noWrap
             sx={{
               flexGrow: 1,
               mr: 2,
@@ -121,7 +114,7 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/">Classic Cars</Link>
+            <Link href="/"> Classic Cars</Link>
           </Typography>
 
           <Box
@@ -161,7 +154,13 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-in"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
+                sx={{
+                  width: '80px',
+                  ml: '20px',
+                  mr: '5px',
+                  fontSize: '10px',
+                  background: '#6195c3fe',
+                }}
               >
                 Sign in
               </Button>

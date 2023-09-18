@@ -1,4 +1,12 @@
-import { Box, Button, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { FormEventHandler, useContext, useMemo } from 'react';
 import { MyCartRemoveLineItemAction } from '@commercetools/platform-sdk';
@@ -63,47 +71,34 @@ export default function CartPage() {
   };
 
   return (
-    <Box>
-      <Typography
-        style={{
-          textAlign: 'center',
-        }}
-        variant="h4"
-        mb={10}
-      >
-        My Shopping Cart
-      </Typography>
-      <Stack
-        spacing={2}
-        sx={{
-          display: 'flex',
-          flexDirection: 'space-beetwen',
-          alignItems: 'center',
-          margin: '0 1rem',
-        }}
-      >
-        {lineItems ? (
-          <Grid container spacing={2}>
-            <CarItem />
-            <Divider />
-          </Grid>
-        ) : (
-          <Typography
-            style={{
-              textAlign: 'center',
-            }}
-            variant="subtitle1"
-            gutterBottom
-          >
-            No items in the cart
-          </Typography>
-        )}
-        <Divider />
+    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minHeight: '80vh' }}>
+        <Typography variant="h6">Shopping Cart</Typography>
 
-        <Box mt={2} mb={6}>
-          <div className="cart-total">
-            <h4>${(totalPrice?.centAmount || 0) / 100}</h4>
-          </div>
+        <Paper>
+          {lineItems ? (
+            <>
+              <CarItem />
+              <Divider />
+            </>
+          ) : (
+            <Typography
+              sx={{
+                textAlign: 'center',
+              }}
+              variant="subtitle1"
+              gutterBottom
+            >
+              No items in the cart
+            </Typography>
+          )}
+
+          <Typography variant="h6" sx={{ pr: '20px', fontWeight: 'bold', textAlign: 'end' }}>
+            Total: ${(totalPrice?.centAmount || 0) / 100}
+          </Typography>
+        </Paper>
+
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
           {!!discountCodes.length &&
             discountCodes.map(({ discountCode }) => (
               <Box className="flex gap-1 items-center" key={discountCode.id}>
@@ -112,16 +107,47 @@ export default function CartPage() {
               </Box>
             ))}
 
-          <form onSubmit={handleAddDiscountCode}>
-            <TextField required name="discountCode" />
-            <Button type="submit">apply</Button>
-          </form>
-          <Button variant="outlined" onClick={handleClearCart}>
-            clear cart
-          </Button>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography sx={{ fontSize: '16px', fontWeight: 'bold', color: '#6195c3' }}>
+              Have a promo?
+            </Typography>
+
+            <form onSubmit={handleAddDiscountCode}>
+              <TextField required name="discountCode" />
+              <Button
+                type="submit"
+                sx={{ width: '125px', height: '33px', ml: '5px', border: 'solid 2px' }}
+              >
+                apply
+              </Button>
+            </form>
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+            <Button
+              onClick={handleClearCart}
+              sx={{
+                width: '125px',
+                height: '33px',
+                p: 0,
+                color: '#CE5959',
+                border: 'solid 2px #CE5959',
+              }}
+            >
+              clear cart
+            </Button>
+          </Box>
         </Box>
-      </Stack>
-    </Box>
+      </Box>
+    </Container>
   );
 }
 

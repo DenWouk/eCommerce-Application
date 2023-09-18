@@ -16,6 +16,11 @@ export const roboto = Roboto({
   display: 'swap',
 });
 
+let rootElement: HTMLElement | null = null;
+if (typeof window !== 'undefined') {
+  rootElement = document.getElementById('__next');
+}
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,6 +29,28 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+  },
+  components: {
+    MuiPopover: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+    MuiPopper: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+    MuiDialog: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
+    MuiModal: {
+      defaultProps: {
+        container: rootElement,
+      },
+    },
   },
 });
 

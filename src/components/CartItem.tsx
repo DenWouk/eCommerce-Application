@@ -4,15 +4,14 @@ import { Box, Divider, IconButton, Typography } from '@mui/material';
 import Image from 'next/image';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { Cart } from '@commercetools/platform-sdk';
+import { HighlightOffRounded } from '@mui/icons-material';
 import { updateCart } from '@/src/api/carts';
 import cartModel from '../helpers/commercetools/cart/cartModel';
 import isAuthorized from '../helpers/auth';
 import { AuthProps } from '../types/auth';
 import MyContext from '../contexts/MyContext';
 import PriceProduct from './price/PriceProduct';
-import { HighlightOffRounded } from '@mui/icons-material';
 
 export default function CartPage() {
   const { state, dispatch } = useContext(MyContext);

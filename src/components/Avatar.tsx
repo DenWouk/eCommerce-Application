@@ -26,8 +26,9 @@ function stringToColor(string: string) {
 
 function stringAvatar(name?: string) {
   if (!name) {
-    return;
+    return undefined;
   }
+
   return {
     sx: {
       bgcolor: stringToColor(name),

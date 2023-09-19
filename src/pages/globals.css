@@ -1,4 +1,3 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -11,7 +10,7 @@
 
   --background-color1: #6195c3;
   --background-color2: #f1f7f7;
-  --background-color3: #2270ec;
+  --background-color3: #397eec;
   --background-color4: #62778c;
 
   --link-color1: #2270ec;
@@ -47,7 +46,6 @@ main {
   padding: 90px 0 50px;
   font-weight: bold;
   color: var(--color4);
-  background: transparent;
 }
 
 .auth-btns-duplicate {
@@ -75,40 +73,6 @@ main {
   color: var(--color4);
   border: solid 1px #cccccc;
   border-radius: 4px;
-}
-
-.input-radio {
-  width: 16px;
-  height: 16px;
-  margin: 10px 13px;
-  border: 2px solid white;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px #656565;
-  background-color: #ffffff;
-  appearance: none;
-  transition: all ease-in 0.2s;
-}
-
-.input-radio:checked {
-  background-color: var(--background-color3);
-}
-
-.registration-btn,
-.login-btn {
-  margin-top: 20px !important;
-  color: var(--color2) !important;
-  background-color: var(--background-color1) !important;
-}
-
-.registration-btn[disabled],
-.login-btn[disabled] {
-  color: var(--color5) !important;
-  background-color: var(--background-color4) !important;
-}
-
-.registration-btn:hover,
-.login-btn:hover {
-  background-color: var(--background-color3) !important;
 }
 
 .product-card-img1,
@@ -184,9 +148,67 @@ main {
   transition: all 0.3s;
 }
 
+.welcome-page-content1,
+.welcome-page-content2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0 20px;
+  overflow: auto;
+}
+
+.welcome-page-content2 {
+  padding: 10px 20px 20px;}
+
+.content-title {
+  width: 100%;
+  padding: 0 20px 10px;
+  font-size: 24px;
+}
+
+.content-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  padding: 10px;
+}
+
+.content-item-title {
+  margin: 5px 0 30px;
+  font-size: 20px;
+}
+
+.content-item-about-team,
+.content-item-description {
+  font-size: 18px;
+  font-weight: bold;
+  font-style: italic;
+  line-height: 2;
+  white-space: pre-line;
+}
+
+.content-item-description {
+  text-indent: 15px;
+  line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .welcome-page-content1 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .content-item {
+    width: 90%;
+  }
+
 @media (max-width: 420px) {
   .footer {
     font-size: 12px;
     font-weight: 400;
   }
+}
 }

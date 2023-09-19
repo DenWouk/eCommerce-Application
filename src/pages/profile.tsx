@@ -24,6 +24,12 @@ export default function ProfilePage({ customer }: Props) {
   const [profileInfo, setProfileInfo] = useState(customer);
 
   const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+    version,
+    password,
     addresses = [],
     shippingAddressIds = [],
     billingAddressIds = [],
@@ -42,8 +48,6 @@ export default function ProfilePage({ customer }: Props) {
     addresses,
     defaultShippingAddressId
   );
-
-  const { firstName, lastName, dateOfBirth, email, version, password } = profileInfo;
 
   const handleChange = (index: number) => {
     setTabIndex(index);
@@ -108,10 +112,10 @@ export default function ProfilePage({ customer }: Props) {
           <AddressForm
             addresses={addresses}
             version={version}
-            shippingAddressIds={profileInfo.shippingAddressIds as string[]}
-            billingAddressIds={profileInfo.billingAddressIds as string[]}
-            defaultShippingAddressId={profileInfo.defaultShippingAddressId as string}
-            defaultBillingAddressId={profileInfo.defaultBillingAddressId as string}
+            shippingAddressIds={shippingAddressIds}
+            billingAddressIds={billingAddressIds}
+            defaultShippingAddressId={defaultShippingAddressId}
+            defaultBillingAddressId={defaultBillingAddressId}
             onUpdate={setProfileInfo}
           />
         )}
@@ -130,6 +134,7 @@ export default function ProfilePage({ customer }: Props) {
 
 export const getServerSideProps: GetServerSideProps<AuthProps> = async ({ req }) => {
   const authorized = await isAuthorized({ req });
+
   try {
     const customerResponse = await customerModel.getMe(req);
     return { props: { authorized, customer: customerResponse.body } };

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import useSWR, { unstable_serialize } from 'swr';
 import { useSearchParams } from 'next/navigation';
 import { Category } from '@commercetools/platform-sdk';
+import { Cart } from '@commercetools/platform-sdk';
 import SelectAsync from '@/src/components/SelectAsync';
 import SortButton from '@/src/components/SortButton';
 import getProducts from '@/src/api/products';
@@ -15,6 +16,7 @@ import PaginationMemo from '@/src/components/PaginationMemo';
 import buildCategoryTree from '@/src/helpers/commercetools/category/categoriesTree';
 import CategoriesTree from '@/src/components/CategoriesTree';
 import ProductsBreadcrumbs from '@/src/components/ProductsBreadcrumbs';
+import cartModel from '@/src/helpers/commercetools/cart';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
@@ -50,7 +52,7 @@ function ProductsPage({ category, categories }: Props) {
     }
   );
 
-  const productsResponse = data!;
+  const productsResponse = useMemo(() => data, [data])!;
 
   const { results: products = [], total = 0, limit } = productsResponse?.body || {};
   const refId = useRef<NodeJS.Timeout>();
@@ -63,7 +65,7 @@ function ProductsPage({ category, categories }: Props) {
     router.push(url.href, undefined, { shallow: true });
   }, []);
 
-  const handleClick = (sortValue: string, orderValue: 'asc' | 'desc') => {
+  const handleSort = (sortValue: string, orderValue: 'asc' | 'desc') => {
     const url = new URL(window.location.href);
     const search = url.searchParams;
     search.delete('category');
@@ -107,8 +109,6 @@ function ProductsPage({ category, categories }: Props) {
           display: 'flex',
           flexDirection: 'column',
           gap: '30px',
-          maxHeight: '4000px',
-          transition: 'height 5.5s linear',
         }}
       >
         <Box className="flex flex-wrap gap-2">
@@ -137,13 +137,13 @@ function ProductsPage({ category, categories }: Props) {
               <Stack direction="row" spacing={1}>
                 <SortButton
                   value={sort === 'name.en-US' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="name.en-US"
                   label="Name"
                 />
                 <SortButton
                   value={sort === 'price' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="price"
                   label="Price"
                 />
@@ -189,6 +189,13 @@ export const getServerSideProps = ssrWithAuthToken<
   const authorized = token?.type === NamesClients.PASSWORD;
   const slugCategory = params?.category?.at(-1);
 
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
+  }
+
   try {
     const categoriesRes = await categoryModel.getCategories(req);
 
@@ -211,6 +218,7 @@ export const getServerSideProps = ssrWithAuthToken<
     return {
       props: {
         authorized,
+        cart,
         category: categoryId ? categoryResponse?.body.results[0] : null,
         categories: categoriesRes.body.results,
         fallback: {

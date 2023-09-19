@@ -75,23 +75,23 @@ function ProductCard({ product }: Props) {
         <Divider />
 
         <CardContent>
-          <Typography
-            gutterBottom
-            variant="h6"
-            component={Link}
-            href={`/products/${product.id}`}
-            className="product-card-name"
-            sx={{
-              color: 'inherit',
-              textTransform: 'none',
-              textDecoration: 'none',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {product?.name['en-US']}
-          </Typography>
+          <Link href={`/products/${product.id}`}>
+            <Typography
+              gutterBottom
+              variant="h6"
+              className="product-card-name"
+              sx={{
+                color: 'inherit',
+                textTransform: 'none',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {product?.name['en-US']}
+            </Typography>
+          </Link>
 
           <Typography className="flex justify-between items-center" gutterBottom variant="h6">
             <PriceProduct price={price} />

@@ -3,6 +3,7 @@ import { Box, Container, Grid, Stack } from '@mui/material';
 import { useRouter } from 'next/router';
 import useSWR, { unstable_serialize } from 'swr';
 import { useSearchParams } from 'next/navigation';
+import { Cart, Category } from '@commercetools/platform-sdk';
 import SelectAsync from '@/src/components/SelectAsync';
 import SortButton from '@/src/components/SortButton';
 import getProducts from '@/src/api/products';
@@ -11,12 +12,21 @@ import NotFoundProducts from '@/src/components/NotFoundProducts';
 import ProductsSideBar from '@/src/components/ProductsSideBar';
 import ProductCard from '@/src/components/ProductCard';
 import PaginationMemo from '@/src/components/PaginationMemo';
+import buildCategoryTree from '@/src/helpers/commercetools/category/categoriesTree';
+import CategoriesTree from '@/src/components/CategoriesTree';
+import ProductsBreadcrumbs from '@/src/components/ProductsBreadcrumbs';
+import cartModel from '@/src/helpers/commercetools/cart';
 import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
 import NamesClients from '../../helpers/commercetools/consts';
 import productModel from '../../helpers/commercetools/product';
 import categoryModel from '../../helpers/commercetools/category/categoryModel';
 
-function ProductsPage() {
+type Props = {
+  category: Category | null;
+  categories: Category[];
+};
+
+function ProductsPage({ category, categories }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
@@ -28,8 +38,12 @@ function ProductsPage() {
   const refForPriceAndSort = useRef({ from, to, sort, order });
   refForPriceAndSort.current = { from, to, sort, order };
 
+  const urlSearchKey = new URLSearchParams(router.query as unknown as URLSearchParams);
+  const categoryId = category?.id;
+  categoryId && urlSearchKey.get('category') && urlSearchKey.set('category', categoryId);
+
   const { data, error } = useSWR(
-    ['/api/products', searchParams.toString()],
+    ['/api/products', urlSearchKey.toString()],
     (keys) => getProducts(keys[1]),
     {
       keepPreviousData: true,
@@ -37,7 +51,7 @@ function ProductsPage() {
     }
   );
 
-  const productsResponse = data!;
+  const productsResponse = useMemo(() => data, [data])!;
 
   const { results: products = [], total = 0, limit } = productsResponse?.body || {};
   const refId = useRef<NodeJS.Timeout>();
@@ -50,7 +64,7 @@ function ProductsPage() {
     router.push(url.href, undefined, { shallow: true });
   }, []);
 
-  const handleClick = (sortValue: string, orderValue: 'asc' | 'desc') => {
+  const handleSort = (sortValue: string, orderValue: 'asc' | 'desc') => {
     const url = new URL(window.location.href);
     const search = url.searchParams;
     search.delete('category');
@@ -85,20 +99,29 @@ function ProductsPage() {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px' }}>
+    <Container maxWidth="xl" sx={{ display: 'flex', gap: '15px', px: '10px' }}>
       <ProductsSideBar filter={filterForProductsSideBar} onChange={handleChangeProductsSideBar} />
 
-      <Container disableGutters sx={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
-        <Box
-          component="form"
-          sx={{
-            '& > :not(style)': { width: '25ch' },
-          }}
-          noValidate
-          autoComplete="off"
-        >
-          <SelectAsync />
+      <Container
+        disableGutters
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '30px',
+        }}
+      >
+        <Box className="flex flex-wrap gap-2">
+          <Box component="form" sx={{ width: '20ch' }} noValidate autoComplete="off">
+            <SelectAsync />
+          </Box>
+
+          <CategoriesTree
+            sx={{ width: '20ch', height: '38px' }}
+            tree={buildCategoryTree(categories)}
+          />
         </Box>
+
+        <ProductsBreadcrumbs category={searchParams.get('category') ? category : null} />
 
         {products.length && !error ? (
           <>
@@ -106,13 +129,13 @@ function ProductsPage() {
               <Stack direction="row" spacing={1}>
                 <SortButton
                   value={sort === 'name.en-US' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="name.en-US"
                   label="Name"
                 />
                 <SortButton
                   value={sort === 'price' ? order : null}
-                  onClick={handleClick}
+                  onClick={handleSort}
                   targetSort="price"
                   label="Price"
                 />
@@ -151,32 +174,55 @@ function ProductsPage() {
   );
 }
 
-export const getServerSideProps = ssrWithAuthToken<{ authorized: boolean }, { category: string[] }>(
-  async ({ req, token, params, query }) => {
-    const authorized = token?.type === NamesClients.PASSWORD;
-    const slugCategory = params?.category?.at(-1);
-    try {
-      const categoryResponse = slugCategory
-        ? await categoryModel.getCategoryBySlug(req, slugCategory)
-        : undefined;
-      const productsResponse = await productModel.getProducts(req, {
-        category: categoryResponse && categoryResponse.body.results[0]?.id,
-        ...query,
-      });
-      const searchString = req.url?.match(/\?\S+/)?.[0].slice(1) || '';
+export const getServerSideProps = ssrWithAuthToken<
+  Props & { authorized: boolean },
+  { category: string[] }
+>(async ({ req, token, params, query }) => {
+  const authorized = token?.type === NamesClients.PASSWORD;
+  const slugCategory = params?.category?.at(-1);
 
-      return {
-        props: {
-          authorized,
-          fallback: { [unstable_serialize(['/api/products', searchString])]: productsResponse },
-        },
-      };
-    } catch (e) {
-      return {
-        notFound: true,
-      };
-    }
+  let cart: Cart | null;
+  try {
+    cart = (await cartModel.getCart(req)).body;
+  } catch {
+    cart = null;
   }
-);
+
+  try {
+    const categoriesRes = await categoryModel.getCategories(req);
+
+    const categoryResponse = slugCategory
+      ? await categoryModel.getCategoryBySlug(req, slugCategory)
+      : undefined;
+    const categoryId = categoryResponse?.body.results[0]?.id;
+    if (slugCategory && !categoryId) {
+      throw new Error('not found category');
+    }
+
+    const productsResponse = await productModel.getProducts(req, {
+      ...query,
+      category: categoryId,
+    });
+
+    const urlSearch = new URLSearchParams(query as unknown as URLSearchParams);
+    categoryId && urlSearch.set('category', categoryId);
+
+    return {
+      props: {
+        authorized,
+        cart,
+        category: categoryId ? categoryResponse?.body.results[0] : null,
+        categories: categoriesRes.body.results,
+        fallback: {
+          [unstable_serialize(['/api/products', urlSearch.toString()])]: productsResponse,
+        },
+      },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
+});
 
 export default SWRProvider(ProductsPage);

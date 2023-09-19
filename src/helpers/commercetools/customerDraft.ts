@@ -8,7 +8,7 @@ import { countries } from '@/src/enums/countries';
 export default function createCustomerDraft(data: IFormInput): CustomerDraft {
   const { dateOfBirth: day, addresses: baseAddresses, firstName, lastName, email, password } = data;
 
-  const dateOfBirth = formatDate(day);
+  const dateOfBirth = day && typeof day === 'object' ? formatDate(day) : undefined;
   const shippingAddresses: number[] = [];
   const billingAddresses: number[] = [];
   let defaultShippingAddress: number | undefined;
@@ -50,7 +50,7 @@ export default function createCustomerDraft(data: IFormInput): CustomerDraft {
     shippingAddresses,
     billingAddresses,
     lastName,
-    email,
+    email: email || '',
     password,
     addresses,
     dateOfBirth,

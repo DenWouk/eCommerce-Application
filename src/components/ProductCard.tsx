@@ -1,33 +1,27 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Card,
   CardActions,
   CardContent,
   Divider,
   Grid,
   Typography,
+  Link as LinkMui,
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
-
-const buttons = [
-  <Button className="card-btn-img0" key="one" />,
-  <Button className="card-btn-img1" key="two" />,
-  <Button className="card-btn-img2" key="three" />,
-  <Button className="card-btn-img3" key="four" />,
-  <Button className="card-btn-img4" key="five" />,
-];
+import PriceProduct from '@/src/components/price/PriceProduct';
+import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
 
 type Props = {
   product: ProductProjection;
 };
 
-export default function ProductCard({ product }: Props) {
+function ProductCard({ product }: Props) {
   const { price } = product.masterVariant;
   const attributes = useMemo(
     () =>
@@ -40,7 +34,7 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <Grid item xs={12} sm={6} md={4} key={product.id}>
-      <Card className="product-card" sx={{ maxWidth: 345 }}>
+      <Card className="product-card" sx={{ maxWidth: 345, m: '0 auto' }}>
         {[0, 1, 2, 3, 4].map((index) => (
           <Box
             className={`product-card-img${index}`}
@@ -55,54 +49,48 @@ export default function ProductCard({ product }: Props) {
               placeholder="blur"
               blurDataURL="data:image/gif;base64,R0lGODlhAQABAPAAAJaWlv///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
               src={product?.masterVariant.images?.[index]?.url || '#'}
-              alt={`car ${product.name}`}
+              sizes="(max-width: 768px) 100vw, (max-width: 900px) 50vw, 33vw"
+              alt={`car ${product.name['en-US']}`}
             />
           </Box>
         ))}
 
-        <ButtonGroup
-          className="img-btns"
-          size="small"
-          aria-label="small button group"
-          sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}
-        >
-          {buttons}
-        </ButtonGroup>
-
         <Divider />
 
-        <CardContent className="product-card-content">
-          <Typography gutterBottom variant="h5" component="div">
-            {product?.name['en-US']}
+        <CardContent>
+          <LinkMui
+            underline="none"
+            component={Link}
+            href={`/products/product/${product.slug['en-US']}`}
+          >
+            <Typography
+              gutterBottom
+              variant="h6"
+              className="product-card-name"
+              sx={{
+                color: 'inherit',
+                textTransform: 'none',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {product?.name['en-US']}
+            </Typography>
+          </LinkMui>
+
+          <Typography className="flex justify-between items-center" gutterBottom variant="h6">
+            <PriceProduct price={price} />
+            <CartChangeCountItemsButton productId={product.id} />
           </Typography>
 
-          <Typography gutterBottom variant="h6" component="div">
-            {price?.discounted ? (
-              <>
-                <del
-                  style={{
-                    fontSize: '14px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    borderRadius: '5px',
-                    padding: '0 3px',
-                  }}
-                >
-                  {`$ ${(price?.value.centAmount || 0) / 100}`}
-                </del>
-                <span
-                  className="bg-blue-300 rounded-md"
-                  style={{
-                    marginLeft: '5px',
-                    padding: '0 3px',
-                  }}
-                >{`$ ${(price?.discounted?.value.centAmount || 0) / 100}`}</span>
-              </>
-            ) : (
-              <div>{`$ ${(price?.value?.centAmount || 0) / 100 || '--/--'}`}</div>
-            )}
-          </Typography>
-
-          <Typography gutterBottom variant="subtitle1" color="text.secondary">
+          <Typography
+            gutterBottom
+            variant="subtitle1"
+            color="text.secondary"
+            sx={{ whiteSpace: 'nowrap' }}
+          >
             {`year: ${attributes?.year || '--/--'}`} <br />
             {`engine: ${attributes?.engine || '--/--'}`} <br />
             {`gearbox: ${attributes?.transmission?.[0]?.label || '--/--'}`} <br />
@@ -111,7 +99,7 @@ export default function ProductCard({ product }: Props) {
         </CardContent>
 
         <CardActions>
-          <Button component={Link} size="small" href={`/products/${product.id}`}>
+          <Button component={Link} size="small" href={`/products/product/${product.slug['en-US']}`}>
             Details
           </Button>
         </CardActions>
@@ -119,3 +107,5 @@ export default function ProductCard({ product }: Props) {
     </Grid>
   );
 }
+
+export default memo(ProductCard);

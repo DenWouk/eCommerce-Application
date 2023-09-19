@@ -1,27 +1,25 @@
+import { Address } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import { countryPost } from '../enums/countries';
 import { IBaseAddressProfile } from '../interfaces/IBaseAddressProfile';
 
 export default function prepareAddresses(
   addressesIds: string[],
-  addresses: IBaseAddressProfile[],
+  addresses: Address[],
   defaultAddress: string
 ) {
   return addressesIds
     .map((addressId: string) => {
-      const addressFindO = addresses.find(
-        (address: IBaseAddressProfile) => address.id === addressId
-      );
-      const addressFind = { ...addressFindO };
-      const isDefault = addressFind!.id === defaultAddress;
-      const code = addressFind!.country;
-      const countryObj = countryPost.find((country) => country.code === code);
+      const addressFindO = addresses.find((address) => address.id === addressId)!;
 
-      addressFind!.countryLabel = countryObj!.label;
-      addressFind!.isDefault = Number(isDefault);
-      return addressFind as IBaseAddressProfile;
+      const isDefault = addressFindO.id === defaultAddress;
+      const code = addressFindO.country;
+      const countryObj = countryPost.find((country) => country.code === code)!;
+      const addressFind: IBaseAddressProfile = {
+        ...addressFindO,
+        countryLabel: countryObj.label,
+        isDefault: Number(isDefault),
+      };
+      return addressFind;
     })
-    .sort(
-      (a1: IBaseAddressProfile, a2: IBaseAddressProfile) =>
-        (a2.isDefault as number) - (a1.isDefault as number)
-    );
+    .sort((a1, a2) => a2.isDefault - a1.isDefault);
 }

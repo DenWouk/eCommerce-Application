@@ -8,7 +8,7 @@ type Props = PropsWithChildren & {
 };
 export default function LoadingButton({ className, isLoading, children, type }: Props) {
   return (
-    <Button className={`registration-btn ${className}`} disabled={isLoading} type={type}>
+    <Button className={className} variant="contained" disabled={isLoading} type={type}>
       {isLoading && (
         <CircularProgress
           size="1.5rem"

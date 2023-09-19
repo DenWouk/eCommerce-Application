@@ -1,9 +1,5 @@
-import getConfig from 'next/config';
-
-const { ROOT_APP = '' } = getConfig().publicRuntimeConfig as Record<string, string | undefined>;
-
 export default async function getProfile() {
-  const data = await fetch(`${ROOT_APP}/api/profile`, {
+  const data = await fetch('/api/profile', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   }).then(async (res) => {

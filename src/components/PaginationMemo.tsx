@@ -10,7 +10,16 @@ type Props = {
 
 function PaginationMemo(props: Props) {
   const { className, page, onChange, count } = props;
-  return <Pagination className={className} count={count} page={page} onChange={onChange} />;
+  return (
+    <Pagination
+      className={className}
+      count={count}
+      page={page}
+      onChange={onChange}
+      size="small"
+      siblingCount={0}
+    />
+  );
 }
 
 PaginationMemo.defaultProps = {

@@ -57,6 +57,7 @@ export default function SelectAsync() {
       return;
     }
     const url = new URL(window.location.href);
+    url.pathname = 'products';
     const search = url.searchParams;
     search.delete('category');
     search.delete('page');
@@ -74,12 +75,13 @@ export default function SelectAsync() {
         refInputValue.current = value;
       }}
       isClearable
-      className="w-full z-2"
+      className="w-full"
       placeholder="..."
       cacheOptions
       loadOptions={loadOptions}
       noOptionsMessage={() => 'nothing found'}
       styles={{
+        container: (base) => ({ ...base, zIndex: 4 }),
         clearIndicator: () => ({ cursor: 'pointer' }),
       }}
       components={{ Control }}

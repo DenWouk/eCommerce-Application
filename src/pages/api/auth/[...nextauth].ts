@@ -61,10 +61,12 @@ export const authOptions: AuthOptions = {
       async authorize(credentials, req) {
         const cookies = req?.headers && getCookieParser(req.headers)();
         let isAnonymousSession: boolean = false;
+        let anonymousToken: string | undefined;
         if (cookies) {
           const jwt = await getToken({ req: { cookies, headers: req.headers } } as GetTokenParams);
           const { token, type } = jwt || {};
           isAnonymousSession = type === NamesClients.ANONYMOUS && !!token;
+          anonymousToken = token?.token;
         }
         if (!credentials) {
           throw new Error('Username and password were not provided');
@@ -76,18 +78,20 @@ export const authOptions: AuthOptions = {
             tokenCache.clear();
             customer = (
               await builder
-                .createForAnonymous()
+                .createForExisting(anonymousToken!)
                 .me()
                 .login()
                 .post({
                   body: {
                     email: credentials.username,
                     password: credentials.password,
+                    activeCartSignInMode: 'MergeWithExistingCustomerCart',
                   },
                 })
                 .execute()
             ).body.customer;
           }
+
           tokenCache.clear();
           customer = (await builder.createForUser(credentials).me().get().execute()).body;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

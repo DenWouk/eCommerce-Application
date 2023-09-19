@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 type Props = {
   price: number | undefined;
@@ -14,9 +14,28 @@ export default function PriceWithDiscount({ price, priceWithDiscount }: Props) {
     );
   }
   return (
-    <Typography sx={{ m: 0 }} gutterBottom variant="h6" component="div">
+    <Typography
+      sx={{ m: 0 }}
+      gutterBottom
+      variant="h6"
+      component={Stack}
+      direction="row"
+      alignItems="end"
+      flexWrap="wrap"
+      justifyContent="start"
+    >
       {priceWithDiscount ? (
         <>
+          <Box
+            component="span"
+            sx={(theme) => ({
+              bgcolor: theme.palette.primary.main,
+              color: 'white',
+              borderRadius: '6px',
+              marginRight: '5px',
+              padding: '0 3px',
+            })}
+          >{`$${priceWithDiscount}`}</Box>
           <del
             style={{
               fontSize: '14px',
@@ -27,13 +46,6 @@ export default function PriceWithDiscount({ price, priceWithDiscount }: Props) {
           >
             {`$${price}`}
           </del>
-          <span
-            className="bg-blue-300 rounded-md"
-            style={{
-              marginLeft: '5px',
-              padding: '0 3px',
-            }}
-          >{`$${priceWithDiscount}`}</span>
         </>
       ) : (
         <div>{`$${price}`}</div>

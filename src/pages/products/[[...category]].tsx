@@ -111,14 +111,7 @@ function ProductsPage({ category, categories }: Props) {
         }}
       >
         <Box className="flex flex-wrap gap-2">
-          <Box
-            component="form"
-            sx={{
-              '& > :not(style)': { width: '20ch' },
-            }}
-            noValidate
-            autoComplete="off"
-          >
+          <Box component="form" sx={{ width: '20ch' }} noValidate autoComplete="off">
             <SelectAsync />
           </Box>
 

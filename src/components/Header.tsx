@@ -117,7 +117,13 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <LinkMui component={Link}  color="inherit" underline="none" href="/">
+            <LinkMui
+              component={Link}
+              color="inherit"
+              underline="none"
+              href="/"
+              sx={{ lineHeight: '1' }}
+            >
               Classic Cars
             </LinkMui>
           </Typography>

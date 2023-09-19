@@ -37,6 +37,7 @@ function Header({ authorized }: Props) {
         <Toolbar disableGutters>
           <Typography
             variant="h1"
+            component="h1"
             noWrap
             sx={{
               mr: 2,
@@ -105,6 +106,7 @@ function Header({ authorized }: Props) {
 
           <Typography
             variant="h6"
+            component="h1"
             sx={{
               flexGrow: 1,
               mr: 2,
@@ -179,8 +181,8 @@ function Header({ authorized }: Props) {
                 variant="contained"
                 href="/sign-in"
                 sx={{
-                  width: '80px',
-                  ml: '20px',
+                  whiteSpace: 'nowrap',
+                  ml: '5px',
                   mr: '5px',
                   fontSize: '10px',
                 }}
@@ -192,7 +194,7 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-up"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px' }}
+                sx={{ whiteSpace: 'nowrap', mr: '5px', fontSize: '10px' }}
               >
                 Sign up
               </Button>

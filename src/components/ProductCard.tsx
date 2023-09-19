@@ -1,13 +1,13 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Card,
   CardActions,
   CardContent,
   Divider,
   Grid,
   Typography,
+  Link as LinkMui,
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,14 +16,6 @@ import { memo, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
 import PriceProduct from '@/src/components/price/PriceProduct';
 import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
-
-const buttons = [
-  <Button className="card-btn-img0" key="one" />,
-  <Button className="card-btn-img1" key="two" />,
-  <Button className="card-btn-img2" key="three" />,
-  <Button className="card-btn-img3" key="four" />,
-  <Button className="card-btn-img4" key="five" />,
-];
 
 type Props = {
   product: ProductProjection;
@@ -63,19 +55,14 @@ function ProductCard({ product }: Props) {
           </Box>
         ))}
 
-        <ButtonGroup
-          className="img-btns"
-          size="small"
-          aria-label="small button group"
-          sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}
-        >
-          {buttons}
-        </ButtonGroup>
-
         <Divider />
 
         <CardContent>
-          <Link href={`/products/${product.id}`}>
+          <LinkMui
+            underline="none"
+            component={Link}
+            href={`/products/product/${product.slug['en-US']}`}
+          >
             <Typography
               gutterBottom
               variant="h6"
@@ -91,7 +78,7 @@ function ProductCard({ product }: Props) {
             >
               {product?.name['en-US']}
             </Typography>
-          </Link>
+          </LinkMui>
 
           <Typography className="flex justify-between items-center" gutterBottom variant="h6">
             <PriceProduct price={price} />
@@ -112,7 +99,7 @@ function ProductCard({ product }: Props) {
         </CardContent>
 
         <CardActions>
-          <Button component={Link} size="small" href={`/products/product/${product.id}`}>
+          <Button component={Link} size="small" href={`/products/product/${product.slug['en-US']}`}>
             Details
           </Button>
         </CardActions>

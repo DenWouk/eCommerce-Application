@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Container, Divider, Paper, Stack, Typography } from '@mui/material';
-import ImageGallery from 'react-image-gallery';
+import ImageGallery, { ReactImageGalleryItem } from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
-import { Cart, ClientResponse, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import PriceProduct from '@/src/components/price/PriceProduct';
 import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
 import NamesClients from '@/src/helpers/commercetools/consts';
@@ -11,15 +11,15 @@ import cartModel from '@/src/helpers/commercetools/cart';
 import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
 
 type Props = {
-  productResponse: ClientResponse<ProductProjection>;
+  product: ProductProjection;
 };
 
 export default function BasicStack(props: Props) {
-  const { productResponse } = props;
-  const { id, key = '', name, description, masterVariant } = productResponse.body;
+  const { product } = props;
+  const { id, key = '', name, description, masterVariant } = product;
   const { price, attributes, images } = masterVariant;
 
-  const imageGalleryItem =
+  const imageGalleryItem: ReactImageGalleryItem[] =
     images?.map(({ url }) => ({
       original: url,
       thumbnail: url,
@@ -78,7 +78,10 @@ export default function BasicStack(props: Props) {
               </Box>
 
               <Box>
-                <ImageGallery items={imageGalleryItem} />
+                <ImageGallery
+                  additionalClass="image-gallery-thumbnail-custom"
+                  items={imageGalleryItem}
+                />
               </Box>
 
               <Box
@@ -160,8 +163,8 @@ export const getServerSideProps = ssrWithAuthToken<
 
   const authorized = token?.type === NamesClients.PASSWORD;
   try {
-    const productResponse = await productModel.getProductById(req, id);
-    return { props: { authorized, cart, productResponse } };
+    const productResponse = await productModel.getProductBySlug(req, id);
+    return { props: { authorized, cart, product: productResponse.body.results[0] } };
   } catch (e) {
     return { notFound: true };
   }

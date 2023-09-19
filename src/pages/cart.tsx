@@ -1,8 +1,20 @@
-import { Box, Button, Container, Divider, Paper, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Paper,
+  TextField,
+  Typography,
+  Link as LinkMui,
+  IconButton,
+} from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { FormEventHandler, useContext, useMemo } from 'react';
 import { MyCartRemoveLineItemAction } from '@commercetools/platform-sdk';
-import CarItem from '../components/CartItem';
+import Link from 'next/link';
+import { HighlightOffRounded } from '@mui/icons-material';
+import CartItemsList from '../components/CartItemsList';
 import cartModel from '../helpers/commercetools/cart/cartModel';
 import isAuthorized from '../helpers/auth';
 import { AuthProps } from '../types/auth';
@@ -21,9 +33,19 @@ export default function CartPage() {
       })),
     [lineItems]
   );
+
   if (!state.cart?.lineItems?.length) {
-    return <div>Cart empty</div>;
+    return (
+      <div>
+        Cart empty. Go to the{' '}
+        <LinkMui component={Link} href="/products">
+          Cars
+        </LinkMui>{' '}
+        page to add a car to your cart.
+      </div>
+    );
   }
+
   const handleClearCart = async () => {
     try {
       const cart = await updateCart('removeLineItem', {
@@ -36,17 +58,16 @@ export default function CartPage() {
       showError('Oops, something went wrong, try again later');
     }
   };
-  const handleRemoveDiscountCode = async () => {
-    const { id: discountCodeId, typeId } = discountCodes[0].discountCode;
+  const handleRemoveDiscountCode = async (discountCodeId: string) => {
     try {
       const updatedCart = await updateCart('removeDiscountCode', {
         id,
         version,
-        actions: { discountCode: { id: discountCodeId, typeId } },
+        actions: { discountCode: { id: discountCodeId, typeId: 'discount-code' } },
       });
       dispatch({ type: 'CHANGE', value: updatedCart });
     } catch {
-      showError('Oops, something went wrong, try again later');
+      showError('There is no such discount code');
     }
   };
   const handleAddDiscountCode: FormEventHandler<HTMLFormElement> = async (event) => {
@@ -63,14 +84,16 @@ export default function CartPage() {
   };
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container sx={{ display: 'flex', justifyContent: 'center', px: '6px' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', minHeight: '80vh' }}>
-        <Typography variant="h6">Shopping Cart</Typography>
+        <Typography variant="h5" component="h2">
+          Shopping Cart
+        </Typography>
 
         <Paper>
           {lineItems ? (
             <>
-              <CarItem />
+              <CartItemsList />
               <Divider />
             </>
           ) : (
@@ -85,17 +108,22 @@ export default function CartPage() {
             </Typography>
           )}
 
-          <Typography variant="h6" sx={{ pr: '20px', fontWeight: 'bold', textAlign: 'end' }}>
+          <Typography
+            variant="h6"
+            sx={{ p: '10px', pr: '20px', fontWeight: 'bold', textAlign: 'end' }}
+          >
             Total: ${(totalPrice?.centAmount || 0) / 100}
           </Typography>
         </Paper>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}>
           {!!discountCodes.length &&
             discountCodes.map(({ discountCode }) => (
               <Box className="flex gap-1 items-center" key={discountCode.id}>
                 <div>{discountCode.obj?.code}</div>
-                <Button onClick={handleRemoveDiscountCode}>Remove discount code</Button>
+                <IconButton onClick={() => handleRemoveDiscountCode(discountCode.id)}>
+                  <HighlightOffRounded sx={{ fontSize: 30, color: '#CE5959' }} />
+                </IconButton>
               </Box>
             ))}
 
@@ -104,43 +132,35 @@ export default function CartPage() {
             onSubmit={handleAddDiscountCode}
             sx={{
               display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
               justifyContent: 'end',
               alignItems: 'center',
+              mt: '5px',
+              mr: '5px',
+            }}
+          >
+            <TextField label="Have a promo?" required name="discountCode" size="small" />
+            <Button
+              type="submit"
+              variant="outlined"
+              sx={{ width: '125px', height: '40px', ml: '5px' }}
+            >
+              apply
+            </Button>
+          </Box>
+
+          <Button
+            onClick={handleClearCart}
+            variant="outlined"
+            color="error"
+            sx={{
+              width: '125px',
+              height: '33px',
               mt: '10px',
               mr: '5px',
             }}
           >
-            <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>Have a promo?</Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                flexWrap: 'nowrap',
-              }}
-            >
-              <TextField required name="discountCode" size="small" />
-              <Button type="submit" variant="outlined" sx={{ width: '125px', ml: '5px' }}>
-                apply
-              </Button>
-            </Box>
-          </Box>
-
-          <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-            <Button
-              onClick={handleClearCart}
-              variant="outlined"
-              color="error"
-              sx={{
-                width: '125px',
-                height: '33px',
-                mr: '5px',
-              }}
-            >
-              clear cart
-            </Button>
-          </Box>
+            clear cart
+          </Button>
         </Box>
       </Box>
     </Container>

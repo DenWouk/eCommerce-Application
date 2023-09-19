@@ -95,7 +95,7 @@ main {
   display: none !important;
 }
 
-.product-card:hover .product-card-content {
+.product-card:hover .product-card-name {
   color: var(--color3);
 }
 

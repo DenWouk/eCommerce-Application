@@ -36,15 +36,15 @@ export default function AboutUsPage() {
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
             <br />
-            - Registration and Authorization forms
+            - Registration form
+            <br />
+            - Authorization form
             <br />
             - Shopping Cart
             <br />
             - Application styling
             <br />
             - Refactoring
-            <br />
-            -
             <br />
           </Typography>
         </Box>

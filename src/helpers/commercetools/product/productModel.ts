@@ -61,6 +61,13 @@ class ProductModel {
       .get({ queryArgs: { priceCurrency: 'USD' } })
       .execute();
   }
+
+  async getProductBySlug(req: Req, slug: string) {
+    return (await this.builder.getBuilder(req))
+      .productProjections()
+      .get({ queryArgs: { where: `slug(en-US="${slug}")`, priceCurrency: 'USD' } })
+      .execute();
+  }
 }
 
 const productModel = new ProductModel(builderApiRoot);

@@ -48,7 +48,7 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <LinkMui color="inherit" underline="hover" component={Link} href="/">
+            <LinkMui color="inherit" underline="none" component={Link} href="/">
               Classic Cars
             </LinkMui>
           </Typography>
@@ -117,7 +117,7 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <LinkMui component={Link} underline="hover" href="/">
+            <LinkMui component={Link}  color="inherit" underline="none" href="/">
               Classic Cars
             </LinkMui>
           </Typography>
@@ -138,7 +138,7 @@ function Header({ authorized }: Props) {
               underline="hover"
               href="/"
             >
-              MAIN
+              Main
             </LinkMui>
 
             <LinkMui
@@ -148,7 +148,7 @@ function Header({ authorized }: Props) {
               underline="hover"
               href="/products"
             >
-              CARS
+              Cars
             </LinkMui>
 
             <LinkMui
@@ -158,7 +158,7 @@ function Header({ authorized }: Props) {
               underline="hover"
               href="/about-us"
             >
-              ABOUT US
+              About us
             </LinkMui>
           </Box>
 

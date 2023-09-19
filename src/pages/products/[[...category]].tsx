@@ -99,7 +99,7 @@ function ProductsPage({ category, categories }: Props) {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ display: 'flex', gap: '35px' }}>
+    <Container className='products-container' maxWidth="xl" sx={{ display: 'flex', gap: '35px', ml: '-5px' }}>
       <ProductsSideBar filter={filterForProductsSideBar} onChange={handleChangeProductsSideBar} />
 
       <Container

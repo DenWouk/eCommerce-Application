@@ -1,11 +1,12 @@
 import { GetServerSideProps } from 'next';
 import { useContext } from 'react';
-import { Box, Divider, IconButton, Typography } from '@mui/material';
+import { Box, Divider, IconButton, Typography, Link as LinkMui } from '@mui/material';
 import Image from 'next/image';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Cart } from '@commercetools/platform-sdk';
 import { HighlightOffRounded } from '@mui/icons-material';
+import Link from 'next/link';
 import { updateCart } from '@/src/api/carts';
 import cartModel from '../helpers/commercetools/cart/cartModel';
 import isAuthorized from '../helpers/auth';
@@ -13,7 +14,7 @@ import { AuthProps } from '../types/auth';
 import MyContext from '../contexts/MyContext';
 import PriceProduct from './price/PriceProduct';
 
-export default function CartPage() {
+export default function CartItemsList() {
   const { state, dispatch } = useContext(MyContext);
 
   if (!state.cart) {
@@ -54,19 +55,31 @@ export default function CartPage() {
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {lineItems ? (
         lineItems.map((item) => {
-          const { price, name, variant, id: lineItemId, productId, totalPrice, quantity } = item;
+          const {
+            price,
+            name,
+            variant,
+            id: lineItemId,
+            productId,
+            totalPrice,
+            quantity,
+            productSlug,
+          } = item;
 
           return (
             <Box key={item.id}>
               <Box
                 sx={{
                   display: 'flex',
-                  justifyContent: 'space-evenly',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   minWidth: '50vw',
                 }}
               >
-                <Box
+                <LinkMui
+                  component={Link}
+                  underline="none"
+                  href={`/products/product/${productSlug?.['en-US'] || ''}`}
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -78,24 +91,34 @@ export default function CartPage() {
                   <Image
                     src={variant?.images?.[0]?.url ?? ''}
                     alt={name['en-US']}
+                    placeholder="blur"
+                    blurDataURL="data:image/gif;base64,R0lGODlhAQABAPAAAJaWlv///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                     width={120}
                     height={90}
                   />
-                </Box>
+                </LinkMui>
 
                 <Box
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    width: '120px',
+                    width: '100%',
+                    maxWidth: '120px',
+                    py: '5px',
+                    gap: '3px',
                   }}
                 >
-                  <Box>
+                  <LinkMui
+                    component={Link}
+                    underline="none"
+                    href={`/products/product/${productSlug?.['en-US'] || ''}`}
+                  >
                     {name['en-US']}
-                    <Divider />
-                    <PriceProduct price={price} />
-                  </Box>
+                  </LinkMui>
+
+                  <Divider />
+                  <PriceProduct price={price} />
                 </Box>
 
                 <Box

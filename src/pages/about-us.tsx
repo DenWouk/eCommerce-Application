@@ -86,7 +86,7 @@ export default function AboutUsPage() {
           <Box sx={{ width: 100, height: 100 }}>
             <Avatar
               className="content-item-img"
-              src="../Denis.jpg"
+              src="../Denis.JPG"
               alt="Avatar img"
               sx={{ width: 100, height: 100 }}
             />

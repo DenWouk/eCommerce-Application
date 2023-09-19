@@ -11,8 +11,10 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  Link as LinkMui,
 } from '@mui/material';
 import LoadingPage from '@/src/components/LoadingPage';
+import CartIconLink from '@/src/components/CartIconLink';
 import LetterAvatar from './Avatar';
 
 type Props = {
@@ -21,7 +23,6 @@ type Props = {
 
 function Header({ authorized }: Props) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -47,7 +48,9 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/">Classic Cars</Link>
+            <LinkMui color="inherit" underline="none" component={Link} href="/">
+              Classic Cars
+            </LinkMui>
           </Typography>
 
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
@@ -80,35 +83,28 @@ function Header({ authorized }: Props) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              <Link href="/">
+              <LinkMui component={Link} underline="hover" href="/">
                 <MenuItem onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Main</Typography>
                 </MenuItem>
-              </Link>
+              </LinkMui>
 
-              <Link href="/products">
+              <LinkMui component={Link} underline="hover" href="/products">
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Products</Typography>
+                  <Typography textAlign="center">Cars</Typography>
                 </MenuItem>
-              </Link>
+              </LinkMui>
 
-              <Link href="/contacts">
+              <LinkMui component={Link} underline="hover" href="/about-us">
                 <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Contacts</Typography>
+                  <Typography textAlign="center">About us</Typography>
                 </MenuItem>
-              </Link>
-
-              <Link href="/profile">
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Profile</Typography>
-                </MenuItem>
-              </Link>
+              </LinkMui>
             </Menu>
           </Box>
 
           <Typography
             variant="h6"
-            noWrap
             sx={{
               flexGrow: 1,
               mr: 2,
@@ -121,35 +117,52 @@ function Header({ authorized }: Props) {
               color: 'inherit',
             }}
           >
-            <Link href="/">Classic Cars</Link>
+            <LinkMui component={Link}  color="inherit" underline="none" href="/">
+              Classic Cars
+            </LinkMui>
           </Typography>
 
           <Box
             sx={{
               flexGrow: 1,
+              alignItems: 'center',
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'center',
               gap: '40px',
             }}
           >
-            <Link href="/">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Main
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/"
+            >
+              Main
+            </LinkMui>
 
-            <Link href="/products">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Products
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/products"
+            >
+              Cars
+            </LinkMui>
 
-            <Link href="/contacts">
-              <Button onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                Contacts
-              </Button>
-            </Link>
+            <LinkMui
+              onClick={handleCloseNavMenu}
+              color="inherit"
+              component={Link}
+              underline="hover"
+              href="/about-us"
+            >
+              About us
+            </LinkMui>
           </Box>
+
+          <CartIconLink href="/cart" className="mx-2" />
 
           {authorized ? (
             <LetterAvatar />
@@ -159,7 +172,12 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-in"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
+                sx={{
+                  width: '80px',
+                  ml: '20px',
+                  mr: '5px',
+                  fontSize: '10px',
+                }}
               >
                 Sign in
               </Button>
@@ -168,13 +186,14 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-up"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px', background: '#6195c3fe' }}
+                sx={{ width: '80px', mr: '5px', fontSize: '10px' }}
               >
                 Sign up
               </Button>
             </>
           )}
         </Toolbar>
+
         <LoadingPage />
       </Container>
     </AppBar>

@@ -24,31 +24,18 @@ function ProductsSideBar(props: Props) {
   };
 
   return (
-    <Paper
-      sx={{
-        position: 'sticky',
-        top: '90px',
-        left: '20px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        width: '15%',
-        height: 'calc(100vh - 140px)',
-        minWidth: '200px',
-        padding: '10px',
-        overflow: 'auto',
-      }}
-    >
+    <Paper className="aside">
       <Box
         sx={{
+          position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'start',
-          pl: '10px',
+          pl: '3px',
         }}
       >
-        <Typography sx={{ ml: '-7px', fontWeight: 'bold' }}>Price:</Typography>
-        <Box sx={{ display: 'flex', width: '100%' }}>
+        <Typography sx={{ fontWeight: 'bold' }}>Price:</Typography>
+        <Box sx={{ display: 'flex', width: '90%' }}>
           <FromToInput />
         </Box>
       </Box>

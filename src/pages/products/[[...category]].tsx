@@ -115,7 +115,7 @@ function ProductsPage({ category, categories }: Props) {
           <Box
             component="form"
             sx={{
-              '& > :not(style)': { width: '25ch' },
+              '& > :not(style)': { width: '20ch' },
             }}
             noValidate
             autoComplete="off"
@@ -124,7 +124,7 @@ function ProductsPage({ category, categories }: Props) {
           </Box>
 
           <CategoriesTree
-            sx={{ width: '200px', height: '38px' }}
+            sx={{ width: '20ch', height: '38px' }}
             tree={buildCategoryTree(categories)}
           />
         </Box>

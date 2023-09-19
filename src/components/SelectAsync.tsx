@@ -75,12 +75,13 @@ export default function SelectAsync() {
         refInputValue.current = value;
       }}
       isClearable
-      className="w-full z-2"
+      className="w-full"
       placeholder="..."
       cacheOptions
       loadOptions={loadOptions}
       noOptionsMessage={() => 'nothing found'}
       styles={{
+        container: (base) => ({ ...base, zIndex: 4 }),
         clearIndicator: () => ({ cursor: 'pointer' }),
       }}
       components={{ Control }}

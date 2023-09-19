@@ -42,11 +42,21 @@ function CategoriesTree({ tree, open, onClick, searchQuery }: CategoriesTreeProp
               </ListItemButton>
               <Divider orientation="vertical" sx={{ ml: 1 }} flexItem />
               {hasChild ? (
-                <IconButton onClick={() => onClick(item.id)}>
-                  {open === item.id ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    height: '100%',
+                    width: '36px',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <IconButton sx={{ width: 34, aspectRatio: 1 }} onClick={() => onClick(item.id)}>
+                    {open === item.id ? <ExpandLess /> : <ExpandMore />}
+                  </IconButton>
+                </Box>
               ) : (
-                <Box sx={{ width: '40px', height: '40px' }} />
+                <Box sx={{ minWidth: '36px', height: '40px' }} />
               )}
             </Box>
             <Collapse in={item.id === open} timeout="auto" unmountOnExit>
@@ -94,17 +104,18 @@ export default function CategoryDropDown({ tree, sx }: Props) {
     setOpenCategory(false);
     setOpen('');
   };
-
+  const zIndexAdd = openCategory ? 10 : 0;
   return (
     <>
       <List
         disablePadding
         sx={{
-          zIndex: 4,
+          zIndex: zIndexAdd + 3,
           borderRadius: '5px',
-          border: '1px solid #d2d2d2',
+          border: '1px solid #cccccc',
           position: 'relative',
           ...sx,
+          '& svg': { fill: '#cccccc' },
         }}
       >
         <ListItemButton
@@ -112,24 +123,28 @@ export default function CategoryDropDown({ tree, sx }: Props) {
           onClick={() => setOpenCategory(!openCategory)}
         >
           <ListItemText sx={{ m: 0, pl: 1 }} primary="Categories" />
-          <Divider orientation="vertical" sx={{ ml: 1 }} flexItem />
+          <Divider orientation="vertical" variant="middle" sx={{ ml: 1 }} flexItem />
           <Box
             sx={{
               display: 'flex',
               height: '100%',
-              width: '40px',
+              width: '36px',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            {openCategory ? <ExpandLess /> : <ExpandMore />}
+            {openCategory ? (
+              <ExpandLess sx={{ '& .MuiSvgIcon-root': { fill: '#cccccc !important' } }} />
+            ) : (
+              <ExpandMore />
+            )}
           </Box>
         </ListItemButton>
         <Collapse
           sx={{
             position: 'absolute',
             bgcolor: 'white',
-            zIndex: 2,
+            zIndex: zIndexAdd + 1,
             ml: '-1px',
             mr: '-2px',
             borderRadius: '5px',
@@ -144,7 +159,7 @@ export default function CategoryDropDown({ tree, sx }: Props) {
         </Collapse>
       </List>
       <Backdrop
-        sx={{ zIndex: 3, bgcolor: 'transparent' }}
+        sx={{ zIndex: zIndexAdd + 2, bgcolor: 'transparent' }}
         open={openCategory}
         onClick={handelBlur}
       />

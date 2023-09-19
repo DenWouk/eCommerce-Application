@@ -13,7 +13,9 @@ type Props = {
 
 export default function CartIconLink({ className, href }: Props) {
   const { state, dispatch } = useContext(MyContext);
-  const { data } = useSWR(state.cart || '/api/carts', getCarts);
+  const { data } = useSWR(state.cart || '/api/carts', getCarts, {
+    errorRetryCount: 1,
+  });
 
   useEffect(() => {
     data && dispatch({ type: 'CHANGE', value: data });

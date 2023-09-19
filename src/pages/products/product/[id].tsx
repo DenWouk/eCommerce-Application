@@ -9,9 +9,6 @@ import NamesClients from '@/src/helpers/commercetools/consts';
 import productModel from '@/src/helpers/commercetools/product';
 import cartModel from '@/src/helpers/commercetools/cart';
 import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
-import { ssrWithAuthToken } from '../../helpers/next/withAuthToken';
-import NamesClients from '../../helpers/commercetools/consts';
-import productModel from '../../helpers/commercetools/product';
 
 type Props = {
   productResponse: ClientResponse<ProductProjection>;

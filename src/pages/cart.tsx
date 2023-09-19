@@ -67,7 +67,7 @@ export default function CartPage() {
       });
       dispatch({ type: 'CHANGE', value: updatedCart });
     } catch {
-      showError('Oops, something went wrong, try again later');
+      showError('There is no such discount code');
     }
   };
   const handleAddDiscountCode: FormEventHandler<HTMLFormElement> = async (event) => {

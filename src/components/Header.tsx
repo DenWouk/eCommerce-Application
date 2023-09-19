@@ -13,8 +13,10 @@ import {
   Typography,
   Link as LinkMui,
 } from '@mui/material';
+import Image from 'next/image';
 import LoadingPage from '@/src/components/LoadingPage';
 import CartIconLink from '@/src/components/CartIconLink';
+import classicCarLog from '@/public/VectorPortal-Classic-Car-Vector.svg';
 import LetterAvatar from './Avatar';
 
 type Props = {
@@ -36,13 +38,13 @@ function Header({ authorized }: Props) {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h1"
+            variant="h5"
+            component="h1"
             noWrap
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
-              fontSize: '22px',
               fontWeight: 700,
               letterSpacing: 'unset',
               color: 'inherit',
@@ -103,24 +105,15 @@ function Header({ authorized }: Props) {
             </Menu>
           </Box>
 
-          <Typography
-            variant="h6"
-            sx={{
-              flexGrow: 1,
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              justifyContent: 'center',
-              fontFamily: 'monospace',
-              fontSize: '16px',
-              fontWeight: 700,
-              letterSpacing: 'unset',
-              color: 'inherit',
-            }}
-          >
-            <LinkMui component={Link} underline="hover" href="/">
-              Classic Cars
-            </LinkMui>
-          </Typography>
+          <Box flexGrow={1} sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <Image
+              src={classicCarLog}
+              placeholder="blur"
+              blurDataURL="gfg"
+              alt="Logo classic car"
+              style={{ transform: 'rotateY(180deg)' }}
+            />
+          </Box>
 
           <Box
             sx={{
@@ -173,8 +166,8 @@ function Header({ authorized }: Props) {
                 variant="contained"
                 href="/sign-in"
                 sx={{
-                  width: '80px',
-                  ml: '20px',
+                  whiteSpace: 'nowrap',
+                  ml: '5px',
                   mr: '5px',
                   fontSize: '10px',
                 }}
@@ -186,7 +179,7 @@ function Header({ authorized }: Props) {
                 component={Link}
                 variant="contained"
                 href="/sign-up"
-                sx={{ width: '80px', mr: '5px', fontSize: '10px' }}
+                sx={{ whiteSpace: 'nowrap', mr: '5px', fontSize: '10px' }}
               >
                 Sign up
               </Button>

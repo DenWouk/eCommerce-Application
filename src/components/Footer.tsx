@@ -1,5 +1,13 @@
 import React, { memo } from 'react';
-import { AppBar, Box, Button, Container, IconButton, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  IconButton,
+  Typography,
+  Link as LinkMui,
+} from '@mui/material';
 import RSSicon from '../icons/rss-icon';
 import GhSvg from '../icons/gh-icon';
 
@@ -35,7 +43,14 @@ function Footer() {
 
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-evenly' }}>
           {authors.map((author, i) => (
-            <a key={author} rel="noopener noreferrer" href={authorsLinks[i]} target="_blank">
+            <LinkMui
+              color="inherit"
+              underline="hover"
+              key={author}
+              rel="noopener noreferrer"
+              href={authorsLinks[i]}
+              target="_blank"
+            >
               <Button sx={{ color: 'inherit', display: 'block', p: '0 5px' }}>
                 <Typography
                   variant="subtitle1"
@@ -55,7 +70,7 @@ function Footer() {
                   {author}
                 </Typography>
               </Button>
-            </a>
+            </LinkMui>
           ))}
         </Box>
 

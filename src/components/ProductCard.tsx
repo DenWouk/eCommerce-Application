@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Card,
   CardActions,
   CardContent,
@@ -16,14 +15,6 @@ import { memo, useMemo } from 'react';
 import { AttributesProduct } from '@/src/types/commercetools';
 import PriceProduct from '@/src/components/price/PriceProduct';
 import CartChangeCountItemsButton from '@/src/components/CartChangeCountItemsButton';
-
-const buttons = [
-  <Button className="card-btn-img0" key="one" />,
-  <Button className="card-btn-img1" key="two" />,
-  <Button className="card-btn-img2" key="three" />,
-  <Button className="card-btn-img3" key="four" />,
-  <Button className="card-btn-img4" key="five" />,
-];
 
 type Props = {
   product: ProductProjection;
@@ -63,15 +54,6 @@ function ProductCard({ product }: Props) {
           </Box>
         ))}
 
-        <ButtonGroup
-          className="img-btns"
-          size="small"
-          aria-label="small button group"
-          sx={{ display: 'flex', justifyContent: 'center', p: '5px' }}
-        >
-          {buttons}
-        </ButtonGroup>
-
         <Divider />
 
         <CardContent className="product-card-content">
@@ -98,7 +80,7 @@ function ProductCard({ product }: Props) {
         </CardContent>
 
         <CardActions>
-          <Button component={Link} size="small" href={`/products/${product.id}`}>
+          <Button component={Link} size="small" href={`/products/${product.slug['en-US']}`}>
             Details
           </Button>
         </CardActions>

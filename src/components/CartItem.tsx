@@ -63,7 +63,6 @@ export default function CartPage() {
                   display: 'flex',
                   justifyContent: 'space-evenly',
                   alignItems: 'center',
-                  gap: '15px',
                   minWidth: '50vw',
                 }}
               >

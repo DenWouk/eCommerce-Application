@@ -22,8 +22,8 @@ export default function LoadingPage() {
   return (
     isLoading && (
       <LinearProgress
-        sx={{ position: 'absolute', left: 0, width: '100%', height: '3px' }}
-        color="warning"
+        sx={{ position: 'absolute', left: 0, width: '100%', height: '7px', borderTop: 'solid 1px #fefefe' }}
+        color="info"
       />
     )
   );

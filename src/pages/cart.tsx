@@ -106,16 +106,25 @@ export default function CartPage() {
               display: 'flex',
               flexWrap: 'wrap',
               gap: '10px',
+              justifyContent: 'end',
               alignItems: 'center',
+              mt: '10px',
+              mr: '5px',
             }}
           >
-            <Typography sx={{ fontSize: '16px', fontWeight: 'bold', color: '#6195c3' }}>
-              Have a promo?
-            </Typography>
-            <TextField required name="discountCode" size="small" />
-            <Button type="submit" variant="outlined" sx={{ width: '125px', ml: '5px' }}>
-              apply
-            </Button>
+            <Typography sx={{ fontSize: '16px', fontWeight: 'bold' }}>Have a promo?</Typography>
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'nowrap',
+              }}
+            >
+              <TextField required name="discountCode" size="small" />
+              <Button type="submit" variant="outlined" sx={{ width: '125px', ml: '5px' }}>
+                apply
+              </Button>
+            </Box>
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'end' }}>
@@ -126,6 +135,7 @@ export default function CartPage() {
               sx={{
                 width: '125px',
                 height: '33px',
+                mr: '5px',
               }}
             >
               clear cart

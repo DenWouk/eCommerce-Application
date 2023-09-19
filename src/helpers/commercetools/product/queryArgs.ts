@@ -20,13 +20,8 @@ type QueryArgs = {
 };
 
 function createQueryValue(searchQuery: string | string[] | undefined) {
-  return (
-    searchQuery &&
-    [searchQuery]
-      .flat()
-      .map((value) => `"${value}"`)
-      .join(',')
-  );
+  const search = Array.isArray(searchQuery) ? searchQuery : searchQuery?.split(',');
+  return search && search.map((value) => `"${value}"`).join(',');
 }
 
 export default function createQueryArgs(
@@ -77,7 +72,6 @@ export default function createQueryArgs(
 
   const queryArgs: QueryArgs = {
     fuzzy: true,
-    where: 'masterVariant(name(en-US="BMW M5"))',
     markMatchingVariants: true,
     offset: page ? (+page - 1) * limitNumber : undefined,
     priceCountry,

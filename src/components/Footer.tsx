@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { AppBar, Box, Button, Container, IconButton, Typography } from '@mui/material';
 import RSSicon from '../icons/rss-icon';
-import GhSvg from '../icons/gh-icon';
+import { GhSvg } from '../icons/gh-icon';
 
 const authors = ['Tanya', 'Kirill', 'Denis'];
 const authorsLinks = [

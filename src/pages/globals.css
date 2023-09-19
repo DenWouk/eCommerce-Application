@@ -134,6 +134,11 @@ main {
   fill: var(--color2);
 }
 
+.gh-logo-fill1-black,
+.gh-logo-fill2-black {
+  fill: var(--color1);
+}
+
 .rss-logo {
   fill: var(--color2);
 }

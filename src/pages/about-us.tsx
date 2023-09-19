@@ -1,8 +1,9 @@
 import React from 'react';
 import Avatar from '@mui/material/Avatar';
-import { Box, Container, Divider, Link, Paper, Typography } from '@mui/material';
+import { Box, Button, Container, Divider, Link, Paper, Typography } from '@mui/material';
 import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
 import NamesClients from '../helpers/commercetools/consts';
+import { GhSvgBlack } from '../icons/gh-icon';
 
 export type Props = {
   authorized: boolean;
@@ -15,24 +16,52 @@ export default function AboutUsPage() {
       sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
     >
       <Paper className="welcome-page-content1">
-        <Typography
-          variant="h4"
-          className="content-title"
-          sx={{ mb: '10px', textDecoration: 'underline' }}
-        >
+        <Typography variant="h4" className="content-title" sx={{ mb: '10px', fontWeight: 'bold' }}>
           About the team:
         </Typography>
 
         <Box className="content-item">
-          <Avatar
-            className="content-item-img"
-            src="../Tanya.jpg"
-            alt="Avatar img"
-            sx={{ width: 100, height: 100 }}
-          />
-          <Typography variant="h5" className="content-item-title">
-            Tanya
-          </Typography>
+          <Box sx={{ width: 100, height: 100 }}>
+            <Avatar
+              className="content-item-img"
+              src="../Tanya.jpg"
+              alt="Avatar img"
+              sx={{ width: 100, height: 100 }}
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Typography variant="h5" className="content-item-title">
+              <a
+                rel="noopener noreferrer"
+                href="https://github.com/tetlisna"
+                target="_blank"
+                style={{
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                }}
+              >
+                <Button
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    fontFamily: 'monospace',
+                    fontSize: 'inherit',
+                    fontWeight: 700,
+                    color: '#313131',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    p: '0 5px',
+                  }}
+                >
+                  {GhSvgBlack()}
+                  Tanya
+                </Button>
+              </a>
+            </Typography>
+          </Box>
+
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
             <br />
@@ -63,9 +92,38 @@ export default function AboutUsPage() {
             />
           </Box>
 
-          <Typography variant="h5" className="content-item-title">
-            Kirill
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Typography variant="h5" className="content-item-title">
+              <a
+                rel="noopener noreferrer"
+                href="https://github.com/zakalupali89"
+                target="_blank"
+                style={{
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                }}
+              >
+                <Button
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    fontFamily: 'monospace',
+                    fontSize: 'inherit',
+                    fontWeight: 700,
+                    color: '#313131',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    p: '0 5px',
+                  }}
+                >
+                  {GhSvgBlack()}
+                  Kirill
+                </Button>
+              </a>
+            </Typography>
+          </Box>
+
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
             <br />
@@ -91,9 +149,39 @@ export default function AboutUsPage() {
               sx={{ width: 100, height: 100 }}
             />
           </Box>
-          <Typography variant="h5" className="content-item-title">
-            Denis
-          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Typography variant="h5" className="content-item-title">
+              <a
+                rel="noopener noreferrer"
+                href="https://github.com/DenWouk"
+                target="_blank"
+                style={{
+                  textDecoration: 'none',
+                  textTransform: 'none',
+                }}
+              >
+                <Button
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    fontFamily: 'monospace',
+                    fontSize: 'inherit',
+                    fontWeight: 700,
+                    color: '#313131',
+                    textDecoration: 'none',
+                    textTransform: 'none',
+                    p: '0 5px',
+                  }}
+                >
+                  {GhSvgBlack()}
+                  Denis
+                </Button>
+              </a>
+            </Typography>
+          </Box>
+
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
             <br />
@@ -112,7 +200,7 @@ export default function AboutUsPage() {
       </Paper>
 
       <Paper className="welcome-page-content2">
-        <Typography variant="h4" className="content-title" sx={{ textDecoration: 'underline' }}>
+        <Typography variant="h4" className="content-title" sx={{ fontWeight: 'bold' }}>
           About the app:
         </Typography>
 

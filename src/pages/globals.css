@@ -1,0 +1,227 @@
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color1: #313131;
+  --color2: #fefefe;
+  --color3: #6195c3;
+  --color4: #6c6c6c;
+  --color5: #cfdfee;
+
+  --background-color1: #6195c3;
+  --background-color2: #f1f7f7;
+  --background-color3: #397eec;
+  --background-color4: #62778c;
+
+  --link-color1: #2270ec;
+}
+
+html {
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.z-2 {
+  z-index: 2;
+}
+
+.header {
+  position: fixed !important;
+  z-index: 15;
+  background-color: var(--background-color1) !important;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 90px 0 50px;
+  font-weight: bold;
+  min-width: 390px;
+  color: var(--color4);
+}
+
+.aside {
+  position: sticky;
+  top: 90px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 15%;
+  height: calc(100vh - 140px);
+  min-width: 200px;
+  padding: 20px;
+  overflow: auto;
+}
+
+.auth-btns-duplicate {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-btns-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-registration {
+  max-width: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-shipping-address {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  color: var(--color4);
+  border: solid 1px #cccccc;
+  border-radius: 4px;
+}
+
+.product-card-img1,
+.product-card-img2,
+.product-card-img3,
+.product-card-img4 {
+  display: none !important;
+}
+
+.product-card:hover .product-card-name {
+  color: var(--color3);
+}
+
+.product-card:hover .img-btns {
+  visibility: visible;
+}
+
+.img-btns {
+  visibility: hidden;
+}
+
+.footer {
+  position: fixed !important;
+  top: unset;
+  bottom: 0;
+  z-index: 5;
+  font-size: 16px;
+  background-color: var(--background-color1) !important;
+  box-shadow:
+    0 -2px 4px -1px rgb(0 0 0 / 20%),
+    0 -4px 5px 0 rgb(0 0 0 / 14%),
+    0 -1px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.gh-logo {
+  width: 17px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: 0.3s;
+}
+
+.gh-logo-fill1,
+.gh-logo-fill2 {
+  fill: var(--color2);
+}
+
+.rss-logo {
+  fill: var(--color2);
+}
+
+.gh-logo:hover {
+  transform: rotateY(180deg);
+  transition: all 0.3s;
+}
+
+.welcome-page-content1,
+.welcome-page-content2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0 20px;
+  overflow: auto;
+}
+
+.welcome-page-content2 {
+  padding: 10px 20px 20px;
+}
+
+.content-title {
+  width: 100%;
+  padding: 0 20px 10px;
+  font-size: 24px;
+}
+
+.content-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 30%;
+  padding: 10px;
+}
+
+.content-item-title {
+  margin: 5px 0 30px;
+  font-size: 20px;
+}
+
+.content-item-about-team,
+.content-item-description {
+  font-size: 18px;
+  font-weight: bold;
+  font-style: italic;
+  line-height: 2;
+  white-space: pre-line;
+}
+
+.content-item-description {
+  text-indent: 15px;
+  line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .image-gallery-thumbnail-custom button {
+    width: 66px;
+  }
+}
+
+@media (max-width: 640px) {
+  .aside {
+    left: 15px;
+    min-width: 150px;
+    padding: 0;
+  }
+
+  .welcome-page-content1 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .content-item {
+    width: 90%;
+  }
+
+  @media (max-width: 420px) {
+    .aside {
+      left: 5px;
+      padding: 0;
+    }
+
+    .footer {
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+}

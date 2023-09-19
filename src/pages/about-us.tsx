@@ -83,12 +83,14 @@ export default function AboutUsPage() {
         </Box>
 
         <Box className="content-item">
-          <Avatar
-            className="content-item-img"
-            src="../Denis.jpg"
-            alt="Avatar img"
-            sx={{ width: 100, height: 100 }}
-          />
+          <Box sx={{ width: 100, height: 100 }}>
+            <Avatar
+              className="content-item-img"
+              src="../Denis.jpg"
+              alt="Avatar img"
+              sx={{ width: 100, height: 100 }}
+            />
+          </Box>
           <Typography variant="h5" className="content-item-title">
             Denis
           </Typography>

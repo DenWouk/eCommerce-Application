@@ -1,6 +1,12 @@
 import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import { Box, Container, Divider, Link, Paper, Typography } from '@mui/material';
+import { ssrWithAuthToken } from '../helpers/next/withAuthToken';
+import NamesClients from '../helpers/commercetools/consts';
+
+export type Props = {
+  authorized: boolean;
+};
 
 export default function AboutUsPage() {
   return (
@@ -9,7 +15,11 @@ export default function AboutUsPage() {
       sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
     >
       <Paper className="welcome-page-content1">
-        <Typography variant="h4" className="content-title">
+        <Typography
+          variant="h4"
+          className="content-title"
+          sx={{ mb: '10px', textDecoration: 'underline' }}
+        >
           About the team:
         </Typography>
 
@@ -25,13 +35,14 @@ export default function AboutUsPage() {
           </Typography>
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
-            -
             <br />
-            -
+            - Registration and Authorization forms
             <br />
-            -
+            - Shopping Cart
             <br />
-            -
+            - Application styling
+            <br />
+            - Refactoring
             <br />
             -
             <br />
@@ -57,12 +68,13 @@ export default function AboutUsPage() {
           </Typography>
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
-            - integration with commercetools API (products, cart, authorization)
             <br />
-            - authentication for Next.js with next-auth
+            - Integration with CommerceTools API (products, cart, authorization)
             <br />
-            - UI components setting up and using Next JS features (SSR, middleware, Image etc.)
-            <br />- refactoring
+            - Authentication for Next.js with next-auth
+            <br />
+            - UI components setting up and using Next.js features (SSR, middleware, Image etc.)
+            <br />- Refactoring
           </Typography>
         </Box>
 
@@ -82,27 +94,35 @@ export default function AboutUsPage() {
           </Typography>
           <Typography variant="subtitle1" className="content-item-about-team">
             Participation in the project: <br />
+            <br />
             - Header and Footer
             <br />
             - Main Page
             <br />
-            -
+            - About us Page
             <br />
-            -
+            - Cars Page and Car details (frontend)
             <br />
-            -
-            <br />
+            - Content filling via CommerceTools
+            <br />- Application styling
           </Typography>
         </Box>
       </Paper>
 
       <Paper className="welcome-page-content2">
-        <Typography variant="h4" className="content-title">
+        <Typography variant="h4" className="content-title" sx={{ textDecoration: 'underline' }}>
           About the app:
         </Typography>
 
-        <Typography variant="subtitle1" className="content-item-description">
-          In this application we used content from the site
+        <Typography
+          variant="subtitle1"
+          className="content-item-description"
+          sx={{ overflow: 'hidden' }}
+        >
+          <br />
+          - The application was created on Next.js. <br />
+          - Used Material UI library. <br />
+          <br />- In this application we took content from the site
           <Link href="https://classiccars.com" rel="noopener noreferrer" target="_blank">
             &nbsp;https://classiccars.com&nbsp;
           </Link>
@@ -113,3 +133,8 @@ export default function AboutUsPage() {
     </Container>
   );
 }
+
+export const getServerSideProps = ssrWithAuthToken<Props>(async ({ token }) => {
+  const authorized = token?.type === NamesClients.PASSWORD;
+  return { props: { authorized } };
+});

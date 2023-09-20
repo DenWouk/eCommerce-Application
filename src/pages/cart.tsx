@@ -138,7 +138,13 @@ export default function CartPage() {
               mr: '5px',
             }}
           >
-            <TextField label="Have a promo?" required name="discountCode" size="small" />
+            <TextField
+              label="Promo LuckyCustomer10"
+              placeholder="LuckyCustomer10"
+              required
+              name="discountCode"
+              size="small"
+            />
             <Button
               type="submit"
               variant="outlined"

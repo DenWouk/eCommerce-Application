@@ -49,6 +49,20 @@ main {
   color: var(--color4);
 }
 
+.main-page-background {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: max(390px, 100vw);
+  height: 100vh;
+  margin-top: -50px;
+  background-image: url('../../public/main-page-background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .aside {
   position: sticky;
   top: 90px;

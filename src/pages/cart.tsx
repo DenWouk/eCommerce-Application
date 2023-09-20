@@ -10,10 +10,11 @@ import {
   IconButton,
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { FormEventHandler, useContext, useMemo } from 'react';
+import { FormEventHandler, useContext, useMemo, useState } from 'react';
 import { MyCartRemoveLineItemAction } from '@commercetools/platform-sdk';
 import Link from 'next/link';
 import { HighlightOffRounded } from '@mui/icons-material';
+import ModalClearCart from '@/src/components/ModalClearCart';
 import CartItemsList from '../components/CartItemsList';
 import cartModel from '../helpers/commercetools/cart/cartModel';
 import isAuthorized from '../helpers/auth';
@@ -23,6 +24,7 @@ import { updateCart } from '../api/carts';
 import { showError } from '../helpers/toastify';
 
 export default function CartPage() {
+  const [open, setOpen] = useState(false);
   const { state, dispatch } = useContext(MyContext);
   const { lineItems = [], version = 0, id = '', discountCodes = [], totalPrice } = state.cart || {};
 
@@ -154,8 +156,10 @@ export default function CartPage() {
             </Button>
           </Box>
 
+          <ModalClearCart open={open} onConfirm={handleClearCart} onCancel={() => setOpen(false)} />
+
           <Button
-            onClick={handleClearCart}
+            onClick={() => setOpen(true)}
             variant="outlined"
             color="error"
             sx={{

@@ -12,6 +12,8 @@
   --background-color2: #f1f7f7;
   --background-color3: #397eec;
   --background-color4: #62778c;
+  --background-color5: #6195c3ec;
+  --background-color6: #6f0808df;
 
   --link-color1: #2270ec;
 }
@@ -52,7 +54,8 @@ main {
 .main-page-background {
   position: absolute;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   width: max(390px, 100vw);
   height: 100vh;
@@ -61,6 +64,44 @@ main {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.main-page-title {
+  width: 100vw;
+  margin: 110px 20px 0;
+  padding: 10px;
+  font-size: 40px;
+  font-style: italic;
+  color: var(--color2);
+  background-color: var(--background-color5);
+  text-align: center;
+}
+
+.main-page-promocodes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 50%;
+  margin: 0 20px 35vh;
+  padding: 10px;
+  font-size: 30px;
+  color: var(--color2);
+  border-radius: 3px;
+  background-color: var(--background-color6);
+  text-align: center;
+}
+
+.promocode-1,
+.promocode-2 {
+  width: 100%;
+  color: var(--color1);
+  border-radius: 3px;
+  background-color: var(--background-color5);
+}
+
+.promocode-1 {
+  margin-top: 30px;
 }
 
 .aside {
@@ -210,6 +251,20 @@ main {
   line-height: 1.3;
 }
 
+@media (max-width: 900px) {
+  .main-page-title {
+    margin: 100px 10px 0;
+    font-size: 24px;
+
+  }
+
+  .main-page-promocodes {
+    margin: 0 10px 35vh;
+    font-size: 20px;
+  }
+}
+
+
 @media (max-width: 768px) {
   .image-gallery-thumbnail-custom button {
     width: 66px;
@@ -231,16 +286,27 @@ main {
   .content-item {
     width: 90%;
   }
+}
 
-  @media (max-width: 420px) {
-    .aside {
-      left: 5px;
-      padding: 0;
-    }
+@media (max-width: 600px) {
+  .main-page-title {
+    font-size: 22px;
 
-    .footer {
-      font-size: 12px;
-      font-weight: 400;
-    }
+  }
+
+  .main-page-promocodes {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .aside {
+    left: 5px;
+    padding: 0;
+  }
+
+  .footer {
+    font-size: 12px;
+    font-weight: 400;
   }
 }

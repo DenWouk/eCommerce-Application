@@ -5,7 +5,13 @@ import { ssrWithAuthToken } from '@/src/helpers/next/withAuthToken';
 export default function Home() {
   return (
     <div className="main-page-background">
-      <Box
+        <div className="main-page-title">Welcome to our autohouse!</div>
+
+      <div className="main-page-promocodes">Catch Promo Codes
+      <div className="promocode-1">LuckyCustomer10</div>
+      <div className="promocode-2">bmw-10</div>
+      </div>
+      {/* <Box
         sx={{
           position: 'absolute',
           top: '90px',
@@ -16,8 +22,8 @@ export default function Home() {
           bgcolor: 'var(--background-color1)',
         }}
       >
-        Promo codes LuckyCustomer10 bmw-10
-      </Box>
+        Promo codes LuckyCustomer10 
+      </Box> */}
     </div>
   );
 }

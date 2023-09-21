@@ -141,8 +141,7 @@ export default function CartPage() {
             }}
           >
             <TextField
-              label="Promo LuckyCustomer10"
-              placeholder="LuckyCustomer10"
+              label="Enter promo code here"
               required
               name="discountCode"
               size="small"

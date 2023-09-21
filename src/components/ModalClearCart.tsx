@@ -41,7 +41,7 @@ export default function ModalClearCart({ open, onConfirm, onCancel }: Props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={onCancel} autoFocus disabled={isLoading}>
-            Cansel
+            Cancel
           </Button>
           <Button onClick={handleConfirm} color="error">
             Confirm

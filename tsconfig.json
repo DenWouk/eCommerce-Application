@@ -36,6 +36,6 @@
     "next.config.js",
     "tailwind.config.js",
     "postcss.config.js"
-  ],
+, "__tests__/Footer.test.tsx"  ],
   "exclude": ["node_modules"]
 }
